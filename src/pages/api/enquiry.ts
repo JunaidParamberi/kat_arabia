@@ -12,7 +12,9 @@ export const POST: APIRoute = async ({ request, redirect, url }) => {
 	const form = await request.formData().catch(() => null);
 	const back = (ok: boolean) => {
 		const page = clip(form?.get("page") ?? null, 200) || "/contact";
-		const target = new URL(page.startsWith("/") ? page : "/contact", url.origin);
+		const safe = page.startsWith("/") && !page.startsWith("//") && !page.startsWith("/\\") ? page : "/contact";
+		const target = new URL(safe, url.origin);
+		if (target.origin !== url.origin) target.pathname = "/contact";
 		target.searchParams.set("sent", ok ? "1" : "0");
 		target.hash = "contact";
 		return redirect(`${target.pathname}${target.search}${target.hash}`, 303);
