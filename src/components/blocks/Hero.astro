@@ -49,18 +49,11 @@ const Heading = index === 0 ? "h1" : "h2";
 		</Heading>
 		{v.subheadline && <p class="hero__sub" data-hero-line>{v.subheadline}</p>}
 		{
-			(v.primary_cta_label || v.secondary_cta_label) && (
+			v.primary_cta_label && (
 				<div class="btn-row" data-hero-line>
-					{v.primary_cta_label && (
-						<a href={v.primary_cta_url || "#"} class="btn btn--primary">
-							{v.primary_cta_label} <span aria-hidden="true">→</span>
-						</a>
-					)}
-					{v.secondary_cta_label && (
-						<a href={v.secondary_cta_url || "#"} class="btn btn--light">
-							{v.secondary_cta_label}
-						</a>
-					)}
+					<a href={v.primary_cta_url || "#"} class="btn btn--primary">
+						{v.primary_cta_label} <span aria-hidden="true">→</span>
+					</a>
 				</div>
 			)
 		}

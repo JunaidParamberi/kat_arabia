@@ -21,14 +21,14 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.google(),
-			name: "Funnel Display",
+			name: "Montserrat",
 			cssVariable: "--font-display",
 			weights: [300, 400, 500, 600],
 			fallbacks: ["sans-serif"],
 		},
 		{
 			provider: fontProviders.google(),
-			name: "Geist",
+			name: "Montserrat",
 			cssVariable: "--font-body",
 			weights: [400, 500, 600],
 			fallbacks: ["sans-serif"],
@@ -39,13 +39,6 @@ export default defineConfig({
 			cssVariable: "--font-mono",
 			weights: [400, 500],
 			fallbacks: ["monospace"],
-		},
-		{
-			provider: fontProviders.google(),
-			name: "Montserrat",
-			cssVariable: "--font-brand",
-			weights: [500, 600],
-			fallbacks: ["sans-serif"],
 		},
 	],
 	devToolbar: { enabled: false },
