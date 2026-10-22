@@ -111,7 +111,7 @@ BLOCKS = [
         rep("offices", "Offices", [
             f("city", "City", required=True),
             f("country", "Country"),
-            f("role", "Role (e.g. KSA office)"),
+            f("role", "Role (e.g. Regional office)"),
             f("address", "Address", "text"),
             f("phone", "Phone"),
             f("primary", "Highlight on map", "boolean"),
@@ -253,21 +253,21 @@ IND_IMG = {"Oil & gas": "plant-night", "Petrochemicals": "steel-erection", "Infr
 COUNTRIES = "India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi"
 
 CHAPTERS = [
-    {"title": "Ground", "description": "Survey, enabling works and earthworks. Plant and crews are on site from day one.", "services": "Civil & heavy engineering · Plant & equipment · Workforce"},
-    {"title": "Structure", "description": "Foundations, concrete frames and structural steel rise under one site organisation.", "services": "General contracting · Civil · Plant & equipment · Workforce"},
-    {"title": "Industry", "description": "Process plant takes shape: steel erection, piping, mechanical installation and equipment setting.", "services": "Industrial · Oil & gas · MEP · Plant & equipment · Workforce"},
-    {"title": "Energy", "description": "Oil & gas and power packages are tied in, tested and brought on line.", "services": "Oil & gas · Industrial · MEP · Workforce"},
-    {"title": "Skyline", "description": "Buildings are completed, commissioned and handed over, then kept running through facility management.", "services": "General contracting · MEP · Facility management · Workforce"},
+    {"title": "Ground", "description": "The plot is staked out on bare desert, pegs marking every line before a single column is poured.", "services": "Civil & heavy engineering · Plant & equipment · Workforce"},
+    {"title": "Frame", "description": "A concrete frame climbs floor by floor under a single tower crane.", "services": "General contracting · Civil · Plant & equipment · Workforce"},
+    {"title": "Climb", "description": "The structure keeps rising as a second crane joins, with glazing closing in from the base.", "services": "General contracting · Civil · Plant & equipment · Workforce"},
+    {"title": "Skin", "description": "The glass façade wraps the tower from base to crown as the cranes finish the top floors.", "services": "General contracting · MEP · Plant & equipment · Workforce"},
+    {"title": "Skyline", "description": "Cranes gone, plaza landscaped: the tower stands finished and operating against the skyline.", "services": "General contracting · MEP · Facility management · Workforce"},
 ]
 
 FACTS = [{"value": "8", "label": "Service lines"}, {"value": "14", "label": "Industries served"},
-         {"value": "12", "label": "Workforce source countries"}, {"value": "2026", "label": "Operations in KSA from"}]
+         {"value": "12", "label": "Workforce source countries"}, {"value": "2026", "label": "Global operations from"}]
 
 OFFICES = [
-    {"city": "Al Jubail", "country": "Kingdom of Saudi Arabia", "role": "KSA office", "address": "KAT Arabia General Contracting\nEastern Province\n[Street, building, P.O. box]", "phone": "+966 53 181 4451", "primary": True},
+    {"city": "Al Jubail", "country": "Saudi Arabia", "role": "Regional office", "address": "KAT Arabia General Contracting\nEastern Province\n[Street, building, P.O. box]", "phone": "+966 53 181 4451", "primary": True},
     {"city": "Abu Dhabi", "country": "United Arab Emirates", "role": "KAT Group HQ", "address": "KAT Group\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
-    {"city": "Dubai", "country": "United Arab Emirates", "role": "UAE operations", "address": "KAT Group\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
-    {"city": "Sharjah", "country": "United Arab Emirates", "role": "UAE operations", "address": "KAT Group FZC LLC\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
+    {"city": "Dubai", "country": "United Arab Emirates", "role": "Regional office", "address": "KAT Group\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
+    {"city": "Sharjah", "country": "United Arab Emirates", "role": "Regional office", "address": "KAT Group FZC LLC\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
 ]
 
 CERTS = [{"code": "ISO 9001", "title": "Quality management", "note": "Certificate placeholder"},
@@ -275,59 +275,41 @@ CERTS = [{"code": "ISO 9001", "title": "Quality management", "note": "Certificat
          {"code": "ISO 45001", "title": "Occupational health & safety", "note": "Certificate placeholder"}]
 
 CONTACT = dict(phone="+966 53 181 4451", email="info@katarabia.com",
-               ksa_address="KAT Arabia General Contracting\nAl Jubail, Eastern Province\nKingdom of Saudi Arabia\n[Street, building, P.O. box]",
+               ksa_address="KAT Arabia General Contracting\nAl Jubail, Eastern Province\n[Street, building, P.O. box]",
                uae_address="KAT Group · Abu Dhabi, Dubai, Sharjah\n[Head office address]",
-               hours="Sunday – Thursday · [08:00 – 17:00] AST",
+               hours="Sunday – Thursday · [08:00 – 17:00], local time per office",
                reply_note="We reply within [X] working days.")
 
 HOME = [
-    k("hero", "kat_hero", variant="home", eyebrow="KAT Arabia General Contracting · Kingdom of Saudi Arabia",
-      headline="Shaping possibilities across the Kingdom.",
-      subheadline="Engineering, construction and workforce solutions for Saudi Arabia’s industrial, energy and infrastructure projects.",
+    k("hero", "kat_hero", variant="home", eyebrow="KAT Arabia General Contracting · Global engineering & contracting",
+      headline="Shaping possibilities, worldwide.",
+      subheadline="Engineering, construction and workforce solutions for industrial, energy and infrastructure projects around the world.",
       primary_cta_label="Explore capabilities", primary_cta_url="/#capabilities",
       secondary_cta_label="Request prequalification", secondary_cta_url="/contact", default_image="hero-dusk"),
     k("film", "kat_film", label="01 — The film · From bare ground to skyline", headline="One partner. Every stage.",
-      intro="Scroll and watch a project come to life — from survey pegs in the sand to an operating skyline, delivered by one contractor.",
+      intro="Scroll and watch a project come to life — from survey pegs in the ground to an operating skyline, delivered by one contractor.",
       chapters=CHAPTERS, anchor_id="film"),
-    k("about", "kat_intro", label="02 — About KAT Arabia", headline="Engineering excellence built for", highlight="Saudi Arabia.",
-      body="KAT Arabia General Contracting is the Saudi engineering and contracting arm of KAT Group, headquartered in the UAE.\n\nFrom our office in Al Jubail we bring the Group’s construction, industrial and workforce capability to projects across the Kingdom, with operations starting in 2026.",
-      facts=FACTS, tone="paper", anchor_id="about"),
     k("capabilities", "kat_capabilities", label="03 — Capabilities", headline="Every discipline a project needs.", highlight="One contractor.",
       intro="Delivered under one contract, one HSE system and one point of accountability.", layout="tabs",
       cta_label="Discuss a package", cta_url="/contact", anchor_id="capabilities"),
-    k("workforce", "kat_workforce", label="04 — Integrated project workforce", headline="Skilled crews from twelve countries,",
-      highlight="mobilised into the Kingdom.", caption="The people who build it.",
-      body="We recruit, trade-test and mobilise skilled and semi-skilled workers for our own projects and for clients who need dependable manpower at scale.",
-      countries=COUNTRIES, show_globe=True, primary_cta_label="Request manpower", primary_cta_url="/contact?type=manpower",
-      secondary_cta_label="Careers", secondary_cta_url="/contact?type=careers", anchor_id="workforce"),
-    k("industries", "kat_industries", label="05 — Industries", headline="Built for the sectors that", highlight="power the Kingdom.",
-      intro="From hydrocarbons and heavy industry to hospitals, hotels and new cities.", anchor_id="industries"),
-    k("footprint", "kat_footprint", label="06 — Footprint", headline="Group strength.", highlight="Saudi presence.",
-      intro="KAT Group headquarters in the UAE, the KAT Arabia office in Al Jubail, and project delivery across the Kingdom from 2026.",
-      offices=OFFICES, show_cards=False, anchor_id="footprint"),
-    k("hse", "kat_hse", label="07 — HSE & Quality", headline="Safety is our culture.", highlight="Quality is our commitment.",
-      body="Every crew, every site and every service line works to one integrated quality, environment and occupational health & safety system.",
-      certs=CERTS, anchor_id="hse"),
-    k("clients", "kat_clients", label="08 — Clients", headline="Trusted across KAT Group.",
-      logos=[{"name": f"[Client {i}]"} for i in range(1, 13)], anchor_id="clients"),
     k("contact", "kat_contact", label="09 — Contact", headline="Let’s build the future", highlight="together.",
       intro="Project enquiries, vendor prequalification, manpower requests and careers.", dark=True, anchor_id="contact", **CONTACT),
 ]
 
 ABOUT = [
     k("hero", "kat_hero", variant="page", eyebrow="About", headline="Your vision,", highlight="our execution.",
-      subheadline="Integrated contracting for seamless project excellence across Saudi Arabia and the UAE, built on KAT Group experience.",
+      subheadline="Integrated contracting for seamless project excellence worldwide, built on KAT Group experience.",
       default_image="gc-facade", breadcrumb=True),
     k("who", "kat_intro", label="01 — Who we are", headline="Building the future", highlight="since 2024.",
-      body="KAT Arabia General Contracting, established in 2024, is a forward-looking contracting company delivering high-quality engineering, construction and infrastructure solutions across the UAE and Saudi Arabia.\n\nOur integrated approach combines technical excellence, operational efficiency and structured project management, so execution stays seamless from design and engineering through construction, commissioning and maintenance.\n\nWe are committed to delivering sustainable, high-quality projects on time and within budget.",
+      body="KAT Arabia General Contracting, established in 2024, is a forward-looking contracting company delivering high-quality engineering, construction and infrastructure solutions to clients worldwide.\n\nOur integrated approach combines technical excellence, operational efficiency and structured project management, so execution stays seamless from design and engineering through construction, commissioning and maintenance.\n\nWe are committed to delivering sustainable, high-quality projects on time and within budget.",
       tone="paper"),
     k("how", "kat_steps", label="02 — How we deliver", headline="One partner across the whole project life.", columns="4", tone="paper",
       steps=[{"title": "Design & engineering", "text": "Buildability, value engineering and coordinated discipline design before the first peg goes in."},
              {"title": "Construction", "text": "Civil, structural, mechanical and electrical works under one site organisation."},
              {"title": "Commissioning", "text": "Testing, start-up and handover documentation, ready for the owner’s operations team."},
              {"title": "Maintenance", "text": "Facility and building maintenance that keeps completed assets performing."}]),
-    k("group", "kat_split", label="03 — Part of KAT Group", headline="Group experience.", highlight="Saudi focus.",
-      body="KAT Arabia brings KAT Group’s contracting and workforce capability into the Kingdom, with a Saudi office in Al Jubail and operations starting in 2026, supported by the Group’s UAE presence in Dubai, Sharjah and Abu Dhabi.",
+    k("group", "kat_split", label="03 — Part of KAT Group", headline="Group experience.", highlight="Global focus.",
+      body="KAT Arabia brings KAT Group’s contracting and workforce capability to projects worldwide, with operations expanding from 2026 across a growing network of regional offices.",
       default_image="steel-erection", image_right=False, facts=FACTS),
     k("commitments", "kat_steps", label="04 — Our commitments", headline="Four promises on every project.", columns="4", tone="sand",
       steps=[{"title": "Safety", "text": "Zero-harm planning on every site, for every crew."},
@@ -363,7 +345,7 @@ STRENGTHS = [
              {"title": "Client-focused delivery", "text": "Timelines and regulatory compliance treated as non-negotiable."},
              {"title": "Safety, quality, sustainability", "text": "A single integrated management system across every site and service line."}]),
     k("workforce", "kat_split", label="02 — Workforce", headline="Crews we recruit, test", highlight="and mobilise ourselves.",
-      body="Skilled and semi-skilled workers sourced from twelve countries — " + COUNTRIES + " — and deployed into Saudi projects, for our own packages or as manpower supply to clients.",
+      body="Skilled and semi-skilled workers sourced from twelve countries — " + COUNTRIES + " — and deployed into projects worldwide, for our own packages or as manpower supply to clients.",
       default_image="workforce", image_right=True, cta_label="Request manpower", cta_url="/contact?type=manpower"),
     k("hse", "kat_hse", label="03 — HSE & Quality", headline="Safety is our culture.", highlight="Quality is our commitment.",
       body="One integrated management system for quality, environment and occupational health & safety.", certs=CERTS),
@@ -373,12 +355,12 @@ STRENGTHS = [
 
 LOCATIONS = [
     k("hero", "kat_hero", variant="page", eyebrow="Locations", headline="Positioned for", highlight="rapid deployment.",
-      subheadline="A strategic presence across Saudi Arabia and the UAE for efficient execution, streamlined logistics and fast mobilisation.",
+      subheadline="A growing global presence for efficient execution, streamlined logistics and fast mobilisation.",
       default_image="civil-interchange", breadcrumb=True),
     k("map", "kat_footprint", label="01 — Geographic presence", headline="Four bases.", highlight="One network.",
-      intro="Our Saudi office in Al Jubail sits in the heart of the Eastern Province industrial corridor, a day’s mobilisation from KAT Group’s UAE bases.",
+      intro="Our regional offices sit across key industrial corridors, positioned for fast mobilisation to projects worldwide.",
       offices=OFFICES, show_cards=True),
-    k("cta", "kat_cta", headline="Need a team on site fast?", primary_cta_label="Talk to our Al Jubail office", primary_cta_url="/contact"),
+    k("cta", "kat_cta", headline="Need a team on site fast?", primary_cta_label="Talk to our team", primary_cta_url="/contact"),
 ]
 
 CONTACT_PAGE = [
@@ -405,8 +387,8 @@ def menu_item(label, url, css=None):
 seed = {
     "$schema": "https://emdashcms.com/seed.schema.json",
     "version": "1",
-    "meta": {"name": "KAT Arabia", "description": "KAT Arabia General Contracting — engineering & contracting in Saudi Arabia", "author": "Moonframe Studio"},
-    "settings": {"title": "KAT Arabia", "tagline": "Shaping possibilities across the Kingdom", "seo": {"titleSeparator": "—"}},
+    "meta": {"name": "KAT Arabia", "description": "KAT Arabia General Contracting — global engineering & contracting", "author": "Moonframe Studio"},
+    "settings": {"title": "KAT Arabia", "tagline": "Shaping possibilities, worldwide.", "seo": {"titleSeparator": "—"}},
     "blockTypes": BLOCKS,
     "collections": COLLECTIONS,
     "menus": [

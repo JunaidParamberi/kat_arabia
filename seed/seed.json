@@ -3,12 +3,12 @@
 	"version": "1",
 	"meta": {
 		"name": "KAT Arabia",
-		"description": "KAT Arabia General Contracting — engineering & contracting in Saudi Arabia",
+		"description": "KAT Arabia General Contracting — global engineering & contracting",
 		"author": "Moonframe Studio"
 	},
 	"settings": {
 		"title": "KAT Arabia",
-		"tagline": "Shaping possibilities across the Kingdom",
+		"tagline": "Shaping possibilities, worldwide.",
 		"seo": {
 			"titleSeparator": "—"
 		}
@@ -528,7 +528,7 @@
 									},
 									{
 										"slug": "role",
-										"label": "Role (e.g. KSA office)",
+										"label": "Role (e.g. Regional office)",
 										"type": "string"
 									},
 									{
@@ -1344,9 +1344,9 @@
 							"_version": 1,
 							"_key": "hero",
 							"variant": "home",
-							"eyebrow": "KAT Arabia General Contracting · Kingdom of Saudi Arabia",
-							"headline": "Shaping possibilities across the Kingdom.",
-							"subheadline": "Engineering, construction and workforce solutions for Saudi Arabia’s industrial, energy and infrastructure projects.",
+							"eyebrow": "KAT Arabia General Contracting · Global engineering & contracting",
+							"headline": "Shaping possibilities, worldwide.",
+							"subheadline": "Engineering, construction and workforce solutions for industrial, energy and infrastructure projects around the world.",
 							"primary_cta_label": "Explore capabilities",
 							"primary_cta_url": "/#capabilities",
 							"secondary_cta_label": "Request prequalification",
@@ -1359,64 +1359,35 @@
 							"_key": "film",
 							"label": "01 — The film · From bare ground to skyline",
 							"headline": "One partner. Every stage.",
-							"intro": "Scroll and watch a project come to life — from survey pegs in the sand to an operating skyline, delivered by one contractor.",
+							"intro": "Scroll and watch a project come to life — from survey pegs in the ground to an operating skyline, delivered by one contractor.",
 							"chapters": [
 								{
 									"title": "Ground",
-									"description": "Survey, enabling works and earthworks. Plant and crews are on site from day one.",
+									"description": "The plot is staked out on bare desert, pegs marking every line before a single column is poured.",
 									"services": "Civil & heavy engineering · Plant & equipment · Workforce"
 								},
 								{
-									"title": "Structure",
-									"description": "Foundations, concrete frames and structural steel rise under one site organisation.",
+									"title": "Frame",
+									"description": "A concrete frame climbs floor by floor under a single tower crane.",
 									"services": "General contracting · Civil · Plant & equipment · Workforce"
 								},
 								{
-									"title": "Industry",
-									"description": "Process plant takes shape: steel erection, piping, mechanical installation and equipment setting.",
-									"services": "Industrial · Oil & gas · MEP · Plant & equipment · Workforce"
+									"title": "Climb",
+									"description": "The structure keeps rising as a second crane joins, with glazing closing in from the base.",
+									"services": "General contracting · Civil · Plant & equipment · Workforce"
 								},
 								{
-									"title": "Energy",
-									"description": "Oil & gas and power packages are tied in, tested and brought on line.",
-									"services": "Oil & gas · Industrial · MEP · Workforce"
+									"title": "Skin",
+									"description": "The glass façade wraps the tower from base to crown as the cranes finish the top floors.",
+									"services": "General contracting · MEP · Plant & equipment · Workforce"
 								},
 								{
 									"title": "Skyline",
-									"description": "Buildings are completed, commissioned and handed over, then kept running through facility management.",
+									"description": "Cranes gone, plaza landscaped: the tower stands finished and operating against the skyline.",
 									"services": "General contracting · MEP · Facility management · Workforce"
 								}
 							],
 							"anchor_id": "film"
-						},
-						{
-							"_type": "kat_intro",
-							"_version": 1,
-							"_key": "about",
-							"label": "02 — About KAT Arabia",
-							"headline": "Engineering excellence built for",
-							"highlight": "Saudi Arabia.",
-							"body": "KAT Arabia General Contracting is the Saudi engineering and contracting arm of KAT Group, headquartered in the UAE.\n\nFrom our office in Al Jubail we bring the Group’s construction, industrial and workforce capability to projects across the Kingdom, with operations starting in 2026.",
-							"facts": [
-								{
-									"value": "8",
-									"label": "Service lines"
-								},
-								{
-									"value": "14",
-									"label": "Industries served"
-								},
-								{
-									"value": "12",
-									"label": "Workforce source countries"
-								},
-								{
-									"value": "2026",
-									"label": "Operations in KSA from"
-								}
-							],
-							"tone": "paper",
-							"anchor_id": "about"
 						},
 						{
 							"_type": "kat_capabilities",
@@ -1432,151 +1403,6 @@
 							"anchor_id": "capabilities"
 						},
 						{
-							"_type": "kat_workforce",
-							"_version": 1,
-							"_key": "workforce",
-							"label": "04 — Integrated project workforce",
-							"headline": "Skilled crews from twelve countries,",
-							"highlight": "mobilised into the Kingdom.",
-							"caption": "The people who build it.",
-							"body": "We recruit, trade-test and mobilise skilled and semi-skilled workers for our own projects and for clients who need dependable manpower at scale.",
-							"countries": "India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi",
-							"show_globe": true,
-							"primary_cta_label": "Request manpower",
-							"primary_cta_url": "/contact?type=manpower",
-							"secondary_cta_label": "Careers",
-							"secondary_cta_url": "/contact?type=careers",
-							"anchor_id": "workforce"
-						},
-						{
-							"_type": "kat_industries",
-							"_version": 1,
-							"_key": "industries",
-							"label": "05 — Industries",
-							"headline": "Built for the sectors that",
-							"highlight": "power the Kingdom.",
-							"intro": "From hydrocarbons and heavy industry to hospitals, hotels and new cities.",
-							"anchor_id": "industries"
-						},
-						{
-							"_type": "kat_footprint",
-							"_version": 1,
-							"_key": "footprint",
-							"label": "06 — Footprint",
-							"headline": "Group strength.",
-							"highlight": "Saudi presence.",
-							"intro": "KAT Group headquarters in the UAE, the KAT Arabia office in Al Jubail, and project delivery across the Kingdom from 2026.",
-							"offices": [
-								{
-									"city": "Al Jubail",
-									"country": "Kingdom of Saudi Arabia",
-									"role": "KSA office",
-									"address": "KAT Arabia General Contracting\nEastern Province\n[Street, building, P.O. box]",
-									"phone": "+966 53 181 4451",
-									"primary": true
-								},
-								{
-									"city": "Abu Dhabi",
-									"country": "United Arab Emirates",
-									"role": "KAT Group HQ",
-									"address": "KAT Group\n[Street, building, P.O. box]",
-									"phone": "[Phone]",
-									"primary": false
-								},
-								{
-									"city": "Dubai",
-									"country": "United Arab Emirates",
-									"role": "UAE operations",
-									"address": "KAT Group\n[Street, building, P.O. box]",
-									"phone": "[Phone]",
-									"primary": false
-								},
-								{
-									"city": "Sharjah",
-									"country": "United Arab Emirates",
-									"role": "UAE operations",
-									"address": "KAT Group FZC LLC\n[Street, building, P.O. box]",
-									"phone": "[Phone]",
-									"primary": false
-								}
-							],
-							"show_cards": false,
-							"anchor_id": "footprint"
-						},
-						{
-							"_type": "kat_hse",
-							"_version": 1,
-							"_key": "hse",
-							"label": "07 — HSE & Quality",
-							"headline": "Safety is our culture.",
-							"highlight": "Quality is our commitment.",
-							"body": "Every crew, every site and every service line works to one integrated quality, environment and occupational health & safety system.",
-							"certs": [
-								{
-									"code": "ISO 9001",
-									"title": "Quality management",
-									"note": "Certificate placeholder"
-								},
-								{
-									"code": "ISO 14001",
-									"title": "Environmental management",
-									"note": "Certificate placeholder"
-								},
-								{
-									"code": "ISO 45001",
-									"title": "Occupational health & safety",
-									"note": "Certificate placeholder"
-								}
-							],
-							"anchor_id": "hse"
-						},
-						{
-							"_type": "kat_clients",
-							"_version": 1,
-							"_key": "clients",
-							"label": "08 — Clients",
-							"headline": "Trusted across KAT Group.",
-							"logos": [
-								{
-									"name": "[Client 1]"
-								},
-								{
-									"name": "[Client 2]"
-								},
-								{
-									"name": "[Client 3]"
-								},
-								{
-									"name": "[Client 4]"
-								},
-								{
-									"name": "[Client 5]"
-								},
-								{
-									"name": "[Client 6]"
-								},
-								{
-									"name": "[Client 7]"
-								},
-								{
-									"name": "[Client 8]"
-								},
-								{
-									"name": "[Client 9]"
-								},
-								{
-									"name": "[Client 10]"
-								},
-								{
-									"name": "[Client 11]"
-								},
-								{
-									"name": "[Client 12]"
-								}
-							],
-							"anchor_id": "clients"
-						},
-						{
 							"_type": "kat_contact",
 							"_version": 1,
 							"_key": "contact",
@@ -1588,9 +1414,9 @@
 							"anchor_id": "contact",
 							"phone": "+966 53 181 4451",
 							"email": "info@katarabia.com",
-							"ksa_address": "KAT Arabia General Contracting\nAl Jubail, Eastern Province\nKingdom of Saudi Arabia\n[Street, building, P.O. box]",
+							"ksa_address": "KAT Arabia General Contracting\nAl Jubail, Eastern Province\n[Street, building, P.O. box]",
 							"uae_address": "KAT Group · Abu Dhabi, Dubai, Sharjah\n[Head office address]",
-							"hours": "Sunday – Thursday · [08:00 – 17:00] AST",
+							"hours": "Sunday – Thursday · [08:00 – 17:00], local time per office",
 							"reply_note": "We reply within [X] working days."
 						}
 					]
@@ -1611,7 +1437,7 @@
 							"eyebrow": "About",
 							"headline": "Your vision,",
 							"highlight": "our execution.",
-							"subheadline": "Integrated contracting for seamless project excellence across Saudi Arabia and the UAE, built on KAT Group experience.",
+							"subheadline": "Integrated contracting for seamless project excellence worldwide, built on KAT Group experience.",
 							"default_image": "gc-facade",
 							"breadcrumb": true
 						},
@@ -1622,7 +1448,7 @@
 							"label": "01 — Who we are",
 							"headline": "Building the future",
 							"highlight": "since 2024.",
-							"body": "KAT Arabia General Contracting, established in 2024, is a forward-looking contracting company delivering high-quality engineering, construction and infrastructure solutions across the UAE and Saudi Arabia.\n\nOur integrated approach combines technical excellence, operational efficiency and structured project management, so execution stays seamless from design and engineering through construction, commissioning and maintenance.\n\nWe are committed to delivering sustainable, high-quality projects on time and within budget.",
+							"body": "KAT Arabia General Contracting, established in 2024, is a forward-looking contracting company delivering high-quality engineering, construction and infrastructure solutions to clients worldwide.\n\nOur integrated approach combines technical excellence, operational efficiency and structured project management, so execution stays seamless from design and engineering through construction, commissioning and maintenance.\n\nWe are committed to delivering sustainable, high-quality projects on time and within budget.",
 							"tone": "paper"
 						},
 						{
@@ -1658,8 +1484,8 @@
 							"_key": "group",
 							"label": "03 — Part of KAT Group",
 							"headline": "Group experience.",
-							"highlight": "Saudi focus.",
-							"body": "KAT Arabia brings KAT Group’s contracting and workforce capability into the Kingdom, with a Saudi office in Al Jubail and operations starting in 2026, supported by the Group’s UAE presence in Dubai, Sharjah and Abu Dhabi.",
+							"highlight": "Global focus.",
+							"body": "KAT Arabia brings KAT Group’s contracting and workforce capability to projects worldwide, with operations expanding from 2026 across a growing network of regional offices.",
 							"default_image": "steel-erection",
 							"image_right": false,
 							"facts": [
@@ -1677,7 +1503,7 @@
 								},
 								{
 									"value": "2026",
-									"label": "Operations in KSA from"
+									"label": "Global operations from"
 								}
 							]
 						},
@@ -1847,7 +1673,7 @@
 							"label": "02 — Workforce",
 							"headline": "Crews we recruit, test",
 							"highlight": "and mobilise ourselves.",
-							"body": "Skilled and semi-skilled workers sourced from twelve countries — India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi — and deployed into Saudi projects, for our own packages or as manpower supply to clients.",
+							"body": "Skilled and semi-skilled workers sourced from twelve countries — India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi — and deployed into projects worldwide, for our own packages or as manpower supply to clients.",
 							"default_image": "workforce",
 							"image_right": true,
 							"cta_label": "Request manpower",
@@ -1905,7 +1731,7 @@
 							"eyebrow": "Locations",
 							"headline": "Positioned for",
 							"highlight": "rapid deployment.",
-							"subheadline": "A strategic presence across Saudi Arabia and the UAE for efficient execution, streamlined logistics and fast mobilisation.",
+							"subheadline": "A growing global presence for efficient execution, streamlined logistics and fast mobilisation.",
 							"default_image": "civil-interchange",
 							"breadcrumb": true
 						},
@@ -1916,12 +1742,12 @@
 							"label": "01 — Geographic presence",
 							"headline": "Four bases.",
 							"highlight": "One network.",
-							"intro": "Our Saudi office in Al Jubail sits in the heart of the Eastern Province industrial corridor, a day’s mobilisation from KAT Group’s UAE bases.",
+							"intro": "Our regional offices sit across key industrial corridors, positioned for fast mobilisation to projects worldwide.",
 							"offices": [
 								{
 									"city": "Al Jubail",
-									"country": "Kingdom of Saudi Arabia",
-									"role": "KSA office",
+									"country": "Saudi Arabia",
+									"role": "Regional office",
 									"address": "KAT Arabia General Contracting\nEastern Province\n[Street, building, P.O. box]",
 									"phone": "+966 53 181 4451",
 									"primary": true
@@ -1937,7 +1763,7 @@
 								{
 									"city": "Dubai",
 									"country": "United Arab Emirates",
-									"role": "UAE operations",
+									"role": "Regional office",
 									"address": "KAT Group\n[Street, building, P.O. box]",
 									"phone": "[Phone]",
 									"primary": false
@@ -1945,7 +1771,7 @@
 								{
 									"city": "Sharjah",
 									"country": "United Arab Emirates",
-									"role": "UAE operations",
+									"role": "Regional office",
 									"address": "KAT Group FZC LLC\n[Street, building, P.O. box]",
 									"phone": "[Phone]",
 									"primary": false
@@ -1958,7 +1784,7 @@
 							"_version": 1,
 							"_key": "cta",
 							"headline": "Need a team on site fast?",
-							"primary_cta_label": "Talk to our Al Jubail office",
+							"primary_cta_label": "Talk to our team",
 							"primary_cta_url": "/contact"
 						}
 					]
@@ -1982,9 +1808,9 @@
 							"dark": false,
 							"phone": "+966 53 181 4451",
 							"email": "info@katarabia.com",
-							"ksa_address": "KAT Arabia General Contracting\nAl Jubail, Eastern Province\nKingdom of Saudi Arabia\n[Street, building, P.O. box]",
+							"ksa_address": "KAT Arabia General Contracting\nAl Jubail, Eastern Province\n[Street, building, P.O. box]",
 							"uae_address": "KAT Group · Abu Dhabi, Dubai, Sharjah\n[Head office address]",
-							"hours": "Sunday – Thursday · [08:00 – 17:00] AST",
+							"hours": "Sunday – Thursday · [08:00 – 17:00], local time per office",
 							"reply_note": "We reply within [X] working days."
 						},
 						{

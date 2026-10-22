@@ -125,6 +125,9 @@ if (!reduced) {
 }
 
 /* ---------- scroll film ---------- */
+// Chapter breakpoints: Ground 0-20%, Structure 20-45%, Industry 45-65%, Energy 65-85%, Skyline 85-100%.
+const FILM_BREAKPOINTS = [0, 0.2, 0.45, 0.65, 0.85, 1.0001];
+
 for (const film of $$("[data-film]")) {
 	const stage = $("[data-film-stage]", film)!;
 	const video = $<HTMLVideoElement>("[data-film-video]", film);
@@ -133,8 +136,17 @@ for (const film of $$("[data-film]")) {
 	const tabs = $$<HTMLButtonElement>("[data-film-tab]", film);
 	const fills = $$("[data-film-fill]", film);
 	const num = $("[data-film-num]", film);
+	const intro = $("[data-film-intro]", film);
 	const n = Math.max(1, chapters.length);
+	const breakpoints = FILM_BREAKPOINTS.slice(0, n + 1);
 	let active = -1;
+
+	const chapterAt = (p: number) => {
+		for (let k = n - 1; k >= 0; k--) {
+			if (p >= breakpoints[k]) return k;
+		}
+		return 0;
+	};
 
 	const setChapter = (i: number) => {
 		if (i === active) return;
@@ -147,24 +159,80 @@ for (const film of $$("[data-film]")) {
 		if (num) num.textContent = String(i + 1).padStart(2, "0");
 	};
 
-	let pending: number | null = null;
+	// Smoothed scrub: a persistent rAF loop lerps currentTime toward the scroll-driven target,
+	// instead of seeking directly on every scroll update.
+	let target = 0;
+	let current = 0;
+	let rafId: number | null = null;
+	const tickScrub = () => {
+		rafId = null;
+		if (!video || !Number.isFinite(video.duration) || !video.duration) return;
+		current += (target * video.duration - current) * 0.18;
+		if (Math.abs(target * video.duration - current) < 0.002) current = target * video.duration;
+		video.currentTime = Math.max(0, Math.min(video.duration - 0.03, current));
+		if (Math.abs(target * video.duration - current) > 0.001) rafId = requestAnimationFrame(tickScrub);
+	};
 	const seek = (p: number) => {
-		if (!video || !video.duration) return;
-		if (pending !== null) cancelAnimationFrame(pending);
-		pending = requestAnimationFrame(() => {
-			video.currentTime = Math.min(video.duration - 0.05, p * video.duration);
-			pending = null;
-		});
+		target = p;
+		if (rafId === null) rafId = requestAnimationFrame(tickScrub);
 	};
 
+	// Desktop-only pointer parallax on the video layer (max 12px), eased in the same scrub loop.
+	const desktopMQ = window.matchMedia("(min-width: 769px)");
+	let parallaxTargetX = 0;
+	let parallaxTargetY = 0;
+	let parallaxX = 0;
+	let parallaxY = 0;
+	let scale = 1;
+	let parallaxRaf: number | null = null;
+	const applyTransform = () => {
+		if (video) video.style.transform = `scale(${scale}) translate3d(${parallaxX}px, ${parallaxY}px, 0)`;
+	};
+	const tickParallax = () => {
+		parallaxRaf = null;
+		parallaxX += (parallaxTargetX - parallaxX) * 0.08;
+		parallaxY += (parallaxTargetY - parallaxY) * 0.08;
+		applyTransform();
+		if (Math.abs(parallaxTargetX - parallaxX) > 0.05 || Math.abs(parallaxTargetY - parallaxY) > 0.05) {
+			parallaxRaf = requestAnimationFrame(tickParallax);
+		}
+	};
+	if (!reduced) {
+		stage.addEventListener("mousemove", (e) => {
+			if (!desktopMQ.matches) return;
+			const rect = stage.getBoundingClientRect();
+			const nx = (e.clientX - rect.left) / rect.width - 0.5;
+			const ny = (e.clientY - rect.top) / rect.height - 0.5;
+			parallaxTargetX = nx * 24; // max ±12px
+			parallaxTargetY = ny * 24;
+			if (parallaxRaf === null) parallaxRaf = requestAnimationFrame(tickParallax);
+		});
+		stage.addEventListener("mouseleave", () => {
+			parallaxTargetX = 0;
+			parallaxTargetY = 0;
+			if (parallaxRaf === null) parallaxRaf = requestAnimationFrame(tickParallax);
+		});
+	}
+
 	const setProgress = (p: number) => {
-		const pos = p * n;
-		setChapter(Math.min(n - 1, Math.floor(pos)));
+		const chapter = chapterAt(p);
+		setChapter(chapter);
 		fills.forEach((f, k) => {
-			f.style.width = `${Math.max(0, Math.min(1, pos - k)) * 100}%`;
+			const span = breakpoints[k + 1] - breakpoints[k];
+			const into = span > 0 ? (p - breakpoints[k]) / span : 0;
+			f.style.width = `${Math.max(0, Math.min(1, into)) * 100}%`;
 		});
 		seek(p);
+		scale = 1 + p * 0.08;
+		applyTransform();
 		if (poster) poster.style.transform = `scale(${1.12 - p * 0.12})`;
+		if (intro) {
+			// Title card dissolves away once the scrub begins, so the film plays unobstructed.
+			const dissolve = Math.min(1, p / 0.08);
+			intro.style.opacity = String(1 - dissolve);
+			intro.style.filter = `blur(${dissolve * 8}px)`;
+			intro.style.transform = `translateY(${-dissolve * 28}px)`;
+		}
 	};
 
 	if (video) {
@@ -173,31 +241,46 @@ for (const film of $$("[data-film]")) {
 	}
 
 	if (reduced) {
-		setProgress(0);
+		setChapter(0);
+		fills.forEach((f) => (f.style.width = "0%"));
 		tabs.forEach((t, i) =>
 			t.addEventListener("click", () => {
 				setChapter(i);
 				fills.forEach((f, k) => (f.style.width = k <= i ? "100%" : "0%"));
-				seek((i + 0.5) / n);
 			}),
 		);
 		continue;
 	}
 
+	const headerEl = $("[data-header]");
+	const enterCinema = () => {
+		headerEl?.classList.add("is-film-hidden");
+		film.classList.add("is-pinned");
+	};
+	const leaveCinema = () => {
+		headerEl?.classList.remove("is-film-hidden");
+		film.classList.remove("is-pinned");
+	};
+
 	const st = ScrollTrigger.create({
 		trigger: film,
 		start: "top top",
-		end: () => `+=${window.innerHeight * (n + 0.5)}`,
+		end: () => `+=${window.innerHeight * 5}`,
 		pin: stage,
 		scrub: 0.6,
 		anticipatePin: 1,
 		onUpdate: (self) => setProgress(self.progress),
+		onEnter: enterCinema,
+		onEnterBack: enterCinema,
+		onLeave: leaveCinema,
+		onLeaveBack: leaveCinema,
 	});
 	setProgress(0);
 
 	tabs.forEach((t, i) =>
 		t.addEventListener("click", () => {
-			const y = st.start + (st.end - st.start) * ((i + 0.5) / n);
+			const mid = (breakpoints[i] + breakpoints[i + 1]) / 2;
+			const y = st.start + (st.end - st.start) * mid;
 			if (lenis) lenis.scrollTo(y, { duration: 1.4 });
 			else window.scrollTo({ top: y, behavior: "smooth" });
 		}),

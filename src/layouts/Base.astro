@@ -104,7 +104,7 @@ const year = new Date().getFullYear();
 		<header class:list={["site-header", `site-header--${header}`]} data-header>
 			<div class="site-header__bar">
 				<a href="/" class="site-header__logo" aria-label={`${siteTitle} home`}>
-					<Logo idSuffix="header" />
+					<Logo size={56} idSuffix="header" variant={header === "solid" ? "dark" : "light"} />
 				</a>
 				{
 					navLinks.length > 0 && (
@@ -123,7 +123,6 @@ const year = new Date().getFullYear();
 				}
 				<div class="site-header__actions">
 					{isLoggedIn && <a href="/_emdash/admin" class="site-header__admin mono">Admin</a>}
-					<a href="#" lang="ar" class="site-header__lang">العربية</a>
 					{navButtons.map((item) => (
 						<a href={item.url} class="btn btn--primary site-header__cta">
 							{item.label}
@@ -164,8 +163,8 @@ const year = new Date().getFullYear();
 			<div class="wrap">
 				<div class="site-footer__top">
 					<div class="site-footer__brand">
-						<a href="/" aria-label={`${siteTitle} home`}><Logo size={40} idSuffix="footer" /></a>
-						<p>{(siteTagline || "Shaping possibilities across the Kingdom").replace(/\.$/, "")}. A KAT Group company.</p>
+						<a href="/" aria-label={`${siteTitle} home`}><Logo size={68} idSuffix="footer" variant="light" /></a>
+						<p>{(siteTagline || "Shaping possibilities, worldwide").replace(/\.$/, "")}. A KAT Group company.</p>
 					</div>
 					{
 						footerColumns.map((col) => (
@@ -183,7 +182,7 @@ const year = new Date().getFullYear();
 						<span class="mono">Contact</span>
 						<a href="tel:+966531814451">+966 53 181 4451</a>
 						<a href="mailto:info@katarabia.com">info@katarabia.com</a>
-						<span>Al Jubail, KSA</span>
+						<span>Al Jubail, Saudi Arabia</span>
 						<span>Abu Dhabi, UAE</span>
 					</div>
 				</div>
@@ -212,7 +211,11 @@ const year = new Date().getFullYear();
 		transition:
 			background 0.35s var(--ease),
 			color 0.35s var(--ease),
-			box-shadow 0.35s var(--ease);
+			box-shadow 0.35s var(--ease),
+			transform 0.45s var(--ease);
+	}
+	.site-header.is-film-hidden {
+		transform: translateY(-110%);
 	}
 	.site-header--solid {
 		background: var(--paper);
@@ -270,9 +273,6 @@ const year = new Date().getFullYear();
 		align-items: center;
 		gap: 20px;
 	}
-	.site-header__lang {
-		font-size: 14px;
-	}
 	.site-header__admin {
 		color: inherit;
 		opacity: 0.8;
@@ -325,7 +325,6 @@ const year = new Date().getFullYear();
 
 	@media (max-width: 1080px) {
 		.site-nav,
-		.site-header__lang,
 		.site-header__cta {
 			display: none;
 		}
