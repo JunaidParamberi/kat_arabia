@@ -1,0 +1,76 @@
+---
+interface Props {
+	value: Record<string, any>;
+}
+const { value: v } = Astro.props;
+const certs: Array<{ code: string; title?: string; note?: string }> = v.certs ?? [];
+---
+
+<section class="section hse" id={v.anchor_id || undefined}>
+	<div class="wrap">
+		{v.label && <div class="sec-label mono"><span>{v.label}</span><span>Integrated management system</span></div>}
+		<div class="sec-head">
+			<h2 class="disp h-lg" data-reveal>
+				{v.headline}{v.highlight && <><br /><span class="accent">{v.highlight}</span></>}
+			</h2>
+			{v.body && <p class="lead" data-reveal>{v.body}</p>}
+		</div>
+		{
+			certs.length > 0 && (
+				<div class="hse__certs" style={`--n:${certs.length}`}>
+					{certs.map((c) => (
+						<div class="hse__cert" data-reveal>
+							<span class="mono hse__code">{c.code}</span>
+							{c.title && <span class="disp hse__title">{c.title}</span>}
+							{c.note && <span class="hse__note">{c.note}</span>}
+						</div>
+					))}
+				</div>
+			)
+		}
+	</div>
+</section>
+
+<style>
+	.hse__certs {
+		display: grid;
+		grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+		border-top: 1px solid var(--ink);
+	}
+	.hse__cert {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 32px 32px 0;
+		border-left: 1px solid var(--rule);
+	}
+	.hse__cert:first-child {
+		padding-left: 0;
+		border-left: 0;
+	}
+	.hse__code {
+		align-self: flex-start;
+		padding: 8px 12px;
+		border: 1px dashed var(--maroon);
+		color: var(--maroon);
+	}
+	.hse__title {
+		font-size: 28px;
+		letter-spacing: -0.02em;
+	}
+	.hse__note {
+		font-size: 15px;
+		color: var(--ink-muted);
+	}
+	@media (max-width: 760px) {
+		.hse__certs {
+			grid-template-columns: 1fr;
+		}
+		.hse__cert,
+		.hse__cert:first-child {
+			padding: 24px 0;
+			border-left: 0;
+			border-bottom: 1px solid var(--rule);
+		}
+	}
+</style>

@@ -1,0 +1,90 @@
+---
+import Base from "../layouts/Base.astro";
+import { listEnquiries } from "../lib/enquiries";
+
+// Admin-only inbox for website enquiries.
+if (!Astro.locals.user) {
+	return Astro.redirect(`/_emdash/admin/login?redirect=${encodeURIComponent("/enquiries")}`);
+}
+Astro.response.headers.set("Cache-Control", "private, no-store");
+const rows = await listEnquiries();
+const fmt = (s: string) => new Date(`${s.replace(" ", "T")}Z`).toLocaleString("en-GB", { timeZone: "Asia/Riyadh" });
+---
+
+<Base title="Enquiries" robots="noindex, nofollow">
+	<section class="section">
+		<div class="wrap">
+			<div class="sec-label mono"><span>Website enquiries</span><span>{rows.length} latest</span></div>
+			<h1 class="disp h-md" style="margin-bottom:40px">Enquiries inbox</h1>
+			{
+				rows.length === 0 ? (
+					<p class="lead">No enquiries yet.</p>
+				) : (
+					<div class="enq">
+						<table>
+							<thead>
+								<tr>
+									<th>Received (AST)</th>
+									<th>Type</th>
+									<th>From</th>
+									<th>Detail</th>
+									<th>Message</th>
+								</tr>
+							</thead>
+							<tbody>
+								{rows.map((r) => (
+									<tr>
+										<td class="mono">{fmt(r.created_at)}</td>
+										<td><span class="enq__type mono">{r.type}</span></td>
+										<td>
+											<strong>{r.name}</strong>
+											{r.company && <div>{r.company}</div>}
+											<div><a href={`mailto:${r.email}`}>{r.email}</a></div>
+											{r.phone && <div><a href={`tel:${r.phone}`}>{r.phone}</a></div>}
+										</td>
+										<td>{r.detail}</td>
+										<td style="white-space:pre-wrap">{r.message}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				)
+			}
+		</div>
+	</section>
+</Base>
+
+<style>
+	.enq {
+		overflow-x: auto;
+		border: 1px solid var(--rule);
+	}
+	table {
+		width: 100%;
+		min-width: 860px;
+		border-collapse: collapse;
+		font-size: 14px;
+	}
+	th,
+	td {
+		padding: 14px 16px;
+		border-bottom: 1px solid var(--rule);
+		text-align: left;
+		vertical-align: top;
+	}
+	th {
+		background: var(--sand);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		font-weight: 500;
+	}
+	.enq__type {
+		padding: 4px 8px;
+		background: var(--ink);
+		color: var(--paper);
+		font-size: 10px;
+	}
+</style>

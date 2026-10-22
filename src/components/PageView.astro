@@ -1,0 +1,30 @@
+---
+import KatBlocks from "./KatBlocks.astro";
+
+interface Props {
+	page: { data: Record<string, any>; edit: Record<string, any> };
+}
+
+const { page } = Astro.props;
+const blocks: any[] = page.data.content ?? [];
+---
+
+{
+	blocks.length > 0 ? (
+		<div {...page.edit.content}>
+			<KatBlocks value={blocks} />
+		</div>
+	) : (
+		<section class="section">
+			<div class="wrap">
+				<h1 class="disp h-lg" {...page.edit.title}>{page.data.title}</h1>
+				{Astro.locals.user && (
+					<p class="lead" style="margin-top:24px">
+						This page has no blocks yet.{" "}
+						<a href={`/_emdash/admin/content/pages/${page.data.id}`}>Add some in the editor</a>, then publish.
+					</p>
+				)}
+			</div>
+		</section>
+	)
+}

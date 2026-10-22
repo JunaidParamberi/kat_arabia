@@ -1,0 +1,119 @@
+---
+import { paragraphs } from "../../lib/media";
+
+interface Props {
+	value: Record<string, any>;
+}
+const { value: v } = Astro.props;
+const body = paragraphs(v.body);
+const facts: Array<{ value: string; label: string }> = v.facts ?? [];
+const tone = v.tone === "night" ? "night" : v.tone === "sand" ? "sand" : "";
+---
+
+<section class:list={["section intro", tone]} id={v.anchor_id || undefined}>
+	<div class="wrap">
+		{v.label && <div class="sec-label mono"><span>{v.label}</span></div>}
+		<div class="intro__grid">
+			<h2 class="disp h-lg intro__title" data-reveal>
+				{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
+			</h2>
+			{
+				body.length > 0 && (
+					<div class="intro__body" data-reveal>
+						{body.map((p, i) => (
+							<p class:list={{ "intro__strong": i === body.length - 1 && body.length > 2 }}>{p}</p>
+						))}
+					</div>
+				)
+			}
+		</div>
+		{
+			facts.length > 0 && (
+				<dl class="facts" style={`--n:${facts.length}`}>
+					{facts.map((f, i) => (
+						<div class="facts__item" data-reveal>
+							<dt>{f.label}</dt>
+							<dd class:list={["disp", { accent: i === facts.length - 1 }]} data-count={f.value}>
+								{f.value}
+							</dd>
+						</div>
+					))}
+				</dl>
+			)
+		}
+	</div>
+</section>
+
+<style>
+	.intro__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		column-gap: 24px;
+		row-gap: 32px;
+	}
+	.intro__title {
+		grid-column: span 7;
+		font-size: clamp(38px, 4.6vw, 68px);
+	}
+	.intro__body {
+		grid-column: 9 / span 4;
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+		font-size: 17px;
+		line-height: 1.65;
+		color: var(--ink-soft);
+	}
+	.night .intro__body {
+		color: var(--on-night-muted);
+	}
+	.intro__strong {
+		color: var(--ink);
+		font-weight: 500;
+	}
+	.facts {
+		display: grid;
+		grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+		margin-top: clamp(48px, 6vw, 72px);
+		border-top: 1px solid currentColor;
+	}
+	.facts__item {
+		display: flex;
+		flex-direction: column-reverse;
+		justify-content: flex-end;
+		gap: 10px;
+		padding: 28px 24px 0;
+		border-left: 1px solid var(--rule);
+	}
+	.facts__item:first-child {
+		padding-left: 0;
+		border-left: 0;
+	}
+	.facts dt {
+		font-size: 15px;
+		color: var(--ink-soft);
+	}
+	.facts dd {
+		font-size: clamp(56px, 6vw, 88px);
+		font-weight: 300;
+		line-height: 0.9;
+	}
+	@media (max-width: 860px) {
+		.intro__title,
+		.intro__body {
+			grid-column: 1 / -1;
+		}
+		.facts {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.facts__item:nth-child(odd) {
+			padding-left: 0;
+			border-left: 0;
+		}
+		.facts__item:nth-child(n + 3) {
+			border-top: 1px solid var(--rule);
+			padding-top: 20px;
+			margin-top: 20px;
+		}
+	}
+</style>

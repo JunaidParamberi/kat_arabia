@@ -1,0 +1,170 @@
+---
+import { pickImage } from "../../lib/media";
+
+interface Props {
+	value: Record<string, any>;
+	index?: number;
+}
+const { value: v, index = 0 } = Astro.props;
+const isHome = v.variant === "home";
+const img = pickImage(v.image, v.default_image || "hero-dusk");
+const Heading = index === 0 ? "h1" : "h2";
+---
+
+<section
+	class:list={["hero on-image", isHome ? "hero--home" : "hero--page"]}
+	id={v.anchor_id || undefined}
+	data-hero
+>
+	{
+		img && (
+			<img
+				class="hero__img"
+				src={img.src}
+				alt={img.alt}
+				fetchpriority={index === 0 ? "high" : undefined}
+				loading={index === 0 ? "eager" : "lazy"}
+				data-hero-img
+			/>
+		)
+	}
+	<div class="hero__scrim" aria-hidden="true"></div>
+	<div class="hero__content wrap">
+		{
+			v.breadcrumb ? (
+				<div class="mono hero__eyebrow" data-hero-line>
+					<a href="/">Home</a>  /  {v.eyebrow}
+				</div>
+			) : (
+				v.eyebrow && (
+					<div class="mono hero__eyebrow" data-hero-line>
+						{v.eyebrow}
+					</div>
+				)
+			)
+		}
+		<Heading class="disp hero__title" data-hero-line>
+			{v.headline}
+			{v.highlight && <span class="accent"> {v.highlight}</span>}
+		</Heading>
+		{v.subheadline && <p class="hero__sub" data-hero-line>{v.subheadline}</p>}
+		{
+			(v.primary_cta_label || v.secondary_cta_label) && (
+				<div class="btn-row" data-hero-line>
+					{v.primary_cta_label && (
+						<a href={v.primary_cta_url || "#"} class="btn btn--primary">
+							{v.primary_cta_label} <span aria-hidden="true">→</span>
+						</a>
+					)}
+					{v.secondary_cta_label && (
+						<a href={v.secondary_cta_url || "#"} class="btn btn--light">
+							{v.secondary_cta_label}
+						</a>
+					)}
+				</div>
+			)
+		}
+	</div>
+	{
+		isHome && (
+			<a href="#film" class="hero__cue mono">
+				<span>Scroll to watch it build</span>
+				<span class="hero__cue-line" aria-hidden="true" />
+			</a>
+		)
+	}
+</section>
+
+<style>
+	.hero {
+		position: relative;
+		display: flex;
+		align-items: flex-end;
+		overflow: hidden;
+		background: #140e0d;
+		color: #f6f0e6;
+	}
+	.hero--home {
+		min-height: 100svh;
+		min-height: max(100svh, 640px);
+	}
+	.hero--page {
+		min-height: clamp(520px, 72svh, 680px);
+	}
+	.hero__img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: 60% center;
+		will-change: transform;
+	}
+	.hero__scrim {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(180deg, rgba(11, 8, 7, 0.5) 0%, rgba(11, 8, 7, 0) 24%, rgba(11, 8, 7, 0) 52%, rgba(11, 8, 7, 0.8) 100%),
+			linear-gradient(90deg, rgba(11, 8, 7, 0.78) 0%, rgba(11, 8, 7, 0.32) 52%, rgba(11, 8, 7, 0) 82%);
+	}
+	.hero__content {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		gap: 26px;
+		padding-block: 140px clamp(64px, 9vh, 104px);
+	}
+	.hero__content > * {
+		max-width: 900px;
+	}
+	.hero__eyebrow {
+		color: var(--gold-soft);
+	}
+	.hero__eyebrow a:hover {
+		color: #fff;
+	}
+	.hero__title {
+		font-size: clamp(46px, 7vw, 104px);
+	}
+	.hero--page .hero__title {
+		font-size: clamp(44px, 6vw, 92px);
+	}
+	.hero__sub {
+		max-width: 540px;
+		font-size: clamp(16px, 1.3vw, 18px);
+		line-height: 1.55;
+		color: #e3d9c9;
+	}
+	.hero__cue {
+		position: absolute;
+		z-index: 3;
+		right: var(--gutter);
+		bottom: clamp(64px, 9vh, 104px);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 14px;
+		color: #e3d9c9;
+	}
+	.hero__cue span:first-child {
+		writing-mode: vertical-rl;
+	}
+	.hero__cue-line {
+		display: block;
+		width: 1px;
+		height: 64px;
+		background: linear-gradient(#e3d9c9, transparent);
+	}
+	@media (max-width: 760px) {
+		.hero__cue {
+			display: none;
+		}
+		.hero__img {
+			object-position: 72% center;
+		}
+		.hero__scrim {
+			background: linear-gradient(180deg, rgba(11, 8, 7, 0.55) 0%, rgba(11, 8, 7, 0) 22%, rgba(11, 8, 7, 0.2) 40%, rgba(11, 8, 7, 0.9) 78%);
+		}
+	}
+</style>

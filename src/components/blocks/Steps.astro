@@ -1,0 +1,85 @@
+---
+import { pad } from "../../lib/media";
+
+interface Props {
+	value: Record<string, any>;
+}
+const { value: v } = Astro.props;
+const steps: Array<{ title: string; text?: string }> = v.steps ?? [];
+const cols = v.columns === "3" ? 3 : 4;
+const tone = v.tone === "night" ? "night" : v.tone === "sand" ? "sand" : "";
+---
+
+<section class:list={["section steps", tone]} id={v.anchor_id || undefined}>
+	<div class="wrap">
+		{v.label && <div class="sec-label mono"><span>{v.label}</span></div>}
+		<h2 class="disp steps__title" data-reveal>
+			{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
+		</h2>
+		<ol class="steps__list" style={`--cols:${cols}`}>
+			{
+				steps.map((s, i) => (
+					<li class="steps__item" data-reveal>
+						<span class="disp steps__num">{pad(i + 1)}</span>
+						<span class="disp steps__name">{s.title}</span>
+						{s.text && <span class="steps__text">{s.text}</span>}
+					</li>
+				))
+			}
+		</ol>
+	</div>
+</section>
+
+<style>
+	.steps__title {
+		max-width: 900px;
+		margin-bottom: clamp(40px, 5vw, 64px);
+		font-size: clamp(34px, 4vw, 60px);
+	}
+	.steps__list {
+		display: grid;
+		grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+		column-gap: 32px;
+		row-gap: 56px;
+	}
+	.steps__item {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		padding-top: 22px;
+		border-top: 1px solid currentColor;
+	}
+	.steps__num {
+		font-size: clamp(52px, 5vw, 72px);
+		font-weight: 300;
+		line-height: 0.9;
+		color: var(--maroon);
+	}
+	.night .steps__num {
+		color: var(--gold);
+	}
+	.steps__name {
+		font-size: 26px;
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+	}
+	.steps__text {
+		font-size: 15px;
+		line-height: 1.6;
+		color: var(--ink-muted);
+	}
+	.night .steps__text {
+		color: var(--on-night-muted);
+	}
+	@media (max-width: 960px) {
+		.steps__list {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+	@media (max-width: 560px) {
+		.steps__list {
+			grid-template-columns: 1fr;
+			row-gap: 36px;
+		}
+	}
+</style>

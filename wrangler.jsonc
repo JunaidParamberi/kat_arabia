@@ -1,0 +1,41 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "kat-arabia",
+	"main": "./src/worker.ts",
+	"compatibility_date": "2026-02-24",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "kat-arabia",
+			"database_id": "018ab2b3-4c51-4d5e-8fc7-62fdf6863310",
+			// After `wrangler d1 create kat-arabia`, paste the database_id here:
+			// "database_id": "",
+		},
+		{
+			"binding": "kat_arabia",
+			"database_name": "kat-arabia",
+			"database_id": "018ab2b3-4c51-4d5e-8fc7-62fdf6863310",
+			"remote": true
+		},
+	],
+	"r2_buckets": [
+		{
+			"binding": "MEDIA",
+			"bucket_name": "kat-arabia-media",
+		},
+		{
+			"bucket_name": "kat-arabia-media",
+			"binding": "kat_arabia_media",
+			"remote": true
+		},
+	],
+	// General maintenance cron trigger (scheduled publishing)
+	"triggers": {
+		"crons": [
+			"* * * * *"
+		],
+	},
+}

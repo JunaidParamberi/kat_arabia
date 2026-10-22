@@ -1,0 +1,2486 @@
+{
+	"$schema": "https://emdashcms.com/seed.schema.json",
+	"version": "1",
+	"meta": {
+		"name": "KAT Arabia",
+		"description": "KAT Arabia General Contracting — engineering & contracting in Saudi Arabia",
+		"author": "Moonframe Studio"
+	},
+	"settings": {
+		"title": "KAT Arabia",
+		"tagline": "Shaping possibilities across the Kingdom",
+		"seo": {
+			"titleSeparator": "—"
+		}
+	},
+	"blockTypes": [
+		{
+			"slug": "kat_hero",
+			"label": "Hero",
+			"description": "Full-bleed image hero with headline and buttons",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "variant",
+							"label": "Size",
+							"type": "select",
+							"validation": {
+								"options": [
+									"home",
+									"page"
+								]
+							},
+							"defaultValue": "page"
+						},
+						{
+							"slug": "eyebrow",
+							"label": "Small text above the headline",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "subheadline",
+							"label": "Subheadline",
+							"type": "text"
+						},
+						{
+							"slug": "primary_cta_label",
+							"label": "Primary button text",
+							"type": "string"
+						},
+						{
+							"slug": "primary_cta_url",
+							"label": "Primary button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "secondary_cta_label",
+							"label": "Secondary button text",
+							"type": "string"
+						},
+						{
+							"slug": "secondary_cta_url",
+							"label": "Secondary button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "image",
+							"label": "Background image",
+							"type": "image"
+						},
+						{
+							"slug": "default_image",
+							"label": "Built-in image when none is chosen",
+							"type": "select",
+							"validation": {
+								"options": [
+									"hero-dusk",
+									"gc-facade",
+									"civil-interchange",
+									"steel-erection",
+									"plant-night",
+									"mep",
+									"equipment",
+									"workforce"
+								]
+							},
+							"defaultValue": "hero-dusk"
+						},
+						{
+							"slug": "breadcrumb",
+							"label": "Show breadcrumb",
+							"type": "boolean",
+							"defaultValue": false
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_film",
+			"label": "Scroll film",
+			"description": "Pinned section where scrolling plays the construction film",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "intro",
+							"label": "Intro",
+							"type": "text"
+						},
+						{
+							"slug": "video",
+							"label": "Film (MP4, encoded with a keyframe on every frame)",
+							"type": "file"
+						},
+						{
+							"slug": "poster",
+							"label": "Poster image (shown before the film loads)",
+							"type": "image"
+						},
+						{
+							"slug": "chapters",
+							"label": "Chapters",
+							"type": "repeater",
+							"validation": {
+								"subFields": [
+									{
+										"slug": "title",
+										"label": "Chapter title",
+										"type": "string",
+										"required": true
+									},
+									{
+										"slug": "description",
+										"label": "Description",
+										"type": "text"
+									},
+									{
+										"slug": "services",
+										"label": "Service lines involved",
+										"type": "string"
+									}
+								],
+								"maxItems": 8,
+								"minItems": 1
+							}
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_intro",
+			"label": "Intro + facts",
+			"description": "Section label, headline, body copy and an optional row of facts",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "body",
+							"label": "Body (leave a blank line between paragraphs)",
+							"type": "text"
+						},
+						{
+							"slug": "facts",
+							"label": "Facts",
+							"type": "repeater",
+							"validation": {
+								"subFields": [
+									{
+										"slug": "value",
+										"label": "Value",
+										"type": "string",
+										"required": true
+									},
+									{
+										"slug": "label",
+										"label": "Label",
+										"type": "string",
+										"required": true
+									}
+								],
+								"maxItems": 6
+							}
+						},
+						{
+							"slug": "tone",
+							"label": "Background",
+							"type": "select",
+							"validation": {
+								"options": [
+									"paper",
+									"sand",
+									"night"
+								]
+							},
+							"defaultValue": "paper"
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_capabilities",
+			"label": "Capabilities",
+			"description": "The service lines, as interactive tabs or a full grid",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "intro",
+							"label": "Intro",
+							"type": "text"
+						},
+						{
+							"slug": "layout",
+							"label": "Layout",
+							"type": "select",
+							"validation": {
+								"options": [
+									"tabs",
+									"grid"
+								]
+							},
+							"defaultValue": "tabs"
+						},
+						{
+							"slug": "cta_label",
+							"label": "Button text",
+							"type": "string"
+						},
+						{
+							"slug": "cta_url",
+							"label": "Button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_workforce",
+			"label": "Workforce",
+			"description": "Workforce photo, copy, source countries, globe and buttons",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "caption",
+							"label": "Caption over the photo",
+							"type": "string"
+						},
+						{
+							"slug": "body",
+							"label": "Body",
+							"type": "text"
+						},
+						{
+							"slug": "image",
+							"label": "Photo",
+							"type": "image"
+						},
+						{
+							"slug": "countries",
+							"label": "Source countries (comma separated)",
+							"type": "text"
+						},
+						{
+							"slug": "show_globe",
+							"label": "Show 3D globe",
+							"type": "boolean",
+							"defaultValue": true
+						},
+						{
+							"slug": "primary_cta_label",
+							"label": "Primary button text",
+							"type": "string"
+						},
+						{
+							"slug": "primary_cta_url",
+							"label": "Primary button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "secondary_cta_label",
+							"label": "Secondary button text",
+							"type": "string"
+						},
+						{
+							"slug": "secondary_cta_url",
+							"label": "Secondary button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_industries",
+			"label": "Industries",
+			"description": "Index of industries served, with hover image",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "intro",
+							"label": "Intro",
+							"type": "text"
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_footprint",
+			"label": "Footprint",
+			"description": "Map with offices",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "intro",
+							"label": "Intro",
+							"type": "text"
+						},
+						{
+							"slug": "offices",
+							"label": "Offices",
+							"type": "repeater",
+							"validation": {
+								"subFields": [
+									{
+										"slug": "city",
+										"label": "City",
+										"type": "string",
+										"required": true
+									},
+									{
+										"slug": "country",
+										"label": "Country",
+										"type": "string"
+									},
+									{
+										"slug": "role",
+										"label": "Role (e.g. KSA office)",
+										"type": "string"
+									},
+									{
+										"slug": "address",
+										"label": "Address",
+										"type": "text"
+									},
+									{
+										"slug": "phone",
+										"label": "Phone",
+										"type": "string"
+									},
+									{
+										"slug": "primary",
+										"label": "Highlight on map",
+										"type": "boolean"
+									}
+								],
+								"maxItems": 8
+							}
+						},
+						{
+							"slug": "show_cards",
+							"label": "Show office cards",
+							"type": "boolean",
+							"defaultValue": false
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_steps",
+			"label": "Numbered steps",
+			"description": "Numbered points: process, strengths or next steps",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "steps",
+							"label": "Steps",
+							"type": "repeater",
+							"validation": {
+								"subFields": [
+									{
+										"slug": "title",
+										"label": "Title",
+										"type": "string",
+										"required": true
+									},
+									{
+										"slug": "text",
+										"label": "Text",
+										"type": "text"
+									}
+								],
+								"maxItems": 9,
+								"minItems": 1
+							}
+						},
+						{
+							"slug": "columns",
+							"label": "Columns",
+							"type": "select",
+							"validation": {
+								"options": [
+									"3",
+									"4"
+								]
+							},
+							"defaultValue": "4"
+						},
+						{
+							"slug": "tone",
+							"label": "Background",
+							"type": "select",
+							"validation": {
+								"options": [
+									"paper",
+									"sand",
+									"night"
+								]
+							},
+							"defaultValue": "paper"
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_split",
+			"label": "Image + text",
+			"description": "Half-width image beside copy and facts",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "body",
+							"label": "Body",
+							"type": "text"
+						},
+						{
+							"slug": "image",
+							"label": "Image",
+							"type": "image"
+						},
+						{
+							"slug": "default_image",
+							"label": "Built-in image when none is chosen",
+							"type": "select",
+							"validation": {
+								"options": [
+									"steel-erection",
+									"workforce",
+									"gc-facade",
+									"plant-night",
+									"mep",
+									"equipment",
+									"civil-interchange",
+									"hero-dusk"
+								]
+							},
+							"defaultValue": "steel-erection"
+						},
+						{
+							"slug": "image_right",
+							"label": "Image on the right",
+							"type": "boolean",
+							"defaultValue": false
+						},
+						{
+							"slug": "facts",
+							"label": "Facts",
+							"type": "repeater",
+							"validation": {
+								"subFields": [
+									{
+										"slug": "value",
+										"label": "Value",
+										"type": "string",
+										"required": true
+									},
+									{
+										"slug": "label",
+										"label": "Label",
+										"type": "string",
+										"required": true
+									}
+								],
+								"maxItems": 4
+							}
+						},
+						{
+							"slug": "cta_label",
+							"label": "Button text",
+							"type": "string"
+						},
+						{
+							"slug": "cta_url",
+							"label": "Button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_hse",
+			"label": "HSE & Quality",
+			"description": "Safety statement and certifications",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "body",
+							"label": "Body",
+							"type": "text"
+						},
+						{
+							"slug": "certs",
+							"label": "Certifications",
+							"type": "repeater",
+							"validation": {
+								"subFields": [
+									{
+										"slug": "code",
+										"label": "Standard (e.g. ISO 9001)",
+										"type": "string",
+										"required": true
+									},
+									{
+										"slug": "title",
+										"label": "Title",
+										"type": "string"
+									},
+									{
+										"slug": "note",
+										"label": "Note",
+										"type": "string"
+									}
+								],
+								"maxItems": 6
+							}
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_clients",
+			"label": "Clients",
+			"description": "Logo wall",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "logos",
+							"label": "Logos",
+							"type": "repeater",
+							"validation": {
+								"subFields": [
+									{
+										"slug": "name",
+										"label": "Client name",
+										"type": "string",
+										"required": true
+									},
+									{
+										"slug": "logo",
+										"label": "Logo",
+										"type": "image"
+									}
+								],
+								"maxItems": 24
+							}
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_cta",
+			"label": "Call to action",
+			"description": "Maroon band with a headline and buttons",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "primary_cta_label",
+							"label": "Primary button text",
+							"type": "string"
+						},
+						{
+							"slug": "primary_cta_url",
+							"label": "Primary button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "secondary_cta_label",
+							"label": "Secondary button text",
+							"type": "string"
+						},
+						{
+							"slug": "secondary_cta_url",
+							"label": "Secondary button link",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
+							}
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"slug": "kat_contact",
+			"label": "Contact + form",
+			"description": "Enquiry form with contact details",
+			"category": "KAT Arabia",
+			"currentVersion": 1,
+			"versions": [
+				{
+					"version": 1,
+					"fields": [
+						{
+							"slug": "label",
+							"label": "Section label (small text above the headline, e.g. 02 — About)",
+							"type": "string"
+						},
+						{
+							"slug": "headline",
+							"label": "Headline",
+							"type": "string",
+							"required": true
+						},
+						{
+							"slug": "highlight",
+							"label": "Highlighted end of headline (shown in accent colour)",
+							"type": "string"
+						},
+						{
+							"slug": "intro",
+							"label": "Intro",
+							"type": "text"
+						},
+						{
+							"slug": "phone",
+							"label": "Phone",
+							"type": "string"
+						},
+						{
+							"slug": "email",
+							"label": "Email",
+							"type": "string"
+						},
+						{
+							"slug": "ksa_address",
+							"label": "KSA office address",
+							"type": "text"
+						},
+						{
+							"slug": "uae_address",
+							"label": "UAE address",
+							"type": "text"
+						},
+						{
+							"slug": "hours",
+							"label": "Working hours",
+							"type": "string"
+						},
+						{
+							"slug": "reply_note",
+							"label": "Reply-time note under the form",
+							"type": "string"
+						},
+						{
+							"slug": "dark",
+							"label": "Dark background",
+							"type": "boolean",
+							"defaultValue": false
+						},
+						{
+							"slug": "anchor_id",
+							"label": "Section ID (lowercase, for links like /#workforce)",
+							"type": "string",
+							"validation": {
+								"pattern": "^(?:$|[a-z][a-z0-9_-]*)$"
+							}
+						}
+					]
+				}
+			]
+		}
+	],
+	"collections": [
+		{
+			"slug": "pages",
+			"label": "Pages",
+			"labelSingular": "Page",
+			"urlPattern": "/{slug}",
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"seo"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "content",
+					"label": "Content",
+					"type": "blocks",
+					"validation": {
+						"allowedTypes": [
+							"kat_hero",
+							"kat_film",
+							"kat_intro",
+							"kat_capabilities",
+							"kat_workforce",
+							"kat_industries",
+							"kat_footprint",
+							"kat_steps",
+							"kat_split",
+							"kat_hse",
+							"kat_clients",
+							"kat_cta",
+							"kat_contact"
+						],
+						"maxItems": 30
+					}
+				}
+			]
+		},
+		{
+			"slug": "services",
+			"label": "Services",
+			"labelSingular": "Service",
+			"urlPattern": "/services/{slug}",
+			"supports": [
+				"drafts",
+				"revisions",
+				"preview",
+				"seo"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "number",
+					"label": "Number (01–99)",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "summary",
+					"label": "Summary (one sentence)",
+					"type": "text",
+					"required": true
+				},
+				{
+					"slug": "description",
+					"label": "Description (leave a blank line between paragraphs)",
+					"type": "text"
+				},
+				{
+					"slug": "image",
+					"label": "Image",
+					"type": "image"
+				},
+				{
+					"slug": "default_image",
+					"label": "Built-in image when none is chosen",
+					"type": "select",
+					"validation": {
+						"options": [
+							"none",
+							"gc-facade",
+							"civil-interchange",
+							"steel-erection",
+							"plant-night",
+							"mep",
+							"equipment",
+							"workforce",
+							"hero-dusk"
+						]
+					},
+					"defaultValue": "none"
+				},
+				{
+					"slug": "scope",
+					"label": "Typical scope",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "item",
+								"label": "Item",
+								"type": "string",
+								"required": true
+							}
+						],
+						"maxItems": 12
+					}
+				},
+				{
+					"slug": "industries",
+					"label": "Industries served",
+					"type": "repeater",
+					"validation": {
+						"subFields": [
+							{
+								"slug": "item",
+								"label": "Industry",
+								"type": "string",
+								"required": true
+							}
+						],
+						"maxItems": 14
+					}
+				},
+				{
+					"slug": "order",
+					"label": "Sort order",
+					"type": "integer",
+					"defaultValue": 0
+				}
+			]
+		},
+		{
+			"slug": "industries",
+			"label": "Industries",
+			"labelSingular": "Industry",
+			"supports": [
+				"drafts",
+				"revisions"
+			],
+			"fields": [
+				{
+					"slug": "title",
+					"label": "Title",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "number",
+					"label": "Number",
+					"type": "string",
+					"required": true
+				},
+				{
+					"slug": "image",
+					"label": "Image",
+					"type": "image"
+				},
+				{
+					"slug": "default_image",
+					"label": "Built-in image when none is chosen",
+					"type": "select",
+					"validation": {
+						"options": [
+							"none",
+							"plant-night",
+							"steel-erection",
+							"civil-interchange",
+							"gc-facade",
+							"mep",
+							"equipment",
+							"workforce",
+							"hero-dusk"
+						]
+					},
+					"defaultValue": "none"
+				},
+				{
+					"slug": "order",
+					"label": "Sort order",
+					"type": "integer",
+					"defaultValue": 0
+				}
+			]
+		}
+	],
+	"menus": [
+		{
+			"name": "primary",
+			"label": "Primary Navigation",
+			"items": [
+				{
+					"type": "custom",
+					"label": "About",
+					"url": "/about"
+				},
+				{
+					"type": "custom",
+					"label": "Services",
+					"url": "/services"
+				},
+				{
+					"type": "custom",
+					"label": "Strengths",
+					"url": "/strengths"
+				},
+				{
+					"type": "custom",
+					"label": "Locations",
+					"url": "/locations"
+				},
+				{
+					"type": "custom",
+					"label": "Contact",
+					"url": "/contact"
+				},
+				{
+					"type": "custom",
+					"label": "Get in touch",
+					"url": "/contact",
+					"cssClasses": "button"
+				}
+			]
+		},
+		{
+			"name": "footer_company",
+			"label": "Company",
+			"items": [
+				{
+					"type": "custom",
+					"label": "About",
+					"url": "/about"
+				},
+				{
+					"type": "custom",
+					"label": "Strengths",
+					"url": "/strengths"
+				},
+				{
+					"type": "custom",
+					"label": "Locations",
+					"url": "/locations"
+				},
+				{
+					"type": "custom",
+					"label": "Careers",
+					"url": "/contact?type=careers"
+				},
+				{
+					"type": "custom",
+					"label": "Prequalification",
+					"url": "/contact?type=prequalification"
+				}
+			]
+		},
+		{
+			"name": "footer_services",
+			"label": "Services",
+			"items": [
+				{
+					"type": "custom",
+					"label": "General Contracting",
+					"url": "/services/general-contracting"
+				},
+				{
+					"type": "custom",
+					"label": "Civil Infrastructure & Heavy Engineering",
+					"url": "/services/civil-infrastructure"
+				},
+				{
+					"type": "custom",
+					"label": "Industrial Construction & Plant Services",
+					"url": "/services/industrial-construction"
+				},
+				{
+					"type": "custom",
+					"label": "Oil & Gas Engineering",
+					"url": "/services/oil-gas-engineering"
+				},
+				{
+					"type": "custom",
+					"label": "MEP",
+					"url": "/services/mep"
+				},
+				{
+					"type": "custom",
+					"label": "Plant & Equipment",
+					"url": "/services/plant-equipment"
+				},
+				{
+					"type": "custom",
+					"label": "Integrated Project Workforce",
+					"url": "/services/integrated-project-workforce"
+				},
+				{
+					"type": "custom",
+					"label": "Integrated Facility Management",
+					"url": "/services/integrated-facility-management"
+				}
+			]
+		}
+	],
+	"content": {
+		"pages": [
+			{
+				"id": "home",
+				"slug": "home",
+				"status": "published",
+				"data": {
+					"title": "Home",
+					"content": [
+						{
+							"_type": "kat_hero",
+							"_version": 1,
+							"_key": "hero",
+							"variant": "home",
+							"eyebrow": "KAT Arabia General Contracting · Kingdom of Saudi Arabia",
+							"headline": "Shaping possibilities across the Kingdom.",
+							"subheadline": "Engineering, construction and workforce solutions for Saudi Arabia’s industrial, energy and infrastructure projects.",
+							"primary_cta_label": "Explore capabilities",
+							"primary_cta_url": "/#capabilities",
+							"secondary_cta_label": "Request prequalification",
+							"secondary_cta_url": "/contact",
+							"default_image": "hero-dusk"
+						},
+						{
+							"_type": "kat_film",
+							"_version": 1,
+							"_key": "film",
+							"label": "01 — The film · From bare ground to skyline",
+							"headline": "One partner. Every stage.",
+							"intro": "Scroll and watch a project come to life — from survey pegs in the sand to an operating skyline, delivered by one contractor.",
+							"chapters": [
+								{
+									"title": "Ground",
+									"description": "Survey, enabling works and earthworks. Plant and crews are on site from day one.",
+									"services": "Civil & heavy engineering · Plant & equipment · Workforce"
+								},
+								{
+									"title": "Structure",
+									"description": "Foundations, concrete frames and structural steel rise under one site organisation.",
+									"services": "General contracting · Civil · Plant & equipment · Workforce"
+								},
+								{
+									"title": "Industry",
+									"description": "Process plant takes shape: steel erection, piping, mechanical installation and equipment setting.",
+									"services": "Industrial · Oil & gas · MEP · Plant & equipment · Workforce"
+								},
+								{
+									"title": "Energy",
+									"description": "Oil & gas and power packages are tied in, tested and brought on line.",
+									"services": "Oil & gas · Industrial · MEP · Workforce"
+								},
+								{
+									"title": "Skyline",
+									"description": "Buildings are completed, commissioned and handed over, then kept running through facility management.",
+									"services": "General contracting · MEP · Facility management · Workforce"
+								}
+							],
+							"anchor_id": "film"
+						},
+						{
+							"_type": "kat_intro",
+							"_version": 1,
+							"_key": "about",
+							"label": "02 — About KAT Arabia",
+							"headline": "Engineering excellence built for",
+							"highlight": "Saudi Arabia.",
+							"body": "KAT Arabia General Contracting is the Saudi engineering and contracting arm of KAT Group, headquartered in the UAE.\n\nFrom our office in Al Jubail we bring the Group’s construction, industrial and workforce capability to projects across the Kingdom, with operations starting in 2026.",
+							"facts": [
+								{
+									"value": "8",
+									"label": "Service lines"
+								},
+								{
+									"value": "14",
+									"label": "Industries served"
+								},
+								{
+									"value": "12",
+									"label": "Workforce source countries"
+								},
+								{
+									"value": "2026",
+									"label": "Operations in KSA from"
+								}
+							],
+							"tone": "paper",
+							"anchor_id": "about"
+						},
+						{
+							"_type": "kat_capabilities",
+							"_version": 1,
+							"_key": "capabilities",
+							"label": "03 — Capabilities",
+							"headline": "Every discipline a project needs.",
+							"highlight": "One contractor.",
+							"intro": "Delivered under one contract, one HSE system and one point of accountability.",
+							"layout": "tabs",
+							"cta_label": "Discuss a package",
+							"cta_url": "/contact",
+							"anchor_id": "capabilities"
+						},
+						{
+							"_type": "kat_workforce",
+							"_version": 1,
+							"_key": "workforce",
+							"label": "04 — Integrated project workforce",
+							"headline": "Skilled crews from twelve countries,",
+							"highlight": "mobilised into the Kingdom.",
+							"caption": "The people who build it.",
+							"body": "We recruit, trade-test and mobilise skilled and semi-skilled workers for our own projects and for clients who need dependable manpower at scale.",
+							"countries": "India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi",
+							"show_globe": true,
+							"primary_cta_label": "Request manpower",
+							"primary_cta_url": "/contact?type=manpower",
+							"secondary_cta_label": "Careers",
+							"secondary_cta_url": "/contact?type=careers",
+							"anchor_id": "workforce"
+						},
+						{
+							"_type": "kat_industries",
+							"_version": 1,
+							"_key": "industries",
+							"label": "05 — Industries",
+							"headline": "Built for the sectors that",
+							"highlight": "power the Kingdom.",
+							"intro": "From hydrocarbons and heavy industry to hospitals, hotels and new cities.",
+							"anchor_id": "industries"
+						},
+						{
+							"_type": "kat_footprint",
+							"_version": 1,
+							"_key": "footprint",
+							"label": "06 — Footprint",
+							"headline": "Group strength.",
+							"highlight": "Saudi presence.",
+							"intro": "KAT Group headquarters in the UAE, the KAT Arabia office in Al Jubail, and project delivery across the Kingdom from 2026.",
+							"offices": [
+								{
+									"city": "Al Jubail",
+									"country": "Kingdom of Saudi Arabia",
+									"role": "KSA office",
+									"address": "KAT Arabia General Contracting\nEastern Province\n[Street, building, P.O. box]",
+									"phone": "+966 53 181 4451",
+									"primary": true
+								},
+								{
+									"city": "Abu Dhabi",
+									"country": "United Arab Emirates",
+									"role": "KAT Group HQ",
+									"address": "KAT Group\n[Street, building, P.O. box]",
+									"phone": "[Phone]",
+									"primary": false
+								},
+								{
+									"city": "Dubai",
+									"country": "United Arab Emirates",
+									"role": "UAE operations",
+									"address": "KAT Group\n[Street, building, P.O. box]",
+									"phone": "[Phone]",
+									"primary": false
+								},
+								{
+									"city": "Sharjah",
+									"country": "United Arab Emirates",
+									"role": "UAE operations",
+									"address": "KAT Group FZC LLC\n[Street, building, P.O. box]",
+									"phone": "[Phone]",
+									"primary": false
+								}
+							],
+							"show_cards": false,
+							"anchor_id": "footprint"
+						},
+						{
+							"_type": "kat_hse",
+							"_version": 1,
+							"_key": "hse",
+							"label": "07 — HSE & Quality",
+							"headline": "Safety is our culture.",
+							"highlight": "Quality is our commitment.",
+							"body": "Every crew, every site and every service line works to one integrated quality, environment and occupational health & safety system.",
+							"certs": [
+								{
+									"code": "ISO 9001",
+									"title": "Quality management",
+									"note": "Certificate placeholder"
+								},
+								{
+									"code": "ISO 14001",
+									"title": "Environmental management",
+									"note": "Certificate placeholder"
+								},
+								{
+									"code": "ISO 45001",
+									"title": "Occupational health & safety",
+									"note": "Certificate placeholder"
+								}
+							],
+							"anchor_id": "hse"
+						},
+						{
+							"_type": "kat_clients",
+							"_version": 1,
+							"_key": "clients",
+							"label": "08 — Clients",
+							"headline": "Trusted across KAT Group.",
+							"logos": [
+								{
+									"name": "[Client 1]"
+								},
+								{
+									"name": "[Client 2]"
+								},
+								{
+									"name": "[Client 3]"
+								},
+								{
+									"name": "[Client 4]"
+								},
+								{
+									"name": "[Client 5]"
+								},
+								{
+									"name": "[Client 6]"
+								},
+								{
+									"name": "[Client 7]"
+								},
+								{
+									"name": "[Client 8]"
+								},
+								{
+									"name": "[Client 9]"
+								},
+								{
+									"name": "[Client 10]"
+								},
+								{
+									"name": "[Client 11]"
+								},
+								{
+									"name": "[Client 12]"
+								}
+							],
+							"anchor_id": "clients"
+						},
+						{
+							"_type": "kat_contact",
+							"_version": 1,
+							"_key": "contact",
+							"label": "09 — Contact",
+							"headline": "Let’s build the future",
+							"highlight": "together.",
+							"intro": "Project enquiries, vendor prequalification, manpower requests and careers.",
+							"dark": true,
+							"anchor_id": "contact",
+							"phone": "+966 53 181 4451",
+							"email": "info@katarabia.com",
+							"ksa_address": "KAT Arabia General Contracting\nAl Jubail, Eastern Province\nKingdom of Saudi Arabia\n[Street, building, P.O. box]",
+							"uae_address": "KAT Group · Abu Dhabi, Dubai, Sharjah\n[Head office address]",
+							"hours": "Sunday – Thursday · [08:00 – 17:00] AST",
+							"reply_note": "We reply within [X] working days."
+						}
+					]
+				}
+			},
+			{
+				"id": "about",
+				"slug": "about",
+				"status": "published",
+				"data": {
+					"title": "About",
+					"content": [
+						{
+							"_type": "kat_hero",
+							"_version": 1,
+							"_key": "hero",
+							"variant": "page",
+							"eyebrow": "About",
+							"headline": "Your vision,",
+							"highlight": "our execution.",
+							"subheadline": "Integrated contracting for seamless project excellence across Saudi Arabia and the UAE, built on KAT Group experience.",
+							"default_image": "gc-facade",
+							"breadcrumb": true
+						},
+						{
+							"_type": "kat_intro",
+							"_version": 1,
+							"_key": "who",
+							"label": "01 — Who we are",
+							"headline": "Building the future",
+							"highlight": "since 2024.",
+							"body": "KAT Arabia General Contracting, established in 2024, is a forward-looking contracting company delivering high-quality engineering, construction and infrastructure solutions across the UAE and Saudi Arabia.\n\nOur integrated approach combines technical excellence, operational efficiency and structured project management, so execution stays seamless from design and engineering through construction, commissioning and maintenance.\n\nWe are committed to delivering sustainable, high-quality projects on time and within budget.",
+							"tone": "paper"
+						},
+						{
+							"_type": "kat_steps",
+							"_version": 1,
+							"_key": "how",
+							"label": "02 — How we deliver",
+							"headline": "One partner across the whole project life.",
+							"columns": "4",
+							"tone": "paper",
+							"steps": [
+								{
+									"title": "Design & engineering",
+									"text": "Buildability, value engineering and coordinated discipline design before the first peg goes in."
+								},
+								{
+									"title": "Construction",
+									"text": "Civil, structural, mechanical and electrical works under one site organisation."
+								},
+								{
+									"title": "Commissioning",
+									"text": "Testing, start-up and handover documentation, ready for the owner’s operations team."
+								},
+								{
+									"title": "Maintenance",
+									"text": "Facility and building maintenance that keeps completed assets performing."
+								}
+							]
+						},
+						{
+							"_type": "kat_split",
+							"_version": 1,
+							"_key": "group",
+							"label": "03 — Part of KAT Group",
+							"headline": "Group experience.",
+							"highlight": "Saudi focus.",
+							"body": "KAT Arabia brings KAT Group’s contracting and workforce capability into the Kingdom, with a Saudi office in Al Jubail and operations starting in 2026, supported by the Group’s UAE presence in Dubai, Sharjah and Abu Dhabi.",
+							"default_image": "steel-erection",
+							"image_right": false,
+							"facts": [
+								{
+									"value": "8",
+									"label": "Service lines"
+								},
+								{
+									"value": "14",
+									"label": "Industries served"
+								},
+								{
+									"value": "12",
+									"label": "Workforce source countries"
+								},
+								{
+									"value": "2026",
+									"label": "Operations in KSA from"
+								}
+							]
+						},
+						{
+							"_type": "kat_steps",
+							"_version": 1,
+							"_key": "commitments",
+							"label": "04 — Our commitments",
+							"headline": "Four promises on every project.",
+							"columns": "4",
+							"tone": "sand",
+							"steps": [
+								{
+									"title": "Safety",
+									"text": "Zero-harm planning on every site, for every crew."
+								},
+								{
+									"title": "Quality",
+									"text": "Work delivered to specification and inspected before handover."
+								},
+								{
+									"title": "Time & budget",
+									"text": "Structured project controls that keep schedules and costs honest."
+								},
+								{
+									"title": "Sustainability",
+									"text": "Responsible methods, materials and energy use across our work."
+								}
+							]
+						},
+						{
+							"_type": "kat_cta",
+							"_version": 1,
+							"_key": "cta",
+							"headline": "Registering KAT Arabia as a vendor?",
+							"primary_cta_label": "Request prequalification pack",
+							"primary_cta_url": "/contact?type=prequalification",
+							"secondary_cta_label": "Contact us",
+							"secondary_cta_url": "/contact"
+						}
+					]
+				}
+			},
+			{
+				"id": "services",
+				"slug": "services",
+				"status": "published",
+				"data": {
+					"title": "Services",
+					"content": [
+						{
+							"_type": "kat_hero",
+							"_version": 1,
+							"_key": "hero",
+							"variant": "page",
+							"eyebrow": "Services",
+							"headline": "One partner for",
+							"highlight": "complete project execution.",
+							"subheadline": "Eight service lines, from design to commissioning and beyond, delivered under one contract and one HSE system.",
+							"default_image": "equipment",
+							"breadcrumb": true
+						},
+						{
+							"_type": "kat_capabilities",
+							"_version": 1,
+							"_key": "lines",
+							"label": "Service portfolio",
+							"headline": "Eight service lines.",
+							"highlight": "One accountable contractor.",
+							"layout": "grid"
+						},
+						{
+							"_type": "kat_steps",
+							"_version": 1,
+							"_key": "also",
+							"label": "Also delivered",
+							"headline": "Specialist packages alongside the core lines.",
+							"columns": "3",
+							"tone": "sand",
+							"steps": [
+								{
+									"title": "Solar & energy solutions",
+									"text": "Solar design, power distribution and energy-efficiency solutions."
+								},
+								{
+									"title": "Camp construction & development",
+									"text": "Workforce camps, modular set-ups, utility infrastructure and maintenance."
+								},
+								{
+									"title": "Specialised personnel",
+									"text": "Skilled crews deployed into client packages under our HSE system."
+								}
+							]
+						},
+						{
+							"_type": "kat_cta",
+							"_version": 1,
+							"_key": "cta",
+							"headline": "Have a package to tender?",
+							"primary_cta_label": "Send an enquiry",
+							"primary_cta_url": "/contact",
+							"secondary_cta_label": "Request prequalification",
+							"secondary_cta_url": "/contact?type=prequalification"
+						}
+					]
+				}
+			},
+			{
+				"id": "strengths",
+				"slug": "strengths",
+				"status": "published",
+				"data": {
+					"title": "Strengths",
+					"content": [
+						{
+							"_type": "kat_hero",
+							"_version": 1,
+							"_key": "hero",
+							"variant": "page",
+							"eyebrow": "Strengths",
+							"headline": "Why owners choose",
+							"highlight": "KAT Arabia.",
+							"subheadline": "Engineering depth, integrated execution and a workforce we mobilise ourselves.",
+							"default_image": "plant-night",
+							"breadcrumb": true
+						},
+						{
+							"_type": "kat_steps",
+							"_version": 1,
+							"_key": "key",
+							"label": "01 — Key strengths",
+							"headline": "Six reasons we can be",
+							"highlight": "trusted with your project.",
+							"columns": "3",
+							"tone": "paper",
+							"steps": [
+								{
+									"title": "Advanced engineering expertise",
+									"text": "Civil, mechanical and electrical disciplines working from one coordinated design."
+								},
+								{
+									"title": "Integrated project execution",
+									"text": "From planning to on-site delivery, one team owns the outcome."
+								},
+								{
+									"title": "Specialised personnel deployment",
+									"text": "Skilled crews recruited and deployed from our own twelve-country pipeline."
+								},
+								{
+									"title": "Rapid mobilisation",
+									"text": "Scalable people, plant and equipment, ready to move across the region."
+								},
+								{
+									"title": "Client-focused delivery",
+									"text": "Timelines and regulatory compliance treated as non-negotiable."
+								},
+								{
+									"title": "Safety, quality, sustainability",
+									"text": "A single integrated management system across every site and service line."
+								}
+							]
+						},
+						{
+							"_type": "kat_split",
+							"_version": 1,
+							"_key": "workforce",
+							"label": "02 — Workforce",
+							"headline": "Crews we recruit, test",
+							"highlight": "and mobilise ourselves.",
+							"body": "Skilled and semi-skilled workers sourced from twelve countries — India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi — and deployed into Saudi projects, for our own packages or as manpower supply to clients.",
+							"default_image": "workforce",
+							"image_right": true,
+							"cta_label": "Request manpower",
+							"cta_url": "/contact?type=manpower"
+						},
+						{
+							"_type": "kat_hse",
+							"_version": 1,
+							"_key": "hse",
+							"label": "03 — HSE & Quality",
+							"headline": "Safety is our culture.",
+							"highlight": "Quality is our commitment.",
+							"body": "One integrated management system for quality, environment and occupational health & safety.",
+							"certs": [
+								{
+									"code": "ISO 9001",
+									"title": "Quality management",
+									"note": "Certificate placeholder"
+								},
+								{
+									"code": "ISO 14001",
+									"title": "Environmental management",
+									"note": "Certificate placeholder"
+								},
+								{
+									"code": "ISO 45001",
+									"title": "Occupational health & safety",
+									"note": "Certificate placeholder"
+								}
+							]
+						},
+						{
+							"_type": "kat_cta",
+							"_version": 1,
+							"_key": "cta",
+							"headline": "Need a contractor you can prequalify fast?",
+							"primary_cta_label": "Request prequalification pack",
+							"primary_cta_url": "/contact?type=prequalification"
+						}
+					]
+				}
+			},
+			{
+				"id": "locations",
+				"slug": "locations",
+				"status": "published",
+				"data": {
+					"title": "Locations",
+					"content": [
+						{
+							"_type": "kat_hero",
+							"_version": 1,
+							"_key": "hero",
+							"variant": "page",
+							"eyebrow": "Locations",
+							"headline": "Positioned for",
+							"highlight": "rapid deployment.",
+							"subheadline": "A strategic presence across Saudi Arabia and the UAE for efficient execution, streamlined logistics and fast mobilisation.",
+							"default_image": "civil-interchange",
+							"breadcrumb": true
+						},
+						{
+							"_type": "kat_footprint",
+							"_version": 1,
+							"_key": "map",
+							"label": "01 — Geographic presence",
+							"headline": "Four bases.",
+							"highlight": "One network.",
+							"intro": "Our Saudi office in Al Jubail sits in the heart of the Eastern Province industrial corridor, a day’s mobilisation from KAT Group’s UAE bases.",
+							"offices": [
+								{
+									"city": "Al Jubail",
+									"country": "Kingdom of Saudi Arabia",
+									"role": "KSA office",
+									"address": "KAT Arabia General Contracting\nEastern Province\n[Street, building, P.O. box]",
+									"phone": "+966 53 181 4451",
+									"primary": true
+								},
+								{
+									"city": "Abu Dhabi",
+									"country": "United Arab Emirates",
+									"role": "KAT Group HQ",
+									"address": "KAT Group\n[Street, building, P.O. box]",
+									"phone": "[Phone]",
+									"primary": false
+								},
+								{
+									"city": "Dubai",
+									"country": "United Arab Emirates",
+									"role": "UAE operations",
+									"address": "KAT Group\n[Street, building, P.O. box]",
+									"phone": "[Phone]",
+									"primary": false
+								},
+								{
+									"city": "Sharjah",
+									"country": "United Arab Emirates",
+									"role": "UAE operations",
+									"address": "KAT Group FZC LLC\n[Street, building, P.O. box]",
+									"phone": "[Phone]",
+									"primary": false
+								}
+							],
+							"show_cards": true
+						},
+						{
+							"_type": "kat_cta",
+							"_version": 1,
+							"_key": "cta",
+							"headline": "Need a team on site fast?",
+							"primary_cta_label": "Talk to our Al Jubail office",
+							"primary_cta_url": "/contact"
+						}
+					]
+				}
+			},
+			{
+				"id": "contact",
+				"slug": "contact",
+				"status": "published",
+				"data": {
+					"title": "Contact",
+					"content": [
+						{
+							"_type": "kat_contact",
+							"_version": 1,
+							"_key": "contact",
+							"label": "Contact",
+							"headline": "Let’s build",
+							"highlight": "together.",
+							"intro": "Delivering capability. Building long-term value. Tell us what you need and the right team will respond.",
+							"dark": false,
+							"phone": "+966 53 181 4451",
+							"email": "info@katarabia.com",
+							"ksa_address": "KAT Arabia General Contracting\nAl Jubail, Eastern Province\nKingdom of Saudi Arabia\n[Street, building, P.O. box]",
+							"uae_address": "KAT Group · Abu Dhabi, Dubai, Sharjah\n[Head office address]",
+							"hours": "Sunday – Thursday · [08:00 – 17:00] AST",
+							"reply_note": "We reply within [X] working days."
+						},
+						{
+							"_type": "kat_steps",
+							"_version": 1,
+							"_key": "next",
+							"label": "What happens next",
+							"headline": "Three steps from enquiry to mobilisation.",
+							"columns": "3",
+							"tone": "paper",
+							"steps": [
+								{
+									"title": "We review",
+									"text": "Your enquiry goes to the right team: projects, procurement or workforce."
+								},
+								{
+									"title": "We respond",
+									"text": "A named contact follows up with documents, a meeting or a proposal."
+								},
+								{
+									"title": "We mobilise",
+									"text": "People, plant and equipment move to site on an agreed plan."
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"services": [
+			{
+				"id": "svc-general-contracting",
+				"slug": "general-contracting",
+				"status": "published",
+				"data": {
+					"title": "General Contracting",
+					"number": "01",
+					"summary": "Design-and-build and build-only delivery of residential, commercial, government and industrial buildings under one contract.",
+					"description": "Design-and-build and build-only delivery of residential, commercial, government and industrial buildings under one contract.",
+					"default_image": "gc-facade",
+					"scope": [
+						{
+							"item": "Design & build"
+						},
+						{
+							"item": "Building works"
+						},
+						{
+							"item": "Fit-out"
+						},
+						{
+							"item": "Turnkey delivery"
+						}
+					],
+					"industries": [
+						{
+							"item": "Commercial"
+						},
+						{
+							"item": "Government"
+						},
+						{
+							"item": "Healthcare"
+						},
+						{
+							"item": "Hospitality"
+						}
+					],
+					"order": 1
+				}
+			},
+			{
+				"id": "svc-civil-infrastructure",
+				"slug": "civil-infrastructure",
+				"status": "published",
+				"data": {
+					"title": "Civil Infrastructure & Heavy Engineering",
+					"number": "02",
+					"summary": "Earthworks, roads, utilities, foundations and heavy civil structures for industrial cities and public infrastructure.",
+					"description": "Earthworks, roads, utilities, foundations and heavy civil structures for industrial cities and public infrastructure.",
+					"default_image": "civil-interchange",
+					"scope": [
+						{
+							"item": "Earthworks & grading"
+						},
+						{
+							"item": "Roads & paving"
+						},
+						{
+							"item": "Utilities & networks"
+						},
+						{
+							"item": "Foundations"
+						}
+					],
+					"industries": [
+						{
+							"item": "Infrastructure"
+						},
+						{
+							"item": "Smart cities"
+						},
+						{
+							"item": "Logistics"
+						},
+						{
+							"item": "Marine"
+						}
+					],
+					"order": 2
+				}
+			},
+			{
+				"id": "svc-industrial-construction",
+				"slug": "industrial-construction",
+				"status": "published",
+				"data": {
+					"title": "Industrial Construction & Plant Services",
+					"number": "03",
+					"summary": "New-build plant works, shutdowns, turnarounds and maintenance campaigns for process and manufacturing facilities.",
+					"description": "New-build plant works, shutdowns, turnarounds and maintenance campaigns for process and manufacturing facilities.",
+					"default_image": "steel-erection",
+					"scope": [
+						{
+							"item": "Steel erection"
+						},
+						{
+							"item": "Shutdowns & turnarounds"
+						},
+						{
+							"item": "Plant maintenance"
+						},
+						{
+							"item": "Equipment setting"
+						}
+					],
+					"industries": [
+						{
+							"item": "Manufacturing"
+						},
+						{
+							"item": "Petrochemicals"
+						},
+						{
+							"item": "Mining"
+						}
+					],
+					"order": 3
+				}
+			},
+			{
+				"id": "svc-oil-gas-engineering",
+				"slug": "oil-gas-engineering",
+				"status": "published",
+				"data": {
+					"title": "Oil & Gas Engineering",
+					"number": "04",
+					"summary": "Onshore and offshore field support, piping, mechanical and structural works, shutdowns and facility maintenance.",
+					"description": "Onshore and offshore field support, piping, mechanical and structural works, shutdowns and facility maintenance.",
+					"default_image": "plant-night",
+					"scope": [
+						{
+							"item": "Piping"
+						},
+						{
+							"item": "Mechanical works"
+						},
+						{
+							"item": "Tie-ins"
+						},
+						{
+							"item": "Shutdown support"
+						}
+					],
+					"industries": [
+						{
+							"item": "Oil & gas"
+						},
+						{
+							"item": "Petrochemicals"
+						},
+						{
+							"item": "Energy"
+						}
+					],
+					"order": 4
+				}
+			},
+			{
+				"id": "svc-mep",
+				"slug": "mep",
+				"status": "published",
+				"data": {
+					"title": "MEP",
+					"number": "05",
+					"summary": "Mechanical, electrical and plumbing installation, testing and commissioning, with integrated electro-mechanical design.",
+					"description": "Mechanical, electrical and plumbing installation, testing and commissioning, with integrated electro-mechanical design.",
+					"default_image": "mep",
+					"scope": [
+						{
+							"item": "HVAC"
+						},
+						{
+							"item": "Power & lighting"
+						},
+						{
+							"item": "Plumbing & drainage"
+						},
+						{
+							"item": "Fire & life safety"
+						}
+					],
+					"industries": [
+						{
+							"item": "Commercial"
+						},
+						{
+							"item": "Healthcare"
+						},
+						{
+							"item": "Hospitality"
+						},
+						{
+							"item": "Government"
+						}
+					],
+					"order": 5
+				}
+			},
+			{
+				"id": "svc-plant-equipment",
+				"slug": "plant-equipment",
+				"status": "published",
+				"data": {
+					"title": "Plant & Equipment",
+					"number": "06",
+					"summary": "Heavy plant, cranes and equipment, supplied with operators to keep packages moving.",
+					"description": "Heavy plant, cranes and equipment, supplied with operators to keep packages moving.",
+					"default_image": "equipment",
+					"scope": [
+						{
+							"item": "Cranes & lifting"
+						},
+						{
+							"item": "Earthmoving fleet"
+						},
+						{
+							"item": "Operators"
+						},
+						{
+							"item": "Fleet maintenance"
+						}
+					],
+					"industries": [
+						{
+							"item": "Infrastructure"
+						},
+						{
+							"item": "Mining"
+						},
+						{
+							"item": "Oil & gas"
+						}
+					],
+					"order": 6
+				}
+			},
+			{
+				"id": "svc-integrated-project-workforce",
+				"slug": "integrated-project-workforce",
+				"status": "published",
+				"data": {
+					"title": "Integrated Project Workforce",
+					"number": "07",
+					"summary": "Recruitment and rapid mobilisation of skilled and semi-skilled crews from twelve source countries.",
+					"description": "Recruitment and rapid mobilisation of skilled and semi-skilled crews from twelve source countries.",
+					"default_image": "workforce",
+					"scope": [
+						{
+							"item": "Recruitment"
+						},
+						{
+							"item": "Trade testing"
+						},
+						{
+							"item": "Mobilisation"
+						},
+						{
+							"item": "Deployment"
+						}
+					],
+					"industries": [
+						{
+							"item": "All 14 industries"
+						}
+					],
+					"order": 7
+				}
+			},
+			{
+				"id": "svc-integrated-facility-management",
+				"slug": "integrated-facility-management",
+				"status": "published",
+				"data": {
+					"title": "Integrated Facility Management",
+					"number": "08",
+					"summary": "Facility and building maintenance that keeps completed assets safe, compliant and operating after handover.",
+					"description": "Facility and building maintenance that keeps completed assets safe, compliant and operating after handover.",
+					"default_image": "none",
+					"scope": [
+						{
+							"item": "Hard FM"
+						},
+						{
+							"item": "Soft FM"
+						},
+						{
+							"item": "Operations & maintenance"
+						},
+						{
+							"item": "Asset care"
+						}
+					],
+					"industries": [
+						{
+							"item": "Government"
+						},
+						{
+							"item": "Healthcare"
+						},
+						{
+							"item": "Commercial"
+						},
+						{
+							"item": "Hospitality"
+						}
+					],
+					"order": 8
+				}
+			}
+		],
+		"industries": [
+			{
+				"id": "ind-01",
+				"slug": "infrastructure",
+				"status": "published",
+				"data": {
+					"title": "Infrastructure",
+					"number": "01",
+					"default_image": "civil-interchange",
+					"order": 1
+				}
+			},
+			{
+				"id": "ind-02",
+				"slug": "oil-gas",
+				"status": "published",
+				"data": {
+					"title": "Oil & gas",
+					"number": "02",
+					"default_image": "plant-night",
+					"order": 2
+				}
+			},
+			{
+				"id": "ind-03",
+				"slug": "petrochemicals",
+				"status": "published",
+				"data": {
+					"title": "Petrochemicals",
+					"number": "03",
+					"default_image": "steel-erection",
+					"order": 3
+				}
+			},
+			{
+				"id": "ind-04",
+				"slug": "energy",
+				"status": "published",
+				"data": {
+					"title": "Energy",
+					"number": "04",
+					"default_image": "hero-dusk",
+					"order": 4
+				}
+			},
+			{
+				"id": "ind-05",
+				"slug": "manufacturing",
+				"status": "published",
+				"data": {
+					"title": "Manufacturing",
+					"number": "05",
+					"default_image": "mep",
+					"order": 5
+				}
+			},
+			{
+				"id": "ind-06",
+				"slug": "mining",
+				"status": "published",
+				"data": {
+					"title": "Mining",
+					"number": "06",
+					"default_image": "none",
+					"order": 6
+				}
+			},
+			{
+				"id": "ind-07",
+				"slug": "commercial",
+				"status": "published",
+				"data": {
+					"title": "Commercial",
+					"number": "07",
+					"default_image": "gc-facade",
+					"order": 7
+				}
+			},
+			{
+				"id": "ind-08",
+				"slug": "government",
+				"status": "published",
+				"data": {
+					"title": "Government",
+					"number": "08",
+					"default_image": "none",
+					"order": 8
+				}
+			},
+			{
+				"id": "ind-09",
+				"slug": "healthcare",
+				"status": "published",
+				"data": {
+					"title": "Healthcare",
+					"number": "09",
+					"default_image": "none",
+					"order": 9
+				}
+			},
+			{
+				"id": "ind-10",
+				"slug": "hospitality",
+				"status": "published",
+				"data": {
+					"title": "Hospitality",
+					"number": "10",
+					"default_image": "none",
+					"order": 10
+				}
+			},
+			{
+				"id": "ind-11",
+				"slug": "logistics",
+				"status": "published",
+				"data": {
+					"title": "Logistics",
+					"number": "11",
+					"default_image": "none",
+					"order": 11
+				}
+			},
+			{
+				"id": "ind-12",
+				"slug": "marine",
+				"status": "published",
+				"data": {
+					"title": "Marine",
+					"number": "12",
+					"default_image": "none",
+					"order": 12
+				}
+			},
+			{
+				"id": "ind-13",
+				"slug": "renewables",
+				"status": "published",
+				"data": {
+					"title": "Renewables",
+					"number": "13",
+					"default_image": "none",
+					"order": 13
+				}
+			},
+			{
+				"id": "ind-14",
+				"slug": "smart-cities",
+				"status": "published",
+				"data": {
+					"title": "Smart cities",
+					"number": "14",
+					"default_image": "none",
+					"order": 14
+				}
+			}
+		]
+	}
+}

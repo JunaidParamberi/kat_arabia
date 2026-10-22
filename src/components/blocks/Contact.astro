@@ -1,0 +1,408 @@
+---
+interface Props {
+	value: Record<string, any>;
+	index?: number;
+}
+const { value: v, index = 0 } = Astro.props;
+const isPage = index === 0;
+const dark = !!v.dark && !isPage;
+
+const TYPES = [
+	{
+		key: "project",
+		label: "Project enquiry",
+		help: "Tell us about the scope, location and timeline of your project or tender package.",
+		extra: "Project location and estimated start",
+		ph: "e.g. Jubail Industrial City, Q2 2026",
+		cta: "Send enquiry",
+	},
+	{
+		key: "prequalification",
+		label: "Prequalification",
+		help: "Procurement and vendor-registration teams: we will send our prequalification pack and register on your portal.",
+		extra: "Vendor portal or registration reference",
+		ph: "e.g. supplier portal / registration category",
+		cta: "Request prequalification pack",
+	},
+	{
+		key: "manpower",
+		label: "Manpower",
+		help: "Tell us the trades, headcount and duration you need. We recruit and mobilise from twelve countries.",
+		extra: "Trades and headcount",
+		ph: "e.g. 40 pipe fitters, 25 welders, 6 months",
+		cta: "Request manpower",
+	},
+	{
+		key: "careers",
+		label: "Careers",
+		help: "Looking to work with us? Share your trade and experience and we will be in touch.",
+		extra: "Trade or role",
+		ph: "e.g. Electrical supervisor",
+		cta: "Send application",
+	},
+];
+const requested = Astro.url.searchParams.get("type");
+const current = TYPES.find((t) => t.key === requested) ?? TYPES[0];
+const sent = Astro.url.searchParams.get("sent");
+const lines = (s?: string) => (s ?? "").split("\n").filter(Boolean);
+const HeadingTag = isPage ? "h1" : "h2";
+---
+
+<section class:list={["contact", { "contact--page": isPage, night: dark }]} id={v.anchor_id || "contact"}>
+	{
+		isPage && (
+			<div class="contact__head night">
+				<div class="wrap">
+					<div class="mono contact__crumb">
+						<a href="/">Home</a>  /  {v.label || "Contact"}
+					</div>
+					<HeadingTag class="disp contact__title">
+						{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
+					</HeadingTag>
+					{v.intro && <p class="lead">{v.intro}</p>}
+				</div>
+			</div>
+		)
+	}
+	<div class="wrap contact__body">
+		{
+			!isPage && (
+				<>
+					{v.label && <div class="sec-label mono"><span>{v.label}</span><span>Enquiries · Prequalification · Manpower</span></div>}
+				</>
+			)
+		}
+		<div class="contact__grid">
+			<aside class="contact__aside">
+				{
+					!isPage && (
+						<HeadingTag class="disp contact__title contact__title--section" data-reveal>
+							{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
+						</HeadingTag>
+					)
+				}
+				{!isPage && v.intro && <p class="lead">{v.intro}</p>}
+				<div class="contact__direct">
+					{v.phone && (
+						<div>
+							<span class="mono">Phone</span>
+							<a class="disp" href={`tel:${String(v.phone).replace(/\s/g, "")}`}>{v.phone}</a>
+						</div>
+					)}
+					{v.email && (
+						<div>
+							<span class="mono">Email</span>
+							<a class="disp contact__email" href={`mailto:${v.email}`}>{v.email}</a>
+						</div>
+					)}
+				</div>
+				<div class="contact__offices">
+					{v.ksa_address && (
+						<address>
+							<span class="mono">KSA office</span>
+							{lines(v.ksa_address).map((l) => <span>{l}</span>)}
+						</address>
+					)}
+					{v.uae_address && (
+						<address>
+							<span class="mono">UAE</span>
+							{lines(v.uae_address).map((l) => <span>{l}</span>)}
+						</address>
+					)}
+					{v.hours && (
+						<div>
+							<span class="mono">Working hours</span>
+							<span>{v.hours}</span>
+						</div>
+					)}
+				</div>
+			</aside>
+
+			<form class="contact__form" method="post" action="/api/enquiry" data-enquiry>
+				{
+					sent === "1" && (
+						<p class="contact__notice" role="status">
+							Thank you — your enquiry has been received. We will be in touch.
+						</p>
+					)
+				}
+				{
+					sent === "0" && (
+						<p class="contact__notice contact__notice--error" role="alert">
+							Something went wrong. Please check the required fields or email us directly.
+						</p>
+					)
+				}
+				<fieldset class="contact__types">
+					<legend class="mono">What can we help with?</legend>
+					<div class="contact__type-grid">
+						{TYPES.map((t) => (
+							<label class="contact__type">
+								<input
+									type="radio"
+									name="type"
+									value={t.key}
+									checked={t.key === current.key}
+									data-help={t.help}
+									data-extra={t.extra}
+									data-ph={t.ph}
+									data-cta={t.cta}
+								/>
+								<span>{t.label}</span>
+							</label>
+						))}
+					</div>
+					<p class="contact__help" data-help-text>{current.help}</p>
+				</fieldset>
+				<div class="contact__fields">
+					<label class="fld">
+						Full name *<input type="text" name="name" autocomplete="name" required maxlength="120" />
+					</label>
+					<label class="fld">
+						Company<input type="text" name="company" autocomplete="organization" maxlength="160" />
+					</label>
+					<label class="fld">
+						Work email *<input type="email" name="email" autocomplete="email" required maxlength="160" />
+					</label>
+					<label class="fld">
+						Phone<input type="tel" name="phone" autocomplete="tel" maxlength="40" />
+					</label>
+					<label class="fld fld--wide">
+						<span data-extra-label>{current.extra}</span>
+						<input type="text" name="detail" placeholder={current.ph} maxlength="300" data-extra-input />
+					</label>
+					<label class="fld fld--wide">
+						Message *<textarea name="message" rows="5" required maxlength="4000"></textarea>
+					</label>
+					<label class="contact__hp" aria-hidden="true">
+						Leave this empty<input type="text" name="website" tabindex="-1" autocomplete="off" />
+					</label>
+					<input type="hidden" name="page" value={Astro.url.pathname} />
+				</div>
+				<div class="contact__submit">
+					{v.reply_note && <span>{v.reply_note}</span>}
+					<button type="submit" class="btn btn--primary">
+						<span data-cta-label>{current.cta}</span> <span aria-hidden="true">→</span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>
+
+<style>
+	.contact {
+		padding-bottom: var(--section-y);
+	}
+	.contact:not(.contact--page) {
+		padding-top: var(--section-y);
+	}
+	.contact__head {
+		padding: clamp(56px, 8vw, 96px) 0 clamp(56px, 7vw, 88px);
+		margin-bottom: clamp(56px, 7vw, 96px);
+	}
+	.contact__crumb {
+		margin-bottom: 22px;
+		color: var(--gold-soft);
+	}
+	.contact__title {
+		font-size: clamp(52px, 7vw, 108px);
+		line-height: 0.94;
+	}
+	.contact__head .lead {
+		max-width: 520px;
+		margin-top: 24px;
+	}
+	.contact__title--section {
+		font-size: clamp(40px, 5vw, 76px);
+	}
+	.contact__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		column-gap: 24px;
+		row-gap: 48px;
+	}
+	.contact__aside {
+		grid-column: span 5;
+		display: flex;
+		flex-direction: column;
+		gap: 36px;
+	}
+	.contact__direct {
+		display: flex;
+		flex-direction: column;
+		gap: 22px;
+	}
+	.contact__direct > div,
+	.contact__offices > * {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+	.contact__direct .mono,
+	.contact__offices .mono {
+		color: var(--maroon);
+	}
+	.night .contact__direct .mono,
+	.night .contact__offices .mono {
+		color: var(--gold);
+	}
+	.contact__direct a {
+		font-size: clamp(26px, 2.4vw, 32px);
+		letter-spacing: -0.02em;
+		overflow-wrap: anywhere;
+	}
+	.night .contact__email {
+		color: var(--gold);
+	}
+	.contact__offices {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+	.contact__offices > * {
+		padding-top: 22px;
+		border-top: 1px solid var(--rule);
+		font-style: normal;
+	}
+	.night .contact__offices > * {
+		border-color: var(--rule-dark);
+		color: var(--on-night-muted);
+	}
+	.contact__form {
+		grid-column: 7 / span 6;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+		padding: clamp(24px, 3vw, 40px);
+		background: var(--paper-2);
+		border: 1px solid var(--rule);
+		color: var(--ink);
+	}
+	.contact__notice {
+		padding: 14px 16px;
+		border-left: 3px solid #2e7d4f;
+		background: #e2efe5;
+	}
+	.contact__notice--error {
+		border-color: var(--maroon);
+		background: #f3e1e1;
+	}
+	.contact__types {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	.contact__types legend {
+		margin-bottom: 12px;
+		color: var(--ink-muted);
+	}
+	.contact__type-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 8px;
+	}
+	.contact__type {
+		position: relative;
+	}
+	.contact__type input {
+		position: absolute;
+		opacity: 0;
+		inset: 0;
+	}
+	.contact__type span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 52px;
+		padding: 0 10px;
+		border: 1px solid #bfb29d;
+		background: var(--paper);
+		font-size: 14px;
+		font-weight: 600;
+		text-align: center;
+		cursor: pointer;
+	}
+	.contact__type input:checked + span {
+		background: var(--ink);
+		border-color: var(--ink);
+		color: #f6f0e6;
+	}
+	.contact__type input:focus-visible + span {
+		outline: 2px solid var(--signal);
+		outline-offset: 2px;
+	}
+	.contact__help {
+		margin-top: 12px;
+		font-size: 14px;
+		color: var(--ink-muted);
+	}
+	.contact__fields {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+	}
+	.fld {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		font-size: 13px;
+		font-weight: 500;
+		color: var(--ink-muted);
+	}
+	.fld--wide {
+		grid-column: span 2;
+	}
+	.fld input,
+	.fld textarea {
+		min-height: 50px;
+		padding: 12px 14px;
+		background: #fbf8f2;
+		border: 1px solid #bfb29d;
+		border-radius: 0;
+		color: var(--ink);
+		font-family: var(--font-body);
+		font-size: 16px;
+	}
+	.fld textarea {
+		resize: vertical;
+	}
+	.fld input:focus,
+	.fld textarea:focus {
+		outline: 2px solid var(--maroon);
+		outline-offset: 0;
+	}
+	.contact__hp {
+		position: absolute;
+		left: -9999px;
+	}
+	.contact__submit {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		font-size: 13px;
+		color: var(--ink-muted);
+	}
+	@media (max-width: 960px) {
+		.contact__aside,
+		.contact__form {
+			grid-column: 1 / -1;
+		}
+	}
+	@media (max-width: 620px) {
+		.contact__type-grid {
+			grid-template-columns: 1fr 1fr;
+		}
+		.contact__fields {
+			grid-template-columns: 1fr;
+		}
+		.fld--wide {
+			grid-column: auto;
+		}
+		.contact__submit .btn {
+			width: 100%;
+		}
+	}
+</style>

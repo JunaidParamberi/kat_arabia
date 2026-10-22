@@ -1,0 +1,40 @@
+---
+import { Blocks, defineBlockComponents } from "emdash/ui";
+import Capabilities from "./blocks/Capabilities.astro";
+import Clients from "./blocks/Clients.astro";
+import Contact from "./blocks/Contact.astro";
+import Cta from "./blocks/Cta.astro";
+import Film from "./blocks/Film.astro";
+import Footprint from "./blocks/Footprint.astro";
+import Hero from "./blocks/Hero.astro";
+import Hse from "./blocks/Hse.astro";
+import Industries from "./blocks/Industries.astro";
+import Intro from "./blocks/Intro.astro";
+import Split from "./blocks/Split.astro";
+import Steps from "./blocks/Steps.astro";
+import Workforce from "./blocks/Workforce.astro";
+
+interface Props {
+	value?: any[] | null;
+}
+
+const { value } = Astro.props;
+
+const components = defineBlockComponents<any>({
+	kat_hero: Hero,
+	kat_film: Film,
+	kat_intro: Intro,
+	kat_capabilities: Capabilities,
+	kat_workforce: Workforce,
+	kat_industries: Industries,
+	kat_footprint: Footprint,
+	kat_steps: Steps,
+	kat_split: Split,
+	kat_hse: Hse,
+	kat_clients: Clients,
+	kat_cta: Cta,
+	kat_contact: Contact,
+});
+---
+
+<Blocks value={value ?? []} components={components} />

@@ -1,0 +1,261 @@
+---
+import { mediaUrl, pad, pickImage } from "../../lib/media";
+
+interface Props {
+	value: Record<string, any>;
+}
+const { value: v } = Astro.props;
+const chapters: Array<{ title: string; description?: string; services?: string }> = v.chapters ?? [];
+const videoSrc = mediaUrl(v.video);
+const poster = pickImage(v.poster, "hero-dusk");
+const total = pad(chapters.length);
+---
+
+<section
+	class="film on-image"
+	id={v.anchor_id || "film"}
+	aria-labelledby="film-title"
+	data-film
+	data-chapters={chapters.length}
+>
+	<div class="film__stage" data-film-stage>
+		{
+			videoSrc ? (
+				<video
+					class="film__media"
+					src={videoSrc}
+					poster={poster?.src}
+					muted
+					playsinline
+					preload="auto"
+					aria-hidden="true"
+					data-film-video
+				/>
+			) : (
+				poster && (
+					<img class="film__media" src={poster.src} alt={poster.alt} loading="lazy" data-film-poster />
+				)
+			)
+		}
+		<div class="film__scrim" aria-hidden="true"></div>
+
+		<div class="film__top wrap">
+			<div class="film__intro">
+				{v.label && <div class="mono film__label">{v.label}</div>}
+				<h2 id="film-title" class="disp film__title">{v.headline}</h2>
+				{v.intro && <p class="film__lead">{v.intro}</p>}
+			</div>
+			<div class="mono film__counter" aria-hidden="true">
+				Chapter <span data-film-num>01</span> / {total}
+			</div>
+		</div>
+
+		<div class="film__caption-wrap wrap">
+			<div class="film__caption" aria-live="polite">
+				{
+					chapters.map((c, i) => (
+						<div class:list={["film__chapter", { "is-active": i === 0 }]} data-film-chapter={i}>
+							<div class="mono film__chapter-num">Chapter {pad(i + 1)} / {total}</div>
+							<div class="disp film__chapter-title">{c.title}</div>
+							{c.description && <p>{c.description}</p>}
+							{c.services && <p class="mono film__services">{c.services}</p>}
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="film__bar">
+			<div class="wrap film__tabs" role="tablist" aria-label="Film chapters">
+				{
+					chapters.map((c, i) => (
+						<button
+							type="button"
+							role="tab"
+							class:list={["film__tab mono", { "is-active": i === 0 }]}
+							aria-selected={i === 0 ? "true" : "false"}
+							data-film-tab={i}
+						>
+							<span class="film__track" aria-hidden="true">
+								<span class="film__fill" data-film-fill={i} />
+							</span>
+							<span>
+								{pad(i + 1)}<span class="film__tab-name">  {c.title}</span>
+							</span>
+						</button>
+					))
+				}
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.film {
+		position: relative;
+		background: #140e0d;
+		color: #f6f0e6;
+	}
+	.film__stage {
+		position: relative;
+		height: 100svh;
+		min-height: 640px;
+		overflow: hidden;
+	}
+	.film__media {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.film__scrim {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(180deg, rgba(11, 8, 7, 0.8) 0%, rgba(11, 8, 7, 0) 34%),
+			linear-gradient(0deg, rgba(11, 8, 7, 0.7) 0%, rgba(11, 8, 7, 0) 40%);
+	}
+	.film__top {
+		position: absolute;
+		inset: 0 0 auto 0;
+		z-index: 2;
+		display: flex;
+		justify-content: space-between;
+		gap: 32px;
+		padding-top: 120px;
+	}
+	.film__intro {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		max-width: 620px;
+	}
+	.film__label {
+		color: var(--gold-soft);
+	}
+	.film__title {
+		font-size: clamp(36px, 4.6vw, 66px);
+	}
+	.film__lead {
+		max-width: 460px;
+		color: #e3d9c9;
+	}
+	.film__counter {
+		color: #e3d9c9;
+		white-space: nowrap;
+	}
+	.film__caption-wrap {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 120px;
+		z-index: 2;
+		pointer-events: none;
+	}
+	.film__caption {
+		position: relative;
+		width: min(460px, 100%);
+		min-height: 230px;
+		pointer-events: auto;
+	}
+	.film__chapter {
+		position: absolute;
+		inset: auto 0 0 0;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 28px 30px;
+		background: rgba(20, 16, 16, 0.88);
+		backdrop-filter: blur(6px);
+		opacity: 0;
+		transform: translateY(16px);
+		transition:
+			opacity 0.45s var(--ease),
+			transform 0.45s var(--ease);
+	}
+	.film__chapter.is-active {
+		opacity: 1;
+		transform: none;
+	}
+	.film__chapter-num {
+		color: var(--gold);
+	}
+	.film__chapter-title {
+		font-size: clamp(36px, 3.6vw, 52px);
+		line-height: 1;
+	}
+	.film__chapter p {
+		color: #d6cbbb;
+		font-size: 15px;
+	}
+	.film__chapter .film__services {
+		font-size: 10px;
+		color: var(--on-night-dim);
+		line-height: 1.7;
+	}
+	.film__bar {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 3;
+		background: rgba(12, 9, 8, 0.92);
+	}
+	.film__tabs {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+		grid-auto-flow: column;
+		gap: 8px;
+		padding-block: 18px;
+	}
+	.film__tab {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		min-height: 44px;
+		padding: 0;
+		background: none;
+		border: 0;
+		color: #9c9184;
+		text-align: left;
+		cursor: pointer;
+	}
+	.film__tab.is-active,
+	.film__tab:hover {
+		color: #f6f0e6;
+	}
+	.film__track {
+		display: block;
+		height: 2px;
+		background: rgba(246, 240, 230, 0.2);
+	}
+	.film__fill {
+		display: block;
+		height: 2px;
+		width: 0;
+		background: var(--signal);
+	}
+	.film__tab.is-active .film__fill {
+		width: 100%;
+	}
+	.js .film__tab .film__fill {
+		width: 0;
+	}
+	@media (max-width: 760px) {
+		.film__top {
+			flex-direction: column;
+			padding-top: 96px;
+		}
+		.film__counter,
+		.film__lead {
+			display: none;
+		}
+		.film__caption-wrap {
+			bottom: 96px;
+		}
+		.film__tab-name {
+			display: none;
+		}
+	}
+</style>

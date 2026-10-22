@@ -1,0 +1,148 @@
+---
+import { paragraphs, pickImage } from "../../lib/media";
+
+interface Props {
+	value: Record<string, any>;
+}
+const { value: v } = Astro.props;
+const img = pickImage(v.image, "workforce");
+const countries: string[] = String(v.countries ?? "")
+	.split(",")
+	.map((c: string) => c.trim())
+	.filter(Boolean);
+const body = paragraphs(v.body);
+---
+
+<section class="workforce night" id={v.anchor_id || undefined}>
+	{
+		img && (
+			<figure class="workforce__photo">
+				<img src={img.src} alt={img.alt} loading="lazy" data-parallax />
+				<div class="workforce__fade" aria-hidden="true" />
+				{v.caption && <figcaption class="disp wrap">{v.caption}</figcaption>}
+			</figure>
+		)
+	}
+	<div class="wrap workforce__body">
+		{v.label && <div class="sec-label mono"><span>{v.label}</span><span>{countries.length} source countries → KSA</span></div>}
+		<div class="workforce__grid">
+			<div class="workforce__copy">
+				<h2 class="disp workforce__title" data-reveal>
+					{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
+				</h2>
+				{body.map((p) => <p class="lead" data-reveal>{p}</p>)}
+				{
+					countries.length > 0 && (
+						<ul class="workforce__countries mono">
+							{countries.map((c) => <li>{c}</li>)}
+						</ul>
+					)
+				}
+				<div class="btn-row">
+					{v.primary_cta_label && (
+						<a href={v.primary_cta_url || "/contact"} class="btn btn--primary">
+							{v.primary_cta_label} <span aria-hidden="true">→</span>
+						</a>
+					)}
+					{v.secondary_cta_label && (
+						<a href={v.secondary_cta_url || "/contact"} class="btn btn--ghost">
+							{v.secondary_cta_label}
+						</a>
+					)}
+				</div>
+			</div>
+			{
+				v.show_globe !== false && (
+					<div class="workforce__globe" data-globe data-countries={JSON.stringify(countries)}>
+						<canvas aria-hidden="true" />
+						<p class="sr-only">
+							Globe showing workforce routes from {countries.join(", ")} into Al Jubail, Saudi Arabia.
+						</p>
+					</div>
+				)
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.workforce {
+		position: relative;
+		overflow: hidden;
+		padding-bottom: var(--section-y);
+	}
+	.workforce__photo {
+		position: relative;
+		height: clamp(360px, 46vw, 600px);
+		overflow: hidden;
+		margin-bottom: clamp(56px, 7vw, 96px);
+	}
+	.workforce__photo img {
+		position: absolute;
+		inset: -8% 0;
+		width: 100%;
+		height: 116%;
+		object-fit: cover;
+		object-position: center 60%;
+	}
+	.workforce__fade {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(20, 16, 16, 0) 45%, var(--ink) 100%);
+	}
+	.workforce__photo figcaption {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 40px;
+		font-size: clamp(30px, 3.6vw, 52px);
+		color: #f6f0e6;
+	}
+	.workforce__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		column-gap: 24px;
+		row-gap: 48px;
+		align-items: center;
+	}
+	.workforce__copy {
+		grid-column: span 5;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+	}
+	.workforce__title {
+		font-size: clamp(36px, 4.4vw, 64px);
+		line-height: 1;
+	}
+	.workforce__countries {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 24px;
+		font-size: 12px;
+	}
+	.workforce__countries li {
+		padding: 10px 0;
+		border-top: 1px solid var(--rule-dark);
+	}
+	.workforce__globe {
+		grid-column: 7 / span 6;
+		position: relative;
+		aspect-ratio: 1;
+	}
+	.workforce__globe canvas {
+		width: 100%;
+		height: 100%;
+	}
+	@media (max-width: 960px) {
+		.workforce__copy,
+		.workforce__globe {
+			grid-column: 1 / -1;
+		}
+		.workforce__globe {
+			max-width: 520px;
+			width: 100%;
+			margin-inline: auto;
+		}
+	}
+</style>

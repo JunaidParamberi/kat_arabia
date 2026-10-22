@@ -1,0 +1,394 @@
+---
+import { getMenuWithCacheHint, getSiteSettingsWithCacheHint } from "emdash";
+import { EmDashBodyEnd, EmDashBodyStart, EmDashHead } from "emdash/ui";
+import { createPublicPageContext } from "emdash/page";
+import { Font } from "astro:assets";
+import Logo from "../components/Logo.astro";
+import { resolveSiteIdentity } from "../utils/site";
+import "../styles/global.css";
+
+interface Props {
+	title?: string;
+	pageTitle?: string | null;
+	description?: string | null;
+	image?: string | null;
+	canonical?: string | null;
+	robots?: string | null;
+	content?: { collection: string; id: string; slug?: string | null };
+	/** "overlay" sits on a full-bleed hero; "solid" sits on paper. */
+	header?: "overlay" | "solid";
+}
+
+const {
+	title,
+	pageTitle,
+	description,
+	image,
+	canonical,
+	robots,
+	content,
+	header = "solid",
+} = Astro.props;
+
+const [settingsResult, menuResult, footerCompanyResult, footerServicesResult] = await Promise.all([
+	getSiteSettingsWithCacheHint(),
+	getMenuWithCacheHint("primary"),
+	getMenuWithCacheHint("footer_company"),
+	getMenuWithCacheHint("footer_services"),
+]);
+
+if (Astro.cache?.enabled) {
+	for (const r of [settingsResult, menuResult, footerCompanyResult, footerServicesResult]) {
+		Astro.cache.set(r.cacheHint);
+	}
+}
+
+const { siteTitle, siteTagline, titleSeparator } = resolveSiteIdentity(settingsResult.data);
+const fullTitle = title
+	? title.includes(siteTitle)
+		? title
+		: `${title} ${titleSeparator} ${siteTitle}`
+	: `${siteTitle} ${titleSeparator} ${siteTagline || "General Contracting"}`;
+
+const items = menuResult.data?.items ?? [];
+const isButton = (i: (typeof items)[number]) => (i.cssClasses ?? "").split(/\s+/).includes("button");
+const navLinks = items.filter((i) => !isButton(i));
+const navButtons = items.filter(isButton);
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isCurrent = (url: string) => {
+	const u = url.split(/[?#]/)[0].replace(/\/$/, "") || "/";
+	return u !== "/" && (path === u || path.startsWith(`${u}/`));
+};
+
+const footerColumns = [footerCompanyResult, footerServicesResult]
+	.map((r) => ({ heading: r.data?.label, items: r.data?.items ?? [] }))
+	.filter((c) => c.items.length > 0);
+
+const pageCtx = createPublicPageContext({
+	Astro,
+	kind: content ? "content" : "custom",
+	pageType: "website",
+	title: fullTitle,
+	pageTitle: pageTitle ?? title ?? siteTitle,
+	description: description || siteTagline || undefined,
+	canonical: canonical ?? `${Astro.url.origin}${Astro.url.pathname}`,
+	image,
+	content,
+	seo: { ogImage: image, robots },
+	siteName: siteTitle,
+});
+
+const isLoggedIn = !!Astro.locals.user;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="theme-color" content="#141010" />
+		<title>{fullTitle}</title>
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<EmDashHead page={pageCtx} />
+		<Font cssVariable="--font-display" preload />
+		<Font cssVariable="--font-body" preload />
+		<Font cssVariable="--font-mono" />
+		<Font cssVariable="--font-brand" />
+		<script is:inline>document.documentElement.classList.add("js");</script>
+	</head>
+	<body>
+		<EmDashBodyStart page={pageCtx} />
+		<a href="#main" class="skip-link">Skip to content</a>
+
+		<header class:list={["site-header", `site-header--${header}`]} data-header>
+			<div class="site-header__bar">
+				<a href="/" class="site-header__logo" aria-label={`${siteTitle} home`}>
+					<Logo idSuffix="header" />
+				</a>
+				{
+					navLinks.length > 0 && (
+						<nav class="site-nav" aria-label="Primary">
+							{navLinks.map((item) => (
+								<a
+									href={item.url}
+									target={item.target}
+									aria-current={isCurrent(item.url) ? "page" : undefined}
+								>
+									{item.label}
+								</a>
+							))}
+						</nav>
+					)
+				}
+				<div class="site-header__actions">
+					{isLoggedIn && <a href="/_emdash/admin" class="site-header__admin mono">Admin</a>}
+					<a href="#" lang="ar" class="site-header__lang">العربية</a>
+					{navButtons.map((item) => (
+						<a href={item.url} class="btn btn--primary site-header__cta">
+							{item.label}
+						</a>
+					))}
+					<button
+						type="button"
+						class="site-header__toggle"
+						aria-expanded="false"
+						aria-controls="mobile-menu"
+						aria-label="Open menu"
+						data-menu-toggle
+					>
+						<span></span><span></span>
+					</button>
+				</div>
+			</div>
+			<div class="mobile-menu" id="mobile-menu" hidden data-menu>
+				<nav aria-label="Mobile">
+					<a href="/" class="disp">Home</a>
+					{navLinks.map((item) => <a href={item.url} class="disp">{item.label}</a>)}
+				</nav>
+				<div class="btn-row">
+					{navButtons.map((item) => (
+						<a href={item.url} class="btn btn--primary">
+							{item.label} <span aria-hidden="true">→</span>
+						</a>
+					))}
+				</div>
+			</div>
+		</header>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer class="site-footer">
+			<div class="wrap">
+				<div class="site-footer__top">
+					<div class="site-footer__brand">
+						<a href="/" aria-label={`${siteTitle} home`}><Logo size={40} idSuffix="footer" /></a>
+						<p>{(siteTagline || "Shaping possibilities across the Kingdom").replace(/\.$/, "")}. A KAT Group company.</p>
+					</div>
+					{
+						footerColumns.map((col) => (
+							<nav class="site-footer__col" aria-label={col.heading ?? "Footer"}>
+								<span class="mono">{col.heading}</span>
+								{col.items.map((item) => (
+									<a href={item.url} target={item.target}>
+										{item.label}
+									</a>
+								))}
+							</nav>
+						))
+					}
+					<div class="site-footer__col">
+						<span class="mono">Contact</span>
+						<a href="tel:+966531814451">+966 53 181 4451</a>
+						<a href="mailto:info@katarabia.com">info@katarabia.com</a>
+						<span>Al Jubail, KSA</span>
+						<span>Abu Dhabi, UAE</span>
+					</div>
+				</div>
+				<div class="site-footer__bottom">
+					<span>© {year} KAT Arabia General Contracting. All rights reserved.</span>
+					<span class="site-footer__legal">
+						<a href="#" lang="ar">العربية</a>
+					</span>
+				</div>
+			</div>
+		</footer>
+
+		<EmDashBodyEnd page={pageCtx} />
+		<script>
+			import "../scripts/motion";
+		</script>
+	</body>
+</html>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		color: var(--ink);
+		transition:
+			background 0.35s var(--ease),
+			color 0.35s var(--ease),
+			box-shadow 0.35s var(--ease);
+	}
+	.site-header--solid {
+		background: var(--paper);
+		box-shadow: inset 0 -1px 0 var(--rule);
+	}
+	.site-header--overlay {
+		position: fixed;
+		left: 0;
+		right: 0;
+		color: #f6f0e6;
+	}
+	.site-header--overlay.is-scrolled,
+	.site-header.menu-open {
+		background: var(--ink);
+		color: #f6f0e6;
+		box-shadow: none;
+	}
+	.site-header__bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px;
+		max-width: var(--max);
+		margin-inline: auto;
+		padding: 22px var(--gutter);
+		transition: padding 0.35s var(--ease);
+	}
+	.is-scrolled .site-header__bar {
+		padding-block: 14px;
+	}
+	.site-header__logo {
+		color: inherit;
+	}
+	.site-header__logo:hover {
+		color: inherit;
+	}
+	.site-nav {
+		display: flex;
+		gap: 32px;
+		font-size: 14px;
+		font-weight: 500;
+	}
+	.site-nav a {
+		padding-block: 6px;
+	}
+	.site-nav a[aria-current="page"] {
+		box-shadow: inset 0 -2px 0 var(--signal);
+	}
+	.site-header--overlay .site-nav a:hover,
+	.site-header.is-scrolled .site-nav a:hover {
+		color: var(--gold);
+	}
+	.site-header__actions {
+		display: flex;
+		align-items: center;
+		gap: 20px;
+	}
+	.site-header__lang {
+		font-size: 14px;
+	}
+	.site-header__admin {
+		color: inherit;
+		opacity: 0.8;
+	}
+	.site-header__cta {
+		min-height: 44px;
+		padding: 0 18px;
+		font-size: 13px;
+	}
+	.site-header__toggle {
+		display: none;
+		width: 44px;
+		height: 44px;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		background: none;
+		border: 1px solid currentColor;
+		color: inherit;
+		cursor: pointer;
+	}
+	.site-header__toggle span {
+		width: 18px;
+		height: 1.5px;
+		background: currentColor;
+		transition: transform 0.3s var(--ease);
+	}
+	.menu-open .site-header__toggle span:first-child {
+		transform: translateY(3.75px) rotate(45deg);
+	}
+	.menu-open .site-header__toggle span:last-child {
+		transform: translateY(-3.75px) rotate(-45deg);
+	}
+	.mobile-menu {
+		padding: 8px var(--gutter) 32px;
+		background: var(--ink);
+		color: #f6f0e6;
+	}
+	.mobile-menu nav {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 24px;
+	}
+	.mobile-menu nav a {
+		padding: 14px 0;
+		border-top: 1px solid var(--rule-dark);
+		font-size: 30px;
+	}
+
+	@media (max-width: 1080px) {
+		.site-nav,
+		.site-header__lang,
+		.site-header__cta {
+			display: none;
+		}
+		.site-header__toggle {
+			display: flex;
+		}
+	}
+
+	.site-footer {
+		padding-block: 72px 32px;
+		background: var(--ink-2);
+		color: var(--on-night-muted);
+		font-size: 14px;
+	}
+	.site-footer__top {
+		display: grid;
+		grid-template-columns: 2fr 1fr 1.4fr 1fr;
+		gap: 40px;
+		padding-bottom: 56px;
+		border-bottom: 1px solid #2e2725;
+	}
+	.site-footer__brand {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		color: var(--on-night);
+	}
+	.site-footer__brand p {
+		max-width: 300px;
+		color: var(--on-night-muted);
+	}
+	.site-footer__col {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.site-footer__col .mono {
+		color: var(--on-night);
+	}
+	.site-footer__bottom {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 16px;
+		padding-top: 24px;
+		font-size: 13px;
+		color: #9c9184;
+	}
+	.site-footer__legal {
+		display: flex;
+		gap: 24px;
+	}
+	@media (max-width: 860px) {
+		.site-footer__top {
+			grid-template-columns: 1fr 1fr;
+		}
+		.site-footer__brand {
+			grid-column: 1 / -1;
+		}
+	}
+	@media (max-width: 520px) {
+		.site-footer__top {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

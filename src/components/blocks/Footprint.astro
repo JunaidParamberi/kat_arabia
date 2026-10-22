@@ -1,0 +1,244 @@
+---
+import { pad } from "../../lib/media";
+
+interface Props {
+	value: Record<string, any>;
+}
+const { value: v } = Astro.props;
+type Office = { city: string; country?: string; role?: string; address?: string; phone?: string; primary?: boolean };
+const offices: Office[] = v.offices ?? [];
+
+// Equirectangular positions in the map's 880×700 viewBox.
+const CITY: Record<string, [number, number]> = {
+	"al jubail": [599.8, 239.6],
+	jubail: [599.8, 239.6],
+	dammam: [615.6, 264],
+	riyadh: [493.2, 332],
+	jeddah: [223.2, 460],
+	yanbu: [182.2, 356.4],
+	neom: [79.2, 200],
+	"abu dhabi": [769.3, 342],
+	dubai: [800, 312],
+	sharjah: [806.4, 301],
+};
+const plotted = offices
+	.map((o) => ({ ...o, pos: CITY[o.city.trim().toLowerCase()] }))
+	.filter((o) => o.pos);
+const LABEL: Record<string, [number, number]> = {
+	dubai: [14, -12],
+	sharjah: [-74, -12],
+	"abu dhabi": [-34, 26],
+};
+const labelOffset = (city: string, isHub: boolean): [number, number] =>
+	isHub ? [-80, -26] : (LABEL[city.trim().toLowerCase()] ?? [12, 4]);
+const hub = plotted.find((o) => o.primary) ?? plotted[0];
+const KSA =
+	"M68.4 144 L126 140 L162 104 L144 60 L216 36 L324 76 L421.2 152 L486 156 L529.2 180 L554.4 180 L597.6 236 L615.6 264 L640.8 332 L669.6 348 L705.6 404 L813.6 440 L799.2 520 L684 560 L576 576 L496.8 628 L374.4 620 L352.8 664 L306 560 L223.2 460 L183.6 356 L129.6 280 L79.2 196Z";
+const UAE =
+	"M669.6 348 L705.6 404 L813.6 440 L828 360 L842.4 324 L838.8 292 L824.4 280 L795.6 308 L756 352 L702 352Z";
+---
+
+<section class="section footprint night" id={v.anchor_id || undefined}>
+	<div class="wrap">
+		{v.label && <div class="sec-label mono"><span>{v.label}</span><span>UAE → KSA</span></div>}
+		<div class="footprint__grid">
+			<div class="footprint__copy">
+				<h2 class="disp footprint__title" data-reveal>
+					{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
+				</h2>
+				{v.intro && <p class="lead" data-reveal>{v.intro}</p>}
+				{
+					!v.show_cards && (
+						<ol class="footprint__list">
+							{offices.map((o, i) => (
+								<li>
+									<span class="mono accent">{pad(i + 1)}</span>
+									<span>
+										<span class="disp footprint__city">{o.city}</span>
+										<span class="footprint__role">{o.role}</span>
+									</span>
+								</li>
+							))}
+						</ol>
+					)
+				}
+			</div>
+			<div class="footprint__map" data-map>
+				<svg viewBox="0 20 880 680" role="img" aria-label={`Map of Saudi Arabia and the UAE showing ${offices.map((o) => o.city).join(", ")}`}>
+					<defs>
+						<pattern id="fp-dots" width="16" height="16" patternUnits="userSpaceOnUse">
+							<circle cx="2" cy="2" r="1" fill="#ECE6DB" fill-opacity=".08" />
+						</pattern>
+					</defs>
+					<rect y="20" width="880" height="680" fill="url(#fp-dots)" />
+					<path d={KSA} fill="#2A201D" stroke="#7A6B62" stroke-width="1.2" stroke-linejoin="round" />
+					<path d={UAE} fill="#33261F" stroke="#9A8A7E" stroke-width="1.2" />
+					<text x="300" y="380" fill="#6B605A" font-family="var(--font-mono)" font-size="13" letter-spacing="4">
+						KINGDOM OF SAUDI ARABIA
+					</text>
+					{
+						hub &&
+							plotted
+								.filter((o) => o !== hub)
+								.map((o) => (
+									<path
+										class="footprint__arc"
+										d={`M${o.pos![0]} ${o.pos![1]} Q${(o.pos![0] + hub.pos![0]) / 2} ${Math.min(o.pos![1], hub.pos![1]) - 80} ${hub.pos![0]} ${hub.pos![1]}`}
+										fill="none"
+										stroke="#E3B877"
+										stroke-width="1.8"
+										pathLength="1"
+										data-arc
+									/>
+								))
+					}
+					{
+						plotted.map((o) =>
+							o === hub ? (
+								<g>
+									<circle cx={o.pos![0]} cy={o.pos![1]} r="22" fill="#A3232A" opacity=".35" class="footprint__pulse" />
+									<circle cx={o.pos![0]} cy={o.pos![1]} r="8" fill="#C8333A" stroke="#ECE6DB" stroke-width="1.5" />
+								</g>
+							) : (
+								<circle cx={o.pos![0]} cy={o.pos![1]} r="5.5" fill="#E3B877" />
+							),
+						)
+					}
+					{
+						plotted.map((o) => (
+							<text
+								x={o.pos![0] + labelOffset(o.city, o === hub)[0]}
+								y={o.pos![1] + labelOffset(o.city, o === hub)[1]}
+								fill="#ECE6DB"
+								font-family="var(--font-mono)"
+								font-size="11"
+								letter-spacing="1.2"
+							>
+								{o.city.toUpperCase()}
+							</text>
+						))
+					}
+				</svg>
+			</div>
+		</div>
+		{
+			v.show_cards && (
+				<div class="footprint__cards">
+					{offices.map((o) => (
+						<div class:list={["footprint__card", { "is-primary": o.primary }]} data-reveal>
+							<span class="mono">{o.country}</span>
+							<span class="disp footprint__card-city">{o.city}</span>
+							{o.role && <span class="footprint__card-role">{o.role}</span>}
+							{o.address && <address>{o.address.split("\n").map((l) => <>{l}<br /></>)}</address>}
+							{o.phone && (o.phone.startsWith("+") ? <a href={`tel:${o.phone.replace(/\s/g, "")}`}>{o.phone}</a> : <span>{o.phone}</span>)}
+						</div>
+					))}
+				</div>
+			)
+		}
+	</div>
+</section>
+
+<style>
+	.footprint__grid {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		column-gap: 24px;
+		row-gap: 40px;
+		align-items: center;
+	}
+	.footprint__copy {
+		grid-column: span 4;
+		display: flex;
+		flex-direction: column;
+		gap: 28px;
+	}
+	.footprint__title {
+		font-size: clamp(36px, 4.2vw, 64px);
+		line-height: 1;
+	}
+	.footprint__list li {
+		display: grid;
+		grid-template-columns: 44px minmax(0, 1fr);
+		gap: 12px;
+		padding: 18px 0;
+		border-top: 1px solid var(--rule-dark);
+	}
+	.footprint__list li:last-child {
+		border-bottom: 1px solid var(--rule-dark);
+	}
+	.footprint__city {
+		display: block;
+		font-size: 24px;
+	}
+	.footprint__role {
+		font-size: 14px;
+		color: var(--on-night-dim);
+	}
+	.footprint__map {
+		grid-column: 6 / span 7;
+	}
+	.footprint__map svg {
+		width: 100%;
+		height: auto;
+	}
+	.footprint__pulse {
+		transform-box: fill-box;
+		transform-origin: center;
+		animation: pulse 2.4s var(--ease) infinite;
+	}
+	@keyframes pulse {
+		0% {
+			transform: scale(0.6);
+			opacity: 0.6;
+		}
+		100% {
+			transform: scale(1.8);
+			opacity: 0;
+		}
+	}
+	.footprint__cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+		gap: 24px;
+		margin-top: clamp(48px, 6vw, 80px);
+	}
+	.footprint__card {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		padding: 28px 28px 32px;
+		border-top: 2px solid var(--on-night-dim);
+		background: #1d1715;
+		font-size: 15px;
+		color: var(--on-night-muted);
+	}
+	.footprint__card.is-primary {
+		border-top-color: var(--signal);
+	}
+	.footprint__card .mono {
+		color: var(--gold);
+	}
+	.footprint__card-city {
+		font-size: 30px;
+		color: var(--on-night);
+	}
+	.footprint__card address {
+		font-style: normal;
+	}
+	.footprint__card a {
+		font-weight: 600;
+		color: var(--on-night);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.footprint__pulse {
+			animation: none;
+		}
+	}
+	@media (max-width: 960px) {
+		.footprint__copy,
+		.footprint__map {
+			grid-column: 1 / -1;
+		}
+	}
+</style>

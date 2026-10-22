@@ -1,0 +1,205 @@
+---
+import { decodeSlug, getEmDashEntry, getSeoMeta } from "emdash";
+import Base from "../../layouts/Base.astro";
+import Cta from "../../components/blocks/Cta.astro";
+import { getServices, toService } from "../../lib/content";
+import { paragraphs } from "../../lib/media";
+
+const slug = decodeSlug(Astro.params.slug);
+if (!slug) return Astro.rewrite("/404");
+
+const { entry, cacheHint } = await getEmDashEntry("services", slug);
+if (!entry) return Astro.rewrite("/404");
+if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+
+const s = toService(entry as any);
+const all = await getServices();
+const idx = all.findIndex((x) => x.slug === s.slug);
+const next = all.length > 1 ? all[(idx + 1) % all.length] : null;
+const seo = getSeoMeta(entry, {
+	siteUrl: Astro.url.origin,
+	path: `/services/${s.slug}`,
+	defaultDescription: s.summary,
+	defaultOgImage: s.image ? new URL(s.image.src, Astro.url.origin).href : undefined,
+});
+---
+
+<Base
+	title={seo.title}
+	pageTitle={s.title}
+	description={seo.description}
+	image={seo.ogImage}
+	canonical={seo.canonical}
+	robots={seo.robots}
+	content={{ collection: "services", id: (entry as any).data.id, slug: s.slug }}
+	header={s.image ? "overlay" : "solid"}
+>
+	<section class:list={["svc-hero", { "svc-hero--image on-image": s.image }]}>
+		{s.image && <img class="svc-hero__img" src={s.image.src} alt={s.image.alt} fetchpriority="high" data-hero-img />}
+		<div class="svc-hero__scrim" aria-hidden="true"></div>
+		<div class="wrap svc-hero__content">
+			<div class="mono svc-hero__crumb" data-hero-line>
+				<a href="/">Home</a>  /  <a href="/services">Services</a>  /  {s.number}
+			</div>
+			<h1 class="disp svc-hero__title" data-hero-line>{s.title}</h1>
+			<p class="svc-hero__sub" data-hero-line>{s.summary}</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="wrap svc-body">
+			<div class="svc-body__main">
+				<div class="sec-label mono"><span>{s.number} — Overview</span></div>
+				{paragraphs(s.description).map((p) => <p class="svc-body__text" data-reveal>{p}</p>)}
+			</div>
+			<aside class="svc-body__aside">
+				{
+					s.scope.length > 0 && (
+						<div>
+							<div class="mono svc-body__label">Typical scope</div>
+							<ul class="svc-list">{s.scope.map((x) => <li>{x}</li>)}</ul>
+						</div>
+					)
+				}
+				{
+					s.industries.length > 0 && (
+						<div>
+							<div class="mono svc-body__label">Industries served</div>
+							<ul class="svc-chips">{s.industries.map((x) => <li>{x}</li>)}</ul>
+						</div>
+					)
+				}
+				<div class="btn-row">
+					<a href="/contact" class="btn btn--primary">Discuss this service <span aria-hidden="true">→</span></a>
+				</div>
+			</aside>
+		</div>
+	</section>
+
+	{
+		next && (
+			<a href={`/services/${next.slug}`} class="svc-next night">
+				<span class="wrap svc-next__inner">
+					<span class="mono">Next service · {next.number}</span>
+					<span class="disp svc-next__title">{next.title} <span aria-hidden="true">→</span></span>
+				</span>
+			</a>
+		)
+	}
+
+	<Cta value={{ headline: "Have a package to tender?", primary_cta_label: "Send an enquiry", primary_cta_url: "/contact", secondary_cta_label: "All services", secondary_cta_url: "/services" }} />
+</Base>
+
+<style>
+	.svc-hero {
+		position: relative;
+		display: flex;
+		align-items: flex-end;
+		min-height: 420px;
+		overflow: hidden;
+		background: var(--ink);
+		color: #f6f0e6;
+	}
+	.svc-hero--image {
+		min-height: clamp(520px, 72svh, 680px);
+	}
+	.svc-hero__img {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.svc-hero__scrim {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(180deg, rgba(11, 8, 7, 0.5) 0%, rgba(11, 8, 7, 0) 25%, rgba(11, 8, 7, 0.75) 100%),
+			linear-gradient(90deg, rgba(11, 8, 7, 0.7), rgba(11, 8, 7, 0) 70%);
+	}
+	.svc-hero__content {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		gap: 22px;
+		padding-block: 140px 72px;
+	}
+	.svc-hero__crumb {
+		color: var(--gold-soft);
+	}
+	.svc-hero__title {
+		max-width: 960px;
+		font-size: clamp(44px, 6vw, 88px);
+	}
+	.svc-hero__sub {
+		max-width: 560px;
+		font-size: 18px;
+		color: #e3d9c9;
+	}
+	.svc-body {
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		column-gap: 24px;
+		row-gap: 48px;
+	}
+	.svc-body__main {
+		grid-column: span 7;
+	}
+	.svc-body__text {
+		max-width: 640px;
+		margin-bottom: 20px;
+		font-size: clamp(18px, 1.6vw, 22px);
+		line-height: 1.55;
+		color: var(--ink-soft);
+	}
+	.svc-body__aside {
+		grid-column: 9 / span 4;
+		display: flex;
+		flex-direction: column;
+		gap: 36px;
+	}
+	.svc-body__label {
+		margin-bottom: 12px;
+		color: var(--maroon);
+	}
+	.svc-list li {
+		padding: 12px 0;
+		border-top: 1px solid var(--rule);
+	}
+	.svc-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.svc-chips li {
+		padding: 8px 12px;
+		border: 1px solid var(--ink);
+		font-size: 14px;
+	}
+	.svc-next {
+		display: block;
+		padding-block: 56px;
+		border-top: 1px solid var(--rule-dark);
+	}
+	.svc-next:hover {
+		color: var(--gold);
+	}
+	.svc-next__inner {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.svc-next .mono {
+		color: var(--on-night-dim);
+	}
+	.svc-next__title {
+		font-size: clamp(30px, 4vw, 56px);
+	}
+	@media (max-width: 860px) {
+		.svc-body__main,
+		.svc-body__aside {
+			grid-column: 1 / -1;
+		}
+	}
+</style>
