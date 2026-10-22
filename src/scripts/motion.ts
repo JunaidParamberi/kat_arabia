@@ -236,8 +236,17 @@ for (const film of $$("[data-film]")) {
 	};
 
 	if (video) {
-		video.pause();
-		video.addEventListener("loadedmetadata", () => seek(0));
+		// iOS Safari leaves a muted/playsinline video on a black frame until it has
+		// actually played once, even after seeking — force one play+pause to decode a frame.
+		video.addEventListener("loadedmetadata", () => {
+			const kick = video.play();
+			if (kick && typeof kick.then === "function") {
+				kick.then(() => video.pause()).catch(() => video.pause());
+			} else {
+				video.pause();
+			}
+			seek(0);
+		});
 	}
 
 	if (reduced) {
