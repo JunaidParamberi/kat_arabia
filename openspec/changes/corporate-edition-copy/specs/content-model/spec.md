@@ -64,6 +64,20 @@ The schema SHALL register `kat_hero`, `kat_film`, `kat_intro`, `kat_capabilities
 - **WHEN** a page contains a `kat_film` block
 - **THEN** `src/components/blocks/Film.astro` renders it with the block's stored fields
 
+### Requirement: Repeaters have fixed item limits
+
+Block repeaters SHALL enforce their seed limits: 1–8 film chapters, up to 6 intro facts, up to 4 split facts, 1–9 steps, up to 8 offices, up to 6 certifications, up to 24 client logos, up to 14 scope items, and up to 14 industries on services.
+
+#### Scenario: Too many logos
+
+- **WHEN** an editor tries to add a twenty-fifth client logo
+- **THEN** the editor blocks the addition at 24
+
+#### Scenario: Deck scope list fits
+
+- **WHEN** an editor pastes the deck's 14-item Oil & Gas scope list into a service entry
+- **THEN** all 14 items are accepted
+
 ## RENAMED Requirements
 
 FROM: `### Requirement: Thirteen KAT block types exist`

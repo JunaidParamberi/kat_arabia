@@ -118,7 +118,7 @@ const HeadingTag = isPage ? "h1" : "h2";
 				</div>
 			</aside>
 
-			<form class="contact__form" method="post" action="/api/enquiry" data-enquiry>
+			<form class="contact__form" method="post" action="/api/enquiry" enctype="multipart/form-data" data-enquiry>
 				{
 					sent === "1" && (
 						<p class="contact__notice" role="status">
@@ -167,9 +167,30 @@ const HeadingTag = isPage ? "h1" : "h2";
 					<label class="fld">
 						Phone<input type="tel" name="phone" autocomplete="tel" maxlength="40" />
 					</label>
+					<label class="fld">
+						Country *<input type="text" name="country" autocomplete="country-name" required maxlength="80" />
+					</label>
+					<label class="fld">
+						Project type
+						<select name="project_type">
+							<option value="">Select (optional)</option>
+							<option>Construction and infrastructure</option>
+							<option>Industrial and energy</option>
+							<option>Building systems and facilities</option>
+							<option>Engineering, equipment and workforce</option>
+						</select>
+					</label>
+					<label class="fld fld--wide">
+						Location *<input type="text" name="location" required maxlength="120" placeholder="City, country or project site" />
+					</label>
 					<label class="fld fld--wide">
 						<span data-extra-label>{current.extra}</span>
 						<input type="text" name="detail" placeholder={current.ph} maxlength="300" data-extra-input />
+					</label>
+					<label class="fld fld--wide">
+						Tender documents (optional)
+						<input type="file" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+						<span class="fld__hint">PDF, Word or Excel, up to 10 MB.</span>
 					</label>
 					<label class="fld fld--wide">
 						Message *<textarea name="message" rows="5" required maxlength="4000"></textarea>
@@ -356,6 +377,7 @@ const HeadingTag = isPage ? "h1" : "h2";
 		grid-column: span 2;
 	}
 	.fld input,
+	.fld select,
 	.fld textarea {
 		min-height: 0;
 		padding: 8px 0 10px;
@@ -372,13 +394,38 @@ const HeadingTag = isPage ? "h1" : "h2";
 		resize: vertical;
 	}
 	.fld input:hover,
+	.fld select:hover,
 	.fld textarea:hover {
 		border-color: var(--ink-muted);
 	}
 	.fld input:focus,
+	.fld select:focus,
 	.fld textarea:focus {
 		outline: none;
 		border-color: var(--maroon);
+	}
+	.fld select {
+		appearance: none;
+		cursor: pointer;
+	}
+	.fld input[type="file"] {
+		font-size: 14px;
+		color: var(--ink-muted);
+	}
+	.fld input[type="file"]::file-selector-button {
+		margin-inline-end: 12px;
+		padding: 8px 14px;
+		background: none;
+		border: 1px solid var(--rule);
+		border-radius: 0;
+		color: var(--ink);
+		font: inherit;
+		cursor: pointer;
+	}
+	.fld__hint {
+		font-size: 12px;
+		font-weight: 400;
+		color: var(--ink-muted);
 	}
 	.contact__hp {
 		position: absolute;

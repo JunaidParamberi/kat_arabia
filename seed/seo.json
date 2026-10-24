@@ -1,0 +1,116 @@
+[
+	{
+		"collection": "pages",
+		"slug": "home",
+		"title": "KAT Arabia General Contracting | Engineering and Contracting in the UAE and Saudi Arabia",
+		"description": "KAT Arabia delivers construction, infrastructure, industrial, oil and gas, and building services projects across the UAE and Saudi Arabia."
+	},
+	{
+		"collection": "pages",
+		"slug": "about",
+		"title": "About Us | KAT Arabia General Contracting",
+		"description": null
+	},
+	{
+		"collection": "pages",
+		"slug": "services",
+		"title": "Our Services | KAT Arabia General Contracting",
+		"description": "General contracting, civil infrastructure, industrial construction, oil and gas, MEP, energy, facility management, equipment, camps and workforce solutions across the UAE and Saudi Arabia."
+	},
+	{
+		"collection": "pages",
+		"slug": "industries",
+		"title": "Industries We Serve | KAT Arabia",
+		"description": null
+	},
+	{
+		"collection": "pages",
+		"slug": "projects",
+		"title": "Our Projects | KAT Arabia",
+		"description": null
+	},
+	{
+		"collection": "pages",
+		"slug": "hse-quality",
+		"title": "HSE & Quality | KAT Arabia",
+		"description": null
+	},
+	{
+		"collection": "pages",
+		"slug": "clients",
+		"title": "Our Clients | KAT Arabia",
+		"description": null
+	},
+	{
+		"collection": "pages",
+		"slug": "contact",
+		"title": "Contact Us | KAT Arabia General Contracting",
+		"description": null
+	},
+	{
+		"collection": "services",
+		"slug": "general-contracting",
+		"title": "General Contracting & Building Construction | KAT Arabia",
+		"description": "Commercial, residential, government, healthcare, education, hospitality and industrial buildings delivered by KAT Arabia in the UAE and Saudi Arabia."
+	},
+	{
+		"collection": "services",
+		"slug": "civil-infrastructure",
+		"title": "Civil Infrastructure & Heavy Engineering | KAT Arabia",
+		"description": "Roads, bridges, utility networks, water transmission, pipelines, marine works and structural engineering by KAT Arabia in the UAE and Saudi Arabia."
+	},
+	{
+		"collection": "services",
+		"slug": "industrial-construction",
+		"title": "Industrial Construction & Plant Services | KAT Arabia",
+		"description": "Construction, installation, commissioning, shutdown and maintenance services for manufacturing, petrochemical, mining, power and process facilities."
+	},
+	{
+		"collection": "services",
+		"slug": "oil-gas-engineering",
+		"title": "Oil & Gas Engineering Services | KAT Arabia",
+		"description": "Engineering, construction, maintenance and technical support across upstream, midstream and downstream oil and gas, onshore and offshore."
+	},
+	{
+		"collection": "services",
+		"slug": "mep",
+		"title": "MEP & Electro-Mechanical Solutions | KAT Arabia",
+		"description": "HVAC, electrical, plumbing, fire fighting, fire alarm, ELV, building automation, instrumentation, testing and commissioning by KAT Arabia."
+	},
+	{
+		"collection": "services",
+		"slug": "energy-electrical-solar",
+		"title": "Energy, Electrical & Solar Solutions | KAT Arabia",
+		"description": "Electrical installation, solar system design and implementation, power distribution and energy efficiency solutions for infrastructure and industrial projects."
+	},
+	{
+		"collection": "services",
+		"slug": "engineering-contracting-project-management",
+		"title": "Engineering, Contracting & Project Management | KAT Arabia",
+		"description": "Civil, mechanical and electrical contracting, design and engineering, project management and site supervision by KAT Arabia."
+	},
+	{
+		"collection": "services",
+		"slug": "plant-equipment",
+		"title": "Plant & Equipment Solutions | KAT Arabia",
+		"description": "Cranes, excavators, loaders, forklifts, generators and material handling equipment supplied with certified operators."
+	},
+	{
+		"collection": "services",
+		"slug": "integrated-facility-management",
+		"title": "Integrated Facility Management | KAT Arabia",
+		"description": "Hard and soft facility management, building, MEP and civil maintenance, asset and energy management by KAT Arabia."
+	},
+	{
+		"collection": "services",
+		"slug": "camp-construction-maintenance",
+		"title": "Camp Construction & Maintenance | KAT Arabia",
+		"description": "Labor camp construction, modular camp setup, utility infrastructure and camp maintenance services by KAT Arabia."
+	},
+	{
+		"collection": "services",
+		"slug": "integrated-project-workforce",
+		"title": "Project Workforce Solutions | KAT Arabia",
+		"description": "Project workforce supply, global talent acquisition, executive search, trade testing and large-scale mobilization from KAT Group's in-house recruitment division."
+	}
+]

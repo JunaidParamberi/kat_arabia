@@ -33,6 +33,30 @@ export async function getServices(): Promise<ServiceItem[]> {
 	return (entries ?? []).map((e: any) => toService(e));
 }
 
+export interface ProjectItem {
+	slug: string;
+	title: string;
+	summary: string;
+	description: string;
+	image: { src: string; alt: string } | null;
+}
+
+export function toProject(entry: { id: string; data: Record<string, any> }): ProjectItem {
+	const d = entry.data;
+	return {
+		slug: entry.id,
+		title: String(d.title ?? ""),
+		summary: String(d.summary ?? ""),
+		description: String(d.description ?? ""),
+		image: pickImage(d.image, null),
+	};
+}
+
+export async function getProjects(): Promise<ProjectItem[]> {
+	const { entries } = await getEmDashCollection("projects", { orderBy: { order: "asc" }, limit: 100 });
+	return (entries ?? []).map((e: any) => toProject(e));
+}
+
 export interface IndustryItem {
 	slug: string;
 	number: string;

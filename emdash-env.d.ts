@@ -232,7 +232,22 @@ export interface PageContentKatContactV1Block {
 
 export type PageContentKatContactBlock = PageContentKatContactV1Block;
 
-export type PageContentBlock = PageContentKatHeroBlock | PageContentKatFilmBlock | PageContentKatIntroBlock | PageContentKatCapabilitiesBlock | PageContentKatWorkforceBlock | PageContentKatIndustriesBlock | PageContentKatFootprintBlock | PageContentKatStepsBlock | PageContentKatSplitBlock | PageContentKatHseBlock | PageContentKatClientsBlock | PageContentKatCtaBlock | PageContentKatContactBlock;
+export interface PageContentKatProjectsV1Block {
+  _type: "kat_projects";
+  _version: 1;
+  _key: string;
+  "label"?: string | null;
+  "headline": string;
+  "highlight"?: string | null;
+  "intro"?: string | null;
+  "cta_label"?: string | null;
+  "cta_url"?: string | null;
+  "anchor_id"?: string | null;
+}
+
+export type PageContentKatProjectsBlock = PageContentKatProjectsV1Block;
+
+export type PageContentBlock = PageContentKatHeroBlock | PageContentKatFilmBlock | PageContentKatIntroBlock | PageContentKatCapabilitiesBlock | PageContentKatWorkforceBlock | PageContentKatIndustriesBlock | PageContentKatFootprintBlock | PageContentKatStepsBlock | PageContentKatSplitBlock | PageContentKatHseBlock | PageContentKatClientsBlock | PageContentKatCtaBlock | PageContentKatContactBlock | PageContentKatProjectsBlock;
 
 export interface Page {
   id: string;
@@ -240,6 +255,23 @@ export interface Page {
   status: string;
   title: string;
   content?: PageContentBlock[];
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+  byline?: BylineSummary | null;
+  bylines?: ContentBylineCredit[];
+  terms?: Record<string, TaxonomyTerm[]>;
+}
+
+export interface Project {
+  id: string;
+  slug: string | null;
+  status: string;
+  title: string;
+  summary: string;
+  image?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
+  description?: string;
+  order?: number;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -273,6 +305,7 @@ declare module "emdash" {
   interface EmDashCollections {
     industries: Industry;
     pages: Page;
+    projects: Project;
     services: Service;
   }
 }

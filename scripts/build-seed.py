@@ -11,6 +11,11 @@ from pathlib import Path
 URL_RE = "^(?:$|(?:https?://|mailto:|tel:|/(?!/)|#).+)$"
 ANCHOR_RE = "^(?:$|[a-z][a-z0-9_-]*)$"
 
+# The EmDash seed engine cannot write SEO records (they live in _emdash_seo,
+# a table applySeed never touches), so deck meta is collected here and applied
+# by scripts/apply-seo.mjs after seeding.
+SEO_ROWS = []
+
 
 def f(slug, label, type_="string", **kw):
     d = {"slug": slug, "label": label, "type": type_}
@@ -165,6 +170,12 @@ BLOCKS = [
         f("dark", "Dark background", "boolean", defaultValue=False),
         ANCHOR,
     ]),
+    block("kat_projects", "Projects", "Listing of published project profiles", [
+        LABEL, HEADLINE, HIGHLIGHT,
+        f("intro", "Intro", "text"),
+        f("cta_label", "Button text"), link("cta_url", "Button link"),
+        ANCHOR,
+    ]),
 ]
 
 ALL_BLOCKS = [b["slug"] for b in BLOCKS]
@@ -190,7 +201,7 @@ COLLECTIONS = [
             f("default_image", "Built-in image when none is chosen", "select",
               options=["none", "gc-facade", "civil-interchange", "steel-erection", "plant-night", "mep", "equipment", "workforce", "hero-dusk"],
               defaultValue="none"),
-            rep("scope", "Typical scope", [f("item", "Item", required=True)], max_items=12),
+            rep("scope", "Typical scope", [f("item", "Item", required=True)], max_items=14),
             rep("industries", "Industries served", [f("item", "Industry", required=True)], max_items=14),
             f("order", "Sort order", "integer", defaultValue=0),
         ],
@@ -208,6 +219,17 @@ COLLECTIONS = [
             f("order", "Sort order", "integer", defaultValue=0),
         ],
     },
+    {
+        "slug": "projects", "label": "Projects", "labelSingular": "Project",
+        "supports": ["drafts", "revisions"],
+        "fields": [
+            f("title", "Title", required=True),
+            f("summary", "Summary (one sentence)", "text", required=True),
+            f("image", "Image", "image"),
+            f("description", "Description (leave a blank line between paragraphs)", "text"),
+            f("order", "Sort order", "integer", defaultValue=0),
+        ],
+    },
 ]
 
 # ---------- content ----------
@@ -219,36 +241,149 @@ def k(i, t, **data):
 
 
 SERVICES = [
-    ("general-contracting", "01", "General Contracting", "gc-facade",
-     "Design-and-build and build-only delivery of residential, commercial, government and industrial buildings under one contract.",
-     ["Design & build", "Building works", "Fit-out", "Turnkey delivery"], ["Commercial", "Government", "Healthcare", "Hospitality"]),
-    ("civil-infrastructure", "02", "Civil Infrastructure & Heavy Engineering", "civil-interchange",
-     "Earthworks, roads, utilities, foundations and heavy civil structures for industrial cities and public infrastructure.",
-     ["Earthworks & grading", "Roads & paving", "Utilities & networks", "Foundations"], ["Infrastructure", "Smart cities", "Logistics", "Marine"]),
-    ("industrial-construction", "03", "Industrial Construction & Plant Services", "steel-erection",
-     "New-build plant works, shutdowns, turnarounds and maintenance campaigns for process and manufacturing facilities.",
-     ["Steel erection", "Shutdowns & turnarounds", "Plant maintenance", "Equipment setting"], ["Manufacturing", "Petrochemicals", "Mining"]),
-    ("oil-gas-engineering", "04", "Oil & Gas Engineering", "plant-night",
-     "Onshore and offshore field support, piping, mechanical and structural works, shutdowns and facility maintenance.",
-     ["Piping", "Mechanical works", "Tie-ins", "Shutdown support"], ["Oil & gas", "Petrochemicals", "Energy"]),
-    ("mep", "05", "MEP", "mep",
-     "Mechanical, electrical and plumbing installation, testing and commissioning, with integrated electro-mechanical design.",
-     ["HVAC", "Power & lighting", "Plumbing & drainage", "Fire & life safety"], ["Commercial", "Healthcare", "Hospitality", "Government"]),
-    ("plant-equipment", "06", "Plant & Equipment", "equipment",
-     "Heavy plant, cranes and equipment, supplied with operators to keep packages moving.",
-     ["Cranes & lifting", "Earthmoving fleet", "Operators", "Fleet maintenance"], ["Infrastructure", "Mining", "Oil & gas"]),
-    ("integrated-project-workforce", "07", "Integrated Project Workforce", "workforce",
-     "Recruitment and rapid mobilisation of skilled and semi-skilled crews from twelve source countries.",
-     ["Recruitment", "Trade testing", "Mobilisation", "Deployment"], ["All 14 industries"]),
-    ("integrated-facility-management", "08", "Integrated Facility Management", "none",
-     "Facility and building maintenance that keeps completed assets safe, compliant and operating after handover.",
-     ["Hard FM", "Soft FM", "Operations & maintenance", "Asset care"], ["Government", "Healthcare", "Commercial", "Hospitality"]),
+    {
+        "slug": "general-contracting", "number": "01",
+        "title": "General Contracting & Building Construction",
+        "image": "gc-facade",
+        "summary": "Commercial, residential, government, healthcare, education, hospitality and industrial buildings delivered by KAT Arabia in the UAE and Saudi Arabia.",
+        "description": "KAT Arabia delivers integrated general contracting solutions across the commercial, residential, institutional, industrial, healthcare, hospitality and government sectors. Our project execution model emphasizes strict timeline adherence, cost management and consistent quality outcomes.\n\nBuilding works are supported by our MEP, civil, equipment and workforce capabilities, giving clients a single point of responsibility. Our teams work to specification, quality standards and applicable building regulations in each market.",
+        "scope": ["Commercial developments", "Residential communities", "Government buildings", "Healthcare facilities",
+                  "Educational institutions", "Hospitality projects", "Industrial buildings", "Warehouses and logistics facilities",
+                  "Structural works", "Interior fit-out", "Building finishing", "Turnkey construction"],
+        "industries": ["Commercial developments", "Government projects", "Healthcare", "Hospitality"],
+    },
+    {
+        "slug": "civil-infrastructure", "number": "02",
+        "title": "Civil Infrastructure & Heavy Engineering",
+        "image": "civil-interchange",
+        "summary": "Roads, bridges, utility networks, water transmission, pipelines, marine works and structural engineering by KAT Arabia in the UAE and Saudi Arabia.",
+        "description": "KAT Arabia delivers integrated civil engineering and heavy infrastructure solutions that support transportation networks, utilities, industrial expansion and urban development.\n\nOur infrastructure teams are supported by modern plant and equipment and certified operators, with engineering supervision and quality control throughout each project.",
+        "scope": ["Roads and highways", "Bridges and flyovers", "Utility networks", "Water transmission systems",
+                  "Drainage infrastructure", "Pipeline installation", "Earthworks and excavation", "Marine infrastructure",
+                  "Site development", "Industrial infrastructure", "Concrete structures", "Structural engineering works"],
+        "industries": ["Infrastructure and transportation", "Smart cities", "Logistics", "Marine"],
+    },
+    {
+        "slug": "industrial-construction", "number": "03",
+        "title": "Industrial Construction & Plant Services",
+        "image": "steel-erection",
+        "summary": "Construction, installation, commissioning, shutdown and maintenance services for manufacturing, petrochemical, mining, power and process facilities.",
+        "description": "KAT Arabia supports industrial growth through specialized engineering, construction and technical solutions for manufacturing, petrochemical, mining, power generation and industrial facilities.\n\nWe combine construction, mechanical installation, equipment and skilled workforce in one organization, enabling rapid mobilization for new construction, expansion and shutdown work.",
+        "scope": ["Manufacturing facilities", "Petrochemical plants", "Power plants", "Process industries",
+                  "Plant expansion", "Structural steel works", "Mechanical installation", "Equipment installation",
+                  "Commissioning support", "Shutdown services", "Industrial maintenance", "Turnkey EPC solutions"],
+        "industries": ["Manufacturing", "Petrochemicals", "Mining and metals"],
+    },
+    {
+        "slug": "oil-gas-engineering", "number": "04",
+        "title": "Oil & Gas Engineering Services",
+        "image": "plant-night",
+        "summary": "Engineering, construction, maintenance and technical support across upstream, midstream and downstream oil and gas, onshore and offshore.",
+        "description": "KAT Arabia provides engineering, construction, maintenance and technical support services across upstream, midstream and downstream oil and gas operations, both onshore and offshore.\n\nAll operations comply with international safety standards and local regulations, supporting reliability and operational excellence.",
+        "scope": ["Pipeline construction", "Plant construction", "Mechanical works", "Piping fabrication and installation",
+                  "Tank and pressure vessel services", "Structural steel works", "Equipment installation", "Commissioning support",
+                  "Shutdown and turnaround services", "Asset integrity support", "Industrial maintenance",
+                  "Facility maintenance and upgrades", "Field support services", "Technical and engineering workforce support"],
+        "industries": ["Oil and gas", "Petrochemicals", "Energy and utilities"],
+    },
+    {
+        "slug": "mep", "number": "05",
+        "title": "Mechanical, Electrical & Plumbing (MEP) and Electro-Mechanical Solutions",
+        "seo_title": "MEP & Electro-Mechanical Solutions | KAT Arabia",
+        "image": "mep",
+        "summary": "HVAC, electrical, plumbing, fire fighting, fire alarm, ELV, building automation, instrumentation, testing and commissioning by KAT Arabia.",
+        "description": "KAT Arabia delivers complete MEP and electro-mechanical solutions that enhance building performance, operational efficiency and sustainability, from installation through testing, commissioning and maintenance.\n\nMechanical, electrical and plumbing disciplines are coordinated within a single team and delivered either as part of a building project or as a standalone package.",
+        "scope": ["HVAC systems", "Electrical installations", "Power distribution", "Plumbing systems",
+                  "Fire fighting systems", "Fire alarm systems", "ELV systems", "Building automation",
+                  "Instrumentation and control services", "Electro-mechanical integration", "Testing and commissioning",
+                  "Preventive maintenance", "HSE and compliance support"],
+        "industries": ["Commercial developments", "Healthcare", "Hospitality", "Government projects"],
+    },
+    {
+        "slug": "energy-electrical-solar", "number": "06",
+        "title": "Energy, Electrical & Solar Solutions",
+        "image": "hero-dusk",
+        "summary": "Electrical installation, solar system design and implementation, power distribution and energy efficiency solutions for infrastructure and industrial projects.",
+        "description": "KAT Arabia delivers modern energy solutions for infrastructure and industrial projects, helping clients optimize energy usage while integrating sustainable practices into their facilities.\n\nOur electrical and engineering teams support projects from design through installation and ongoing maintenance.",
+        "scope": ["Electrical installation and maintenance", "Solar system design and implementation",
+                  "Power distribution systems", "Energy efficiency solutions"],
+        "industries": ["Energy and utilities", "Infrastructure and transportation", "Renewable energy"],
+    },
+    {
+        "slug": "engineering-contracting-project-management", "number": "07",
+        "title": "Engineering, Contracting & Project Management",
+        "image": "civil-interchange",
+        "summary": "Civil, mechanical and electrical contracting, design and engineering, project management and site supervision by KAT Arabia.",
+        "description": "Our engineering division is equipped to handle technically demanding projects across multiple disciplines. Experienced engineers and technical supervisors ensure that every phase of a project is executed according to strict specifications, quality standards and best practice.\n\nOur integrated project execution model combines planning, technical supervision and on-site delivery, supporting seamless execution from engineering and construction through commissioning and maintenance.",
+        "scope": ["Civil, mechanical and electrical contracting", "Civil engineering and structural works",
+                  "Mechanical installation and maintenance", "Electrical systems and power distribution",
+                  "Electro-mechanical integration", "Design and engineering", "Project management and site supervision",
+                  "Turnkey contracting solutions"],
+        "industries": ["Commercial developments", "Infrastructure and transportation", "Government projects"],
+    },
+    {
+        "slug": "plant-equipment", "number": "08",
+        "title": "Plant & Equipment Solutions",
+        "image": "equipment",
+        "summary": "Cranes, excavators, loaders, forklifts, generators and material handling equipment supplied with certified operators.",
+        "description": "KAT Arabia provides modern construction equipment and certified operators that support productivity, safety and operational efficiency at every stage of project delivery.\n\nEquipment is supplied with certified operators and supported by experienced professionals, and is coordinated with our construction and workforce teams.",
+        "scope": ["Mobile cranes", "Crawler cranes", "Excavators", "Bulldozers", "Wheel loaders", "Backhoe loaders",
+                  "Rollers", "Forklifts", "Telehandlers", "Boom lifts", "Material handling equipment", "Generators"],
+        "industries": ["Infrastructure and transportation", "Mining and metals", "Oil and gas"],
+    },
+    {
+        "slug": "integrated-facility-management", "number": "09",
+        "title": "Integrated Facility Management",
+        "image": "none",
+        "summary": "Hard and soft facility management, building, MEP and civil maintenance, asset and energy management by KAT Arabia.",
+        "description": "KAT Arabia delivers integrated facility management and technical maintenance solutions that preserve asset value and ensure long-term operational reliability.\n\nTechnical and operational services are delivered under one contract, with maintenance planned to protect asset performance across the full lifecycle.",
+        "scope": ["Hard facility management", "Soft facility management", "Building maintenance", "MEP maintenance",
+                  "Civil maintenance", "Preventive maintenance", "Corrective maintenance", "Asset management",
+                  "Energy management", "Industrial cleaning", "Technical support", "Landscaping and grounds maintenance"],
+        "industries": ["Government projects", "Healthcare", "Commercial developments", "Hospitality"],
+    },
+    {
+        "slug": "camp-construction-maintenance", "number": "10",
+        "title": "Camp Construction & Maintenance",
+        "image": "gc-facade",
+        "summary": "Labor camp construction, modular camp setup, utility infrastructure and camp maintenance services by KAT Arabia.",
+        "description": "KAT Arabia provides complete solutions for workforce accommodation and site infrastructure. Our designs prioritize functionality, compliance, safety and comfort, supporting smooth operations for project teams.\n\nCamp construction, utilities and ongoing maintenance are delivered by one contractor, supported by our workforce and facility management teams.",
+        "scope": ["Labor camp construction", "Modular camp setup", "Utility infrastructure", "Camp maintenance services"],
+        "industries": ["Infrastructure and transportation", "Mining and metals", "Oil and gas"],
+    },
+    {
+        "slug": "integrated-project-workforce", "number": "11",
+        "title": "Project Workforce Solutions",
+        "image": "workforce",
+        "summary": "Project workforce supply, global talent acquisition, executive search, trade testing and large-scale mobilization from KAT Group's in-house recruitment division.",
+        "description": "Backed by KAT Group's dedicated in-house international recruitment division, KAT Arabia provides integrated workforce solutions that enable clients to mobilize skilled professionals quickly, efficiently and confidently. Our network supports engineering, infrastructure, industrial, oil and gas, and maintenance projects by sourcing, assessing, mobilizing and managing qualified professionals.\n\nWe support clients across every stage of project execution, with flexible deployment aligned to project requirements and rapid mobilization to meet project timelines.",
+        "scope": ["Project workforce supply", "Global talent acquisition", "Executive search",
+                  "Engineering and technical recruitment", "Trade testing and competency assessment",
+                  "Large-scale workforce mobilization", "Shutdown and turnaround teams", "Workforce management"],
+        "industries": ["All 14 industries"],
+    },
 ]
 
-INDUSTRIES = ["Infrastructure", "Oil & gas", "Petrochemicals", "Energy", "Manufacturing", "Mining", "Commercial",
-              "Government", "Healthcare", "Hospitality", "Logistics", "Marine", "Renewables", "Smart cities"]
-IND_IMG = {"Oil & gas": "plant-night", "Petrochemicals": "steel-erection", "Infrastructure": "civil-interchange",
-           "Commercial": "gc-facade", "Energy": "hero-dusk", "Manufacturing": "mep"}
+# Short labels for the footer's Services column (full titles wrap badly there)
+FOOTER_SERVICE_LABELS = {
+    "general-contracting": "General Contracting",
+    "civil-infrastructure": "Civil Infrastructure",
+    "industrial-construction": "Industrial Construction",
+    "oil-gas-engineering": "Oil & Gas Engineering",
+    "mep": "MEP & Electro-Mechanical",
+    "energy-electrical-solar": "Energy, Electrical & Solar",
+    "engineering-contracting-project-management": "Engineering & Project Management",
+    "plant-equipment": "Plant & Equipment",
+    "integrated-facility-management": "Facility Management",
+    "camp-construction-maintenance": "Camp Construction",
+    "integrated-project-workforce": "Project Workforce",
+}
+
+INDUSTRIES = ["Infrastructure and transportation", "Oil and gas", "Petrochemicals", "Energy and utilities", "Manufacturing",
+              "Mining and metals", "Commercial developments", "Government projects", "Healthcare", "Hospitality",
+              "Logistics", "Marine", "Renewable energy", "Smart cities"]
+IND_IMG = {"Oil and gas": "plant-night", "Petrochemicals": "steel-erection", "Infrastructure and transportation": "civil-interchange",
+           "Commercial developments": "gc-facade", "Energy and utilities": "hero-dusk", "Manufacturing": "mep"}
 
 COUNTRIES = "India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi"
 
@@ -260,120 +395,149 @@ CHAPTERS = [
     {"title": "Skyline", "description": "Cranes gone, plaza landscaped: the tower stands finished and operating against the skyline.", "services": "General contracting · MEP · Facility management · Workforce"},
 ]
 
-FACTS = [{"value": "8", "label": "Service lines"}, {"value": "14", "label": "Industries served"},
-         {"value": "12", "label": "Workforce source countries"}, {"value": "2026", "label": "Global operations from"}]
+FACTS = [{"value": "11", "label": "Service lines"}, {"value": "14", "label": "Industries served"},
+         {"value": "12", "label": "Workforce source countries"}, {"value": "4", "label": "Offices in the UAE & KSA"}]
 
 OFFICES = [
-    {"city": "Al Jubail", "country": "Saudi Arabia", "role": "Regional office", "address": "KAT Arabia General Contracting\nEastern Province\n[Street, building, P.O. box]", "phone": "+966 53 181 4451", "primary": True},
-    {"city": "Abu Dhabi", "country": "United Arab Emirates", "role": "KAT Group HQ", "address": "KAT Group\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
-    {"city": "Dubai", "country": "United Arab Emirates", "role": "Regional office", "address": "KAT Group\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
-    {"city": "Sharjah", "country": "United Arab Emirates", "role": "Regional office", "address": "KAT Group FZC LLC\n[Street, building, P.O. box]", "phone": "[Phone]", "primary": False},
+    {"city": "Abu Dhabi", "country": "United Arab Emirates", "role": "Corporate headquarters",
+     "address": "Foodco Building, Salam Street, Abu Dhabi", "primary": True},
+    {"city": "Dubai", "country": "United Arab Emirates", "role": "Regional office",
+     "address": "55, BIN Dasmal Building 1, Al Quoz Industrial Area 1, Dubai", "primary": False},
+    {"city": "Sharjah", "country": "United Arab Emirates", "role": "Regional office",
+     "address": "1201, Crystal Tower, Corniche Street, Al Majaz 1, Sharjah", "primary": False},
+    {"city": "Al Jubail", "country": "Saudi Arabia", "role": "KSA office",
+     "address": "Abu Al Hassan Ibn Al Jawzi St, Tebah District, Al Jubail, P.O. 35513", "primary": False},
 ]
 
-CERTS = [{"code": "ISO 9001", "title": "Quality management", "note": "Certificate placeholder"},
-         {"code": "ISO 14001", "title": "Environmental management", "note": "Certificate placeholder"},
-         {"code": "ISO 45001", "title": "Occupational health & safety", "note": "Certificate placeholder"}]
-
-CONTACT = dict(phone="+966 53 181 4451", email="info@katarabia.com",
-               ksa_address="KAT Arabia General Contracting\nAl Jubail, Eastern Province\n[Street, building, P.O. box]",
-               uae_address="KAT Group · Abu Dhabi, Dubai, Sharjah\n[Head office address]",
+CONTACT = dict(email="info@katarabia.com",
+               ksa_address="KAT Arabia General Contracting Co.\nAbu Al Hassan Ibn Al Jawzi St, Tebah District, Al Jubail, P.O. 35513",
+               uae_address="Abu Dhabi: Foodco Building, Salam Street, Abu Dhabi\nDubai: 55, BIN Dasmal Building 1, Al Quoz Industrial Area 1, Dubai\nSharjah: 1201, Crystal Tower, Corniche Street, Al Majaz 1, Sharjah",
                hours="Sunday – Thursday · [08:00 – 17:00], local time per office",
                reply_note="We reply within [X] working days.")
 
 HOME = [
-    k("hero", "kat_hero", variant="home", eyebrow="KAT Arabia General Contracting · Global engineering & contracting",
-      headline="Shaping possibilities, worldwide.",
-      subheadline="Engineering, construction and workforce solutions for industrial, energy and infrastructure projects around the world.",
-      primary_cta_label="Explore capabilities", primary_cta_url="/#capabilities",
-      secondary_cta_label="Request prequalification", secondary_cta_url="/contact", default_image="hero-dusk"),
+    k("hero", "kat_hero", variant="home", eyebrow="KAT Arabia General Contracting",
+      headline="Engineering and Contracting Solutions Across Industries", highlight="Across Industries",
+      subheadline="KAT Arabia delivers construction, infrastructure, industrial and energy projects across the UAE and Saudi Arabia, supported by in-house equipment and workforce capability.",
+      primary_cta_label="Our Services", primary_cta_url="/services",
+      secondary_cta_label="Contact Us", secondary_cta_url="/contact", default_image="hero-dusk"),
     k("film", "kat_film", label="01 — The film · From bare ground to skyline", headline="One partner. Every stage.",
       intro="Scroll and watch a project come to life — from survey pegs in the ground to an operating skyline, delivered by one contractor.",
       chapters=CHAPTERS, anchor_id="film"),
-    k("capabilities", "kat_capabilities", label="03 — Capabilities", headline="Every discipline a project needs.", highlight="One contractor.",
-      intro="Delivered under one contract, one HSE system and one point of accountability.", layout="tabs",
-      cta_label="Discuss a package", cta_url="/contact", anchor_id="capabilities"),
-    k("contact", "kat_contact", label="09 — Contact", headline="Let’s build the future", highlight="together.",
-      intro="Project enquiries, vendor prequalification, manpower requests and careers.", dark=True, anchor_id="contact", **CONTACT),
+    k("about", "kat_intro", label="02 — About KAT Arabia", headline="International standards,", highlight="local execution.",
+      body="KAT Arabia General Contracting is an engineering and contracting company serving government entities, EPC contractors, industrial operators and private sector clients. We are part of KAT Group, a diversified multinational business group headquartered in the United Arab Emirates, with offices in Abu Dhabi, Dubai, Sharjah and Al Jubail.\n\nWe combine international standards with local execution to deliver reliable, sustainable and value-driven projects, from design and engineering through construction, commissioning and maintenance.",
+      tone="sand", anchor_id="about"),
+    k("capabilities", "kat_capabilities", label="03 — Our Services", headline="Construction to commissioning,", highlight="one partner.",
+      intro="Eleven service lines across four groups — construction and infrastructure, industrial and energy, building systems and facilities, and engineering, equipment and workforce — delivered under one contract and one HSE system.",
+      layout="tabs", cta_label="All services", cta_url="/services", anchor_id="services"),
+    k("industries", "kat_industries", label="04 — Industries We Serve", headline="The sectors driving", highlight="growth in the region.",
+      intro="KAT Arabia supports the industries driving growth in the UAE and Saudi Arabia, delivering integrated solutions across the region’s most vital sectors.",
+      anchor_id="industries"),
+    k("workforce", "kat_workforce", label="05 — Workforce", headline="A dedicated international", highlight="recruitment division.",
+      caption="Skilled crews, sourced and tested in-house",
+      body="Backed by KAT Group’s dedicated in-house international recruitment division, KAT Arabia provides integrated workforce solutions that enable clients to mobilize skilled professionals quickly, efficiently and confidently. Our network supports engineering, infrastructure, industrial, oil and gas, and maintenance projects by sourcing, assessing, mobilizing and managing qualified professionals.",
+      countries=COUNTRIES, show_globe=True,
+      primary_cta_label="Request manpower", primary_cta_url="/contact?type=manpower",
+      secondary_cta_label="Workforce services", secondary_cta_url="/services/integrated-project-workforce",
+      anchor_id="workforce"),
+    k("why", "kat_steps", label="06 — Why Work with KAT Arabia", headline="Six reasons,", highlight="one organization.",
+      columns="3", tone="paper", anchor_id="why",
+      steps=[{"title": "Integrated engineering and contracting.", "text": "One organization accountable from planning to completion."},
+             {"title": "Advanced engineering expertise.", "text": "Civil, mechanical and electrical disciplines supported by experienced engineers and technical supervisors."},
+             {"title": "In-house workforce capability.", "text": "A dedicated international recruitment division supporting rapid mobilization of skilled professionals."},
+             {"title": "Modern plant and equipment.", "text": "Certified operators and experienced professionals supporting productivity, safety and efficiency."},
+             {"title": "Client-focused execution.", "text": "Timelines, quality and regulatory compliance treated as non-negotiable."},
+             {"title": "Safety, quality, and sustainability.", "text": "An integrated management system applied across every site and service."}]),
+    k("projects", "kat_projects", label="07 — Our Projects", headline="Selected project", highlight="profiles.",
+      intro="Our project portfolio includes building construction, civil infrastructure, industrial plant works, oil and gas facilities, MEP installations, camp construction and facility management projects.\n\nRepresentative project profiles are being prepared for publication.",
+      cta_label="View projects", cta_url="/projects", anchor_id="projects"),
+    k("presence", "kat_footprint", label="08 — Our Presence", headline="Four bases.", highlight="One network.",
+      intro="Offices in Abu Dhabi, Dubai and Sharjah in the United Arab Emirates, and in Al Jubail in the Kingdom of Saudi Arabia. Corporate headquarters are in the UAE.",
+      offices=OFFICES, show_cards=True, anchor_id="presence"),
+    k("cta", "kat_cta", headline="Discuss Your Project", primary_cta_label="Contact Us", primary_cta_url="/contact"),
 ]
 
 ABOUT = [
     k("hero", "kat_hero", variant="page", eyebrow="About", headline="Your vision,", highlight="our execution.",
       subheadline="Integrated contracting for seamless project excellence worldwide, built on KAT Group experience.",
       default_image="gc-facade", breadcrumb=True),
-    k("who", "kat_intro", label="01 — Who we are", headline="Building the future", highlight="since 2024.",
-      body="KAT Arabia General Contracting, established in 2024, is a forward-looking contracting company delivering high-quality engineering, construction and infrastructure solutions to clients worldwide.\n\nOur integrated approach combines technical excellence, operational efficiency and structured project management, so execution stays seamless from design and engineering through construction, commissioning and maintenance.\n\nWe are committed to delivering sustainable, high-quality projects on time and within budget.",
+    k("overview", "kat_intro", label="01 — Company Overview", headline="Part of KAT Group,", highlight="delivering worldwide.",
+      body="KAT Arabia General Contracting is an engineering and contracting company serving government entities, EPC contractors, industrial operators and private sector clients.\n\nWe are part of KAT Group, a diversified multinational business group headquartered in the United Arab Emirates. Our teams combine international standards with local execution to deliver reliable, sustainable and value-driven projects across the region.",
       tone="paper"),
-    k("how", "kat_steps", label="02 — How we deliver", headline="One partner across the whole project life.", columns="4", tone="paper",
-      steps=[{"title": "Design & engineering", "text": "Buildability, value engineering and coordinated discipline design before the first peg goes in."},
-             {"title": "Construction", "text": "Civil, structural, mechanical and electrical works under one site organisation."},
-             {"title": "Commissioning", "text": "Testing, start-up and handover documentation, ready for the owner’s operations team."},
-             {"title": "Maintenance", "text": "Facility and building maintenance that keeps completed assets performing."}]),
-    k("group", "kat_split", label="03 — Part of KAT Group", headline="Group experience.", highlight="Global focus.",
-      body="KAT Arabia brings KAT Group’s contracting and workforce capability to projects worldwide, with operations expanding from 2026 across a growing network of regional offices.",
-      default_image="steel-erection", image_right=False, facts=FACTS),
-    k("commitments", "kat_steps", label="04 — Our commitments", headline="Four promises on every project.", columns="4", tone="sand",
-      steps=[{"title": "Safety", "text": "Zero-harm planning on every site, for every crew."},
-             {"title": "Quality", "text": "Work delivered to specification and inspected before handover."},
-             {"title": "Time & budget", "text": "Structured project controls that keep schedules and costs honest."},
-             {"title": "Sustainability", "text": "Responsible methods, materials and energy use across our work."}]),
-    k("cta", "kat_cta", headline="Registering KAT Arabia as a vendor?", primary_cta_label="Request prequalification pack",
-      primary_cta_url="/contact?type=prequalification", secondary_cta_label="Contact us", secondary_cta_url="/contact"),
+    k("whatwedo", "kat_split", label="02 — What We Do", headline="From contracting to workforce,", highlight="one organization.",
+      body="Our capabilities cover general contracting, civil infrastructure, industrial construction, oil and gas services, MEP, energy solutions, plant and equipment, facility management, camp construction and workforce solutions.\n\nBy combining engineering expertise, experienced teams and in-house resources, KAT Arabia delivers integrated project execution with consistency, efficiency and accountability.",
+      default_image="steel-erection", image_right=True, facts=FACTS),
+    k("approach", "kat_steps", label="03 — Our Approach", headline="How we", highlight="work.", columns="3", tone="sand",
+      steps=[{"title": "Integrated engineering and contracting.", "text": "One organization accountable from planning to completion."},
+             {"title": "Advanced engineering expertise.", "text": "Civil, mechanical and electrical disciplines working to strict specifications and quality standards."},
+             {"title": "In-house workforce capability.", "text": "A dedicated international recruitment division supporting rapid mobilization of skilled professionals."},
+             {"title": "Modern plant and equipment.", "text": "Certified operators and experienced professionals supporting productivity and safety."},
+             {"title": "Client-focused execution.", "text": "Timelines, quality and regulatory compliance treated as non-negotiable."}]),
+    k("presence", "kat_intro", label="04 — Our Presence", headline="Four bases.", highlight="One network.",
+      body="With offices in Abu Dhabi, Dubai and Sharjah in the United Arab Emirates, and in Al Jubail in the Kingdom of Saudi Arabia, we combine regional presence with global capability.",
+      tone="paper"),
+    k("leadership", "kat_intro", label="05 — Leadership", headline="Leadership",
+      body="Leadership names, titles and short biographies will be added here once confirmed.",
+      tone="paper"),
 ]
 
 SERVICES_PAGE = [
-    k("hero", "kat_hero", variant="page", eyebrow="Services", headline="One partner for", highlight="complete project execution.",
-      subheadline="Eight service lines, from design to commissioning and beyond, delivered under one contract and one HSE system.",
+    k("hero", "kat_hero", variant="page", eyebrow="Services", headline="Our Services",
+      subheadline="KAT Arabia provides a comprehensive range of engineering, construction, infrastructure and support services designed to meet the evolving needs of clients in the UAE and Saudi Arabia. From general contracting and civil infrastructure to industrial construction, oil and gas services, MEP, energy solutions, facility management, camp construction and workforce solutions, we deliver integrated capabilities under one accountable organization.",
       default_image="equipment", breadcrumb=True),
-    k("lines", "kat_capabilities", label="Service portfolio", headline="Eight service lines.", highlight="One accountable contractor.",
+    k("lines", "kat_capabilities", label="Service portfolio", headline="Eleven service lines.", highlight="One accountable contractor.",
       layout="grid"),
-    k("also", "kat_steps", label="Also delivered", headline="Specialist packages alongside the core lines.", columns="3", tone="sand",
-      steps=[{"title": "Solar & energy solutions", "text": "Solar design, power distribution and energy-efficiency solutions."},
-             {"title": "Camp construction & development", "text": "Workforce camps, modular set-ups, utility infrastructure and maintenance."},
-             {"title": "Specialised personnel", "text": "Skilled crews deployed into client packages under our HSE system."}]),
-    k("cta", "kat_cta", headline="Have a package to tender?", primary_cta_label="Send an enquiry", primary_cta_url="/contact",
-      secondary_cta_label="Request prequalification", secondary_cta_url="/contact?type=prequalification"),
+    k("cta", "kat_cta", headline="Discuss Your Project", primary_cta_label="Contact Us", primary_cta_url="/contact"),
 ]
 
-STRENGTHS = [
-    k("hero", "kat_hero", variant="page", eyebrow="Strengths", headline="Why owners choose", highlight="KAT Arabia.",
-      subheadline="Engineering depth, integrated execution and a workforce we mobilise ourselves.", default_image="plant-night", breadcrumb=True),
-    k("key", "kat_steps", label="01 — Key strengths", headline="Six reasons we can be", highlight="trusted with your project.", columns="3", tone="paper",
-      steps=[{"title": "Advanced engineering expertise", "text": "Civil, mechanical and electrical disciplines working from one coordinated design."},
-             {"title": "Integrated project execution", "text": "From planning to on-site delivery, one team owns the outcome."},
-             {"title": "Specialised personnel deployment", "text": "Skilled crews recruited and deployed from our own twelve-country pipeline."},
-             {"title": "Rapid mobilisation", "text": "Scalable people, plant and equipment, ready to move across the region."},
-             {"title": "Client-focused delivery", "text": "Timelines and regulatory compliance treated as non-negotiable."},
-             {"title": "Safety, quality, sustainability", "text": "A single integrated management system across every site and service line."}]),
-    k("workforce", "kat_split", label="02 — Workforce", headline="Crews we recruit, test", highlight="and mobilise ourselves.",
-      body="Skilled and semi-skilled workers sourced from twelve countries — " + COUNTRIES + " — and deployed into projects worldwide, for our own packages or as manpower supply to clients.",
-      default_image="workforce", image_right=True, cta_label="Request manpower", cta_url="/contact?type=manpower"),
-    k("hse", "kat_hse", label="03 — HSE & Quality", headline="Safety is our culture.", highlight="Quality is our commitment.",
-      body="One integrated management system for quality, environment and occupational health & safety.", certs=CERTS),
-    k("cta", "kat_cta", headline="Need a contractor you can prequalify fast?", primary_cta_label="Request prequalification pack",
-      primary_cta_url="/contact?type=prequalification"),
+INDUSTRIES_PAGE = [
+    k("hero", "kat_hero", variant="page", eyebrow="Industries", headline="The industries", highlight="we serve.",
+      subheadline="KAT Arabia supports the industries driving growth in the UAE and Saudi Arabia, delivering integrated solutions across the region’s most vital sectors.",
+      default_image="plant-night", breadcrumb=True),
+    k("list", "kat_industries", label="01 — Industries", headline="Fourteen sectors.", highlight="One contractor.",
+      intro="Integrated solutions delivered under one contract and one HSE system.", anchor_id="industries"),
+    k("cta", "kat_cta", headline="Discuss Your Project", primary_cta_label="Contact Us", primary_cta_url="/contact"),
 ]
 
-LOCATIONS = [
-    k("hero", "kat_hero", variant="page", eyebrow="Locations", headline="Positioned for", highlight="rapid deployment.",
-      subheadline="A growing global presence for efficient execution, streamlined logistics and fast mobilisation.",
-      default_image="civil-interchange", breadcrumb=True),
-    k("map", "kat_footprint", label="01 — Geographic presence", headline="Four bases.", highlight="One network.",
-      intro="Our regional offices sit across key industrial corridors, positioned for fast mobilisation to projects worldwide.",
-      offices=OFFICES, show_cards=True),
-    k("cta", "kat_cta", headline="Need a team on site fast?", primary_cta_label="Talk to our team", primary_cta_url="/contact"),
+PROJECTS_PAGE = [
+    k("hero", "kat_hero", variant="page", eyebrow="Projects", headline="Selected project", highlight="profiles.",
+      subheadline="Our project portfolio includes building construction, civil infrastructure, industrial plant works, oil and gas facilities, MEP installations, camp construction and facility management projects.",
+      default_image="steel-erection", breadcrumb=True),
+    k("list", "kat_projects", label="01 — Portfolio", headline="Our project work", highlight="includes.",
+      intro="Building construction · Civil infrastructure · Industrial plant works · Oil and gas facilities · MEP installations · Camp construction · Facility management\n\nRepresentative project profiles are being prepared for publication.",
+      cta_label="Send an enquiry", cta_url="/contact", anchor_id="projects"),
+    k("cta", "kat_cta", headline="Discuss Your Project", primary_cta_label="Contact Us", primary_cta_url="/contact"),
+]
+
+HSE_PAGE = [
+    k("hero", "kat_hero", variant="page", eyebrow="HSE & Quality", headline="Safety is our culture.", highlight="Quality is our commitment.",
+      subheadline="KAT Arabia applies these principles across every project, site and service.",
+      default_image="plant-night", breadcrumb=True),
+    k("body", "kat_hse", label="01 — Commitment", headline="Health, safety, environment,", highlight="quality assurance.",
+      body="KAT Arabia is committed to protecting people, the environment and the assets entrusted to us. Health and safety, environmental responsibility and quality assurance are integrated into every stage of our engineering and contracting operations.\n\nAreas of focus: health, safety and environment · quality assurance and quality control · regulatory compliance · incident prevention and risk management · workplace health and monitoring · contractor and supplier HSE management · environmental protection and sustainability · emergency preparedness and response · continuous improvement · training and competency · client and stakeholder confidence · legal and industry alignment.",
+      certs=[]),
+]
+
+CLIENTS_PAGE = [
+    k("hero", "kat_hero", variant="page", eyebrow="Clients", headline="Success built on", highlight="long-term partnerships.",
+      subheadline="KAT Arabia serves government entities, EPC contractors, industrial operators, developers and private sector clients across the UAE and Saudi Arabia.",
+      default_image="gc-facade", breadcrumb=True),
+    k("logos", "kat_clients", label="01 — Clients", headline="Trusted across sectors.",
+      anchor_id="clients"),
+    k("cta", "kat_cta", headline="Discuss Your Project", primary_cta_label="Contact Us", primary_cta_url="/contact"),
 ]
 
 CONTACT_PAGE = [
-    k("contact", "kat_contact", label="Contact", headline="Let’s build", highlight="together.",
-      intro="Delivering capability. Building long-term value. Tell us what you need and the right team will respond.", dark=False, **CONTACT),
-    k("next", "kat_steps", label="What happens next", headline="Three steps from enquiry to mobilisation.", columns="3", tone="paper",
-      steps=[{"title": "We review", "text": "Your enquiry goes to the right team: projects, procurement or workforce."},
-             {"title": "We respond", "text": "A named contact follows up with documents, a meeting or a proposal."},
-             {"title": "We mobilise", "text": "People, plant and equipment move to site on an agreed plan."}]),
+    k("contact", "kat_contact", label="Contact Us", headline="Get in touch", highlight="with KAT Arabia.",
+      intro="Whether you are developing critical infrastructure, expanding industrial operations or delivering complex engineering projects, KAT Arabia is ready to be your engineering and contracting partner.",
+      dark=False, **CONTACT),
 ]
 
 
-def page(slug, title, content):
+def page(slug, title, content, seo=None):
+    if seo:
+        SEO_ROWS.append({"collection": "pages", "slug": slug,
+                         "title": seo.get("title"), "description": seo.get("description")})
     return {"id": slug, "slug": slug, "status": "published", "data": {"title": title, "content": content}}
 
 
@@ -393,21 +557,47 @@ seed = {
     "collections": COLLECTIONS,
     "menus": [
         {"name": "primary", "label": "Primary Navigation", "items": [
-            menu_item("About", "/about"), menu_item("Services", "/services"), menu_item("Strengths", "/strengths"),
-            menu_item("Locations", "/locations"), menu_item("Contact", "/contact"), menu_item("Get in touch", "/contact", "button")]},
+            menu_item("About", "/about"), menu_item("Services", "/services"), menu_item("Industries", "/industries"),
+            menu_item("Projects", "/projects"), menu_item("HSE & Quality", "/hse-quality"), menu_item("Clients", "/clients"),
+            menu_item("Contact", "/contact"), menu_item("Get in touch", "/contact", "button")]},
         {"name": "footer_company", "label": "Company", "items": [
-            menu_item("About", "/about"), menu_item("Strengths", "/strengths"), menu_item("Locations", "/locations"),
+            menu_item("About", "/about"), menu_item("Industries", "/industries"), menu_item("Projects", "/projects"),
+            menu_item("HSE & Quality", "/hse-quality"), menu_item("Clients", "/clients"),
             menu_item("Careers", "/contact?type=careers"), menu_item("Prequalification", "/contact?type=prequalification")]},
         {"name": "footer_services", "label": "Services", "items": [
-            menu_item(s[2], f"/services/{s[0]}") for s in SERVICES]},
+            menu_item(FOOTER_SERVICE_LABELS.get(s["slug"], s["title"]), f"/services/{s['slug']}") for s in SERVICES]},
+        {"name": "footer_contact", "label": "Contact", "items": [
+            menu_item("info@katarabia.com", "mailto:info@katarabia.com"),
+            menu_item("Abu Dhabi, United Arab Emirates", "/contact"), menu_item("Al Jubail, Saudi Arabia", "/contact"),
+            menu_item("Get in touch", "/contact")]},
     ],
     "content": {
-        "pages": [page("home", "Home", HOME), page("about", "About", ABOUT), page("services", "Services", SERVICES_PAGE),
-                  page("strengths", "Strengths", STRENGTHS), page("locations", "Locations", LOCATIONS), page("contact", "Contact", CONTACT_PAGE)],
+        "pages": [
+            page("home", "Home", HOME,
+                 {"title": "KAT Arabia General Contracting | Engineering and Contracting in the UAE and Saudi Arabia",
+                  "description": "KAT Arabia delivers construction, infrastructure, industrial, oil and gas, and building services projects across the UAE and Saudi Arabia."}),
+            page("about", "About", ABOUT,
+                 {"title": "About Us | KAT Arabia General Contracting"}),
+            page("services", "Services", SERVICES_PAGE,
+                 {"title": "Our Services | KAT Arabia General Contracting",
+                  "description": "General contracting, civil infrastructure, industrial construction, oil and gas, MEP, energy, facility management, equipment, camps and workforce solutions across the UAE and Saudi Arabia."}),
+            page("industries", "Industries", INDUSTRIES_PAGE,
+                 {"title": "Industries We Serve | KAT Arabia"}),
+            page("projects", "Projects", PROJECTS_PAGE,
+                 {"title": "Our Projects | KAT Arabia"}),
+            page("hse-quality", "HSE & Quality", HSE_PAGE,
+                 {"title": "HSE & Quality | KAT Arabia"}),
+            page("clients", "Clients", CLIENTS_PAGE,
+                 {"title": "Our Clients | KAT Arabia"}),
+            page("contact", "Contact", CONTACT_PAGE,
+                 {"title": "Contact Us | KAT Arabia General Contracting"}),
+        ],
         "services": [
-            {"id": f"svc-{s[0]}", "slug": s[0], "status": "published", "data": {
-                "title": s[2], "number": s[1], "summary": s[4], "description": s[4], "default_image": s[3],
-                "scope": [{"item": x} for x in s[5]], "industries": [{"item": x} for x in s[6]], "order": i + 1}}
+            {"id": f"svc-{s['slug']}", "slug": s["slug"], "status": "published", "data": {
+                "title": s["title"], "number": s["number"], "summary": s["summary"], "description": s["description"],
+                "default_image": s["image"],
+                "scope": [{"item": x} for x in s["scope"]], "industries": [{"item": x} for x in s["industries"]],
+                "order": i + 1}}
             for i, s in enumerate(SERVICES)],
         "industries": [
             {"id": f"ind-{i+1:02d}", "slug": name.lower().replace(" & ", "-").replace(" ", "-"), "status": "published", "data": {
@@ -419,3 +609,11 @@ seed = {
 out = Path(__file__).resolve().parent.parent / "seed" / "seed.json"
 out.write_text(json.dumps(seed, indent="\t", ensure_ascii=False) + "\n")
 print(f"wrote {out}")
+
+for s in SERVICES:
+    SEO_ROWS.append({"collection": "services", "slug": s["slug"],
+                     "title": s.get("seo_title") or f"{s['title']} | KAT Arabia",
+                     "description": s["summary"]})
+seo_out = out.parent / "seo.json"
+seo_out.write_text(json.dumps(SEO_ROWS, indent="\t", ensure_ascii=False) + "\n")
+print(f"wrote {seo_out} ({len(SEO_ROWS)} SEO records)")

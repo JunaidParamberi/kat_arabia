@@ -35,7 +35,18 @@ if (!reduced) {
 /* ---------- header ---------- */
 const header = $("[data-header]");
 if (header) {
-	const onScroll = () => header.classList.toggle("is-scrolled", window.scrollY > 40);
+	let lastY = window.scrollY;
+	const onScroll = () => {
+		const y = window.scrollY;
+		header.classList.toggle("is-scrolled", y > 40);
+		// Hide when scrolling down, reveal when scrolling up.
+		if (!header.classList.contains("menu-open")) {
+			const down = y > lastY;
+			if (down && y > 120) header.classList.add("is-hidden");
+			else if (!down) header.classList.remove("is-hidden");
+		}
+		lastY = y;
+	};
 	onScroll();
 	window.addEventListener("scroll", onScroll, { passive: true });
 

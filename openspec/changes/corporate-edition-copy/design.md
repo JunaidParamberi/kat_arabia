@@ -24,14 +24,20 @@ The Corporate Edition copy deck (Word doc in `~/Downloads`) is the authoritative
 **1. Schema and content change goes through `build-seed.py`.**
 Collections, block types, menus, and seeded entries are edited in `scripts/build-seed.py`, then `pnpm seed:build` + `pnpm seed:validate` regenerate `seed/seed.json` (project constraint: the seed is generated). Existing DB rows are updated by re-applying the seed rather than manual SQL. *Alternative rejected:* editing `seed/seed.json` directly — it is overwritten on the next build.
 
+**1b. Deck SEO lands via a post-seed script, not the seed itself.**
+EmDash's seed engine never writes `_emdash_seo` (SEO lives in a separate table `applySeed` doesn't touch), so `build-seed.py` emits the deck's page titles and meta descriptions to `seed/seo.json` and `scripts/apply-seo.py` upserts them into the target database *after* `emdash seed` runs — both against the same DB path. Re-run `apply-seo.py` after every seed apply. In dev the DB is the miniflare D1 at `.wrangler/state/v3/d1/miniflare-D1DatabaseObject/*.sqlite`, **not** the CLI's default `./data.db`; point both commands at the miniflare file.
+
 **2. Services grow to 11 with stable slugs; existing slugs do not change.**
 Add `energy-electrical-solar`, `camp-construction-maintenance`, `engineering-contracting-project-management`; keep the 8 existing slugs (only titles/copy change, e.g. `mep` → "Mechanical, Electrical & Plumbing (MEP) and Electro-Mechanical Solutions", `integrated-project-workforce` → "Project Workforce Solutions"). *Rationale:* existing slugs are already linked from menus and service tabs; renaming them would break URLs (the deck's meta descriptions are attached to entries, not slugs).
 
 **3. New pages are `pages` entries; no new route files.**
 `industries`, `projects`, `hse-quality`, `clients` render through `[slug].astro`. `strengths` and `locations` entries are deleted, so their URLs 404 naturally. Menus (`primary`, `footer_company`, `footer_services`) are updated in `build-seed.py` and re-applied so no link points at a removed page.
 
-**4. Home keeps the scroll film.**
-The deck's section list is copy, not full IA, and the film is the site's signature asset with existing chapter copy. Order: hero → film → About KAT Arabia → Our Services → Industries → Why Work with KAT Arabia → Our Projects → Our Presence → CTA. *Alternative rejected:* dropping the film — removes the marquee feature for no copy gain; nothing in the deck conflicts with it.
+**4. Home keeps the scroll film and the workforce globe.**
+The deck's section list is copy, not full IA, and the film and the Three.js globe are the site's marquee features. Order: hero → film → About KAT Arabia → Our Services → Industries → Workforce + globe → Why Work with KAT Arabia → Our Projects → Our Presence → CTA. *Alternatives rejected:* dropping the film or the workforce section — both remove signature features for no copy gain; confirmed with the user during apply.
+
+**4a. Service `scope` repeater cap rises from 12 to 14.**
+The deck's Oil & Gas scope list has 14 items (MEP has 13), so the old `maxItems: 12` would truncate approved client copy. The content-model delta is amended accordingly; client copy wins over the launch-time limit.
 
 **5. `projects` collection has no URL pattern; `kat_projects` lists published entries.**
 Profiles render only through the block on the Projects page and the home "Our Projects" section. *Alternative rejected:* `/projects/[slug]` detail pages — the deck has no profile copy yet, and detail pages add routes we would immediately rework when real profiles arrive.

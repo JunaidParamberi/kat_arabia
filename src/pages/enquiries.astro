@@ -27,6 +27,8 @@ const fmt = (s: string) => new Date(`${s.replace(" ", "T")}Z`).toLocaleString("e
 									<th>Received (AST)</th>
 									<th>Type</th>
 									<th>From</th>
+									<th>Country / Location</th>
+									<th>Project type</th>
 									<th>Detail</th>
 									<th>Message</th>
 								</tr>
@@ -41,7 +43,17 @@ const fmt = (s: string) => new Date(`${s.replace(" ", "T")}Z`).toLocaleString("e
 											{r.company && <div>{r.company}</div>}
 											<div><a href={`mailto:${r.email}`}>{r.email}</a></div>
 											{r.phone && <div><a href={`tel:${r.phone}`}>{r.phone}</a></div>}
+											{r.attachment_key && (
+												<div class="enq__attach">
+													<a href={`/enquiries/${r.id}/attachment`} download>📎 {r.attachment_name}</a>
+												</div>
+											)}
 										</td>
+										<td>
+											{r.country && <div>{r.country}</div>}
+											{r.location && <div>{r.location}</div>}
+										</td>
+										<td>{r.project_type}</td>
 										<td>{r.detail}</td>
 										<td style="white-space:pre-wrap">{r.message}</td>
 									</tr>

@@ -30,15 +30,16 @@ const {
 	header = "solid",
 } = Astro.props;
 
-const [settingsResult, menuResult, footerCompanyResult, footerServicesResult] = await Promise.all([
+const [settingsResult, menuResult, footerCompanyResult, footerServicesResult, footerContactResult] = await Promise.all([
 	getSiteSettingsWithCacheHint(),
 	getMenuWithCacheHint("primary"),
 	getMenuWithCacheHint("footer_company"),
 	getMenuWithCacheHint("footer_services"),
+	getMenuWithCacheHint("footer_contact"),
 ]);
 
 if (Astro.cache?.enabled) {
-	for (const r of [settingsResult, menuResult, footerCompanyResult, footerServicesResult]) {
+	for (const r of [settingsResult, menuResult, footerCompanyResult, footerServicesResult, footerContactResult]) {
 		Astro.cache.set(r.cacheHint);
 	}
 }
@@ -178,11 +179,12 @@ const year = new Date().getFullYear();
 						))
 					}
 					<div class="site-footer__col">
-						<span class="mono">Contact</span>
-						<a href="tel:+966531814451">+966 53 181 4451</a>
-						<a href="mailto:info@katarabia.com">info@katarabia.com</a>
-						<span>Al Jubail, Saudi Arabia</span>
-						<span>Abu Dhabi, UAE</span>
+						<span class="mono">{footerContactResult.data?.label ?? "Contact"}</span>
+						{(footerContactResult.data?.items ?? []).map((item) => (
+							<a href={item.url} target={item.target}>
+								{item.label}
+							</a>
+						))}
 					</div>
 				</div>
 				<div class="site-footer__bottom">
@@ -215,6 +217,14 @@ const year = new Date().getFullYear();
 	}
 	.site-header.is-film-hidden {
 		transform: translateY(-110%);
+	}
+	.site-header.is-hidden {
+		transform: translateY(-110%);
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.site-header.is-hidden {
+			transform: none;
+		}
 	}
 	.site-header--solid {
 		background: var(--paper);
