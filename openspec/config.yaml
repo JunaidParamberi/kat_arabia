@@ -1,0 +1,38 @@
+schema: spec-driven
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+context: |
+  Design source of truth is the "KAT Arabia — Homepage" Design canvas, summarised
+  in PLAN.md; brand palette is paper #ECE6DB, ink #141010, maroon #7A1418,
+  sand-gold #E3B877. Match it rather than inventing new visual language.
+  seed/seed.json is GENERATED — edit scripts/build-seed.py and run
+  `pnpm seed:build`, never seed/seed.json by hand; `pnpm seed:validate` must
+  pass before applying.
+  All CMS pages must stay server-rendered (output: "server"); no getStaticPaths.
+  Content pages are edited by a non-technical client: prefer schema/block edits
+  they can drive from the admin over code-only page changes.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing

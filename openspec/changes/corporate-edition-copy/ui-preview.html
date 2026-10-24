@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KAT Arabia — Corporate Edition UI Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECE6DB; --ink:#141010; --maroon:#7A1418; --gold:#E3B877;
+  --sand:#E2D9C7; --line:rgba(20,16,16,.14); --muted:rgba(20,16,16,.62);
+  --card:#F5F1E8; --radius:14px;
+  --display:"Montserrat",system-ui,sans-serif; --mono:"Geist Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--display);font-weight:400;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{width:min(1200px,92vw);margin-inline:auto}
+
+/* ---------- preview chrome (not part of the site) ---------- */
+.preview-bar{position:sticky;top:0;z-index:50;background:var(--ink);color:var(--paper);padding:10px 0;font-family:var(--mono);font-size:12px}
+.preview-bar .wrap{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.preview-bar b{letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+.viewbtns{display:flex;gap:6px;flex-wrap:wrap}
+.viewbtn{font-family:var(--mono);font-size:12px;background:transparent;color:var(--paper);border:1px solid rgba(236,230,219,.35);border-radius:99px;padding:5px 12px;cursor:pointer}
+.viewbtn[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--ink);font-weight:600}
+.legend{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;padding:2px 7px;border-radius:99px;text-transform:uppercase}
+.tag.new{background:#1f6b3a;color:#eafff2}
+.tag.upd{background:#8a5a00;color:#fff6e5}
+.tag.brk{background:var(--maroon);color:#ffe9ea}
+.tag.keep{background:rgba(20,16,16,.75);color:var(--paper)}
+.note{border-left:3px solid var(--gold);background:rgba(227,184,119,.16);padding:10px 14px;border-radius:0 10px 10px 0;font-size:13.5px;margin:18px 0}
+.note strong{font-weight:600}
+.view{display:none}
+.view.active{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- site chrome ---------- */
+.site-header{position:sticky;top:44px;z-index:40;background:rgba(236,230,219,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.site-header .wrap{display:flex;align-items:center;gap:26px;padding:14px 0}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.12em;font-size:15px;text-transform:uppercase;text-decoration:none}
+.logo .mark{width:30px;height:30px;background:var(--maroon);color:var(--gold);border-radius:7px;display:grid;place-items:center;font-size:13px;font-weight:700}
+.nav{display:flex;gap:22px;margin-inline-start:auto;font-size:14px;font-weight:500}
+.nav a{text-decoration:none;padding-block:4px;border-bottom:2px solid transparent}
+.nav a:hover,.nav a.here{border-color:var(--maroon)}
+.btn{display:inline-flex;align-items:center;gap:8px;border-radius:99px;padding:11px 22px;font-size:14px;font-weight:600;text-decoration:none;border:1px solid transparent;cursor:pointer;font-family:var(--display)}
+.btn-primary{background:var(--maroon);color:#F7EFE6}
+.btn-primary:hover{background:#5f0f14}
+.btn-ghost{border-color:var(--ink);color:var(--ink);background:transparent}
+.btn-gold{background:var(--gold);color:var(--ink)}
+.btn-sm{padding:8px 16px;font-size:13px}
+
+section{padding-block:64px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--maroon);margin:0 0 14px}
+h1{font-size:clamp(38px,5.4vw,64px);line-height:1.04;font-weight:600;letter-spacing:-.015em;margin:0 0 18px}
+h2{font-size:clamp(26px,3.2vw,40px);line-height:1.1;font-weight:600;letter-spacing:-.01em;margin:0 0 16px}
+h3{font-size:19px;font-weight:600;margin:0 0 8px}
+.lead{font-size:18px;color:var(--muted);max-width:64ch;margin:0 0 26px}
+.muted{color:var(--muted)}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.anchor{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:8px}
+
+/* hero */
+.hero{background:linear-gradient(160deg,#1a1512 0%,#2b1113 58%,var(--maroon) 100%);color:#F4EEE3;padding-block:96px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;inset:auto -10% -40% 55%;height:70%;background:radial-gradient(closest-side,rgba(227,184,119,.35),transparent);pointer-events:none}
+.hero .eyebrow{color:var(--gold)}
+.hero .lead{color:rgba(244,238,227,.78)}
+.ph-img{border-radius:var(--radius);background:
+  repeating-linear-gradient(115deg,rgba(20,16,16,.06) 0 12px,transparent 12px 34px),
+  linear-gradient(140deg,#cdc2ab,#a9997d 55%,#6f6250);
+  min-height:200px;position:relative;overflow:hidden}
+.ph-img.tall{min-height:340px}
+.ph-img:after{content:attr(data-label);position:absolute;inset-inline-start:14px;bottom:12px;font-family:var(--mono);font-size:11px;background:rgba(20,16,16,.72);color:var(--paper);padding:4px 9px;border-radius:99px}
+.chip{position:absolute;inset-inline-start:16px;bottom:14px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;padding:6px 12px;border-radius:99px;font-family:var(--mono)}
+
+/* film strip */
+.filmstrip{background:#171310;color:#F4EEE3;border-radius:var(--radius);padding:26px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.filmstrip .bar{flex:1;min-width:220px;height:6px;background:rgba(244,238,227,.2);border-radius:99px;position:relative}
+.filmstrip .bar i{position:absolute;left:0;top:0;bottom:0;width:38%;background:var(--gold);border-radius:99px}
+.filmstrip .chapter{font-family:var(--mono);font-size:12px;color:rgba(244,238,227,.8)}
+
+/* grids */
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.card .num{font-family:var(--mono);font-size:12px;color:var(--maroon);letter-spacing:.1em}
+.card ul{margin:12px 0 0;padding-inline-start:18px;font-size:14.5px;color:var(--muted)}
+.card li{margin-block:5px}
+.group{border-top:2px solid var(--ink);padding-top:18px}
+.svc-list{display:grid;gap:12px}
+.svc{display:flex;gap:16px;align-items:baseline;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;text-decoration:none}
+.svc:hover{border-color:var(--maroon);transform:translateX(3px);transition:.15s}
+.svc .n{font-family:var(--mono);font-size:13px;color:var(--maroon);min-width:34px}
+.svc .t{font-weight:600;font-size:16px}
+.svc .arrow{margin-inline-start:auto;color:var(--maroon)}
+
+.chips{display:flex;flex-wrap:wrap;gap:10px;padding:0;margin:0;list-style:none}
+.chips li{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:9px 16px;font-size:14px;font-weight:500}
+
+.why{counter-reset:w;display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.why li{counter-increment:w;list-style:none;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;position:relative;padding-inline-start:64px}
+.why li:before{content:counter(w,decimal-leading-zero);position:absolute;inset-inline-start:20px;top:20px;font-family:var(--mono);font-size:13px;color:var(--maroon);font-weight:600}
+.why b{display:block;font-weight:600;margin-bottom:4px}
+.why span{font-size:14.5px;color:var(--muted)}
+
+.offices{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.office{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.office .role{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--maroon)}
+.office p{margin:8px 0 0;font-size:14px;color:var(--muted)}
+.office.hq{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.office.hq .role{color:var(--gold)}
+.office.hq p{color:rgba(236,230,219,.7)}
+
+.cta{background:var(--maroon);color:#F7EFE6;border-radius:var(--radius);padding:56px 44px;text-align:center}
+.cta h2{color:#fff}
+.cta .lead{color:rgba(247,239,230,.8);margin-inline:auto}
+
+.empty{border:2px dashed rgba(122,20,24,.4);background:rgba(122,20,24,.05);border-radius:var(--radius);padding:36px;text-align:center}
+.empty .mono{font-family:var(--mono);font-size:12px;color:var(--maroon);letter-spacing:.1em;text-transform:uppercase}
+.empty p{color:var(--muted);max-width:52ch;margin:10px auto 0;font-size:14.5px}
+
+.projcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.projcard .ph-img{border-radius:0;min-height:160px}
+.projcard .body{padding:18px 20px}
+.projcard .sector{font-family:var(--mono);font-size:11px;color:var(--maroon);text-transform:uppercase;letter-spacing:.1em}
+
+/* service detail */
+.svc-hero{background:linear-gradient(160deg,#241a16,#4a1b1e);color:#F4EEE3;padding:72px 0 56px}
+.svc-hero .crumbs{font-family:var(--mono);font-size:12px;color:rgba(244,238,227,.65);margin-bottom:14px}
+.svc-hero .crumbs a{color:var(--gold);text-decoration:none}
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:36px}
+@media(max-width:860px){.two{grid-template-columns:1fr}}
+.scope{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;align-self:start}
+.scope ul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.scope li{display:flex;gap:10px;align-items:flex-start;font-size:14.5px}
+.scope li:before{content:"";width:16px;height:16px;border-radius:99px;background:var(--maroon);flex:none;margin-top:3px;position:relative}
+.meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.pill{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:99px;padding:5px 11px;background:var(--card)}
+
+/* form */
+.formcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px}
+.fgrid{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:700px){.fgrid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:6px}
+.field.wide{grid-column:1/-1}
+.field label{font-size:13px;font-weight:600}
+.field label .req{color:var(--maroon)}
+.field input,.field select,.field textarea{font-family:var(--display);font-size:15px;padding:11px 13px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+.field textarea{min-height:120px;resize:vertical}
+.field .hint{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.filebox{border:2px dashed rgba(122,20,24,.45);border-radius:10px;padding:18px;text-align:center;background:rgba(122,20,24,.04);font-size:14px;cursor:pointer}
+.filebox b{color:var(--maroon)}
+.hp{display:none}
+.contact-details{display:grid;gap:14px}
+.detail{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-size:14.5px}
+.detail .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--maroon);margin-bottom:6px}
+
+/* footer */
+footer{background:#171310;color:#EDE6D9;padding:56px 0 34px;margin-top:40px}
+.fgrid4{display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+footer h4{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin:0 0 14px}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:14px}
+footer a{color:rgba(237,230,217,.82);text-decoration:none}
+footer a:hover{color:#fff}
+.fbottom{border-top:1px solid rgba(237,230,217,.18);margin-top:36px;padding-top:18px;font-family:var(--mono);font-size:11.5px;color:rgba(237,230,217,.6);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.giantmark{font-weight:700;letter-spacing:-.02em;font-size:clamp(48px,11vw,150px);line-height:.9;color:rgba(237,230,217,.08);text-align:center;padding-top:20px;user-select:none}
+</style>
+</head>
+<body>
+
+<!-- ===== preview chrome ===== -->
+<div class="preview-bar">
+  <div class="wrap">
+    <b>KAT Arabia · Corporate Edition — UI preview</b>
+    <div class="viewbtns" role="group" aria-label="Preview views">
+      <button class="viewbtn" data-view="home" aria-pressed="true">Home</button>
+      <button class="viewbtn" data-view="services" aria-pressed="false">Services (11)</button>
+      <button class="viewbtn" data-view="detail" aria-pressed="false">Service detail</button>
+      <button class="viewbtn" data-view="projects" aria-pressed="false">Projects · new</button>
+      <button class="viewbtn" data-view="contact" aria-pressed="false">Contact · new form</button>
+      <button class="viewbtn" data-view="notes" aria-pressed="false">Change notes</button>
+    </div>
+    <div class="legend">
+      <span class="tag new">new</span><span class="tag upd">updated copy</span>
+      <span class="tag brk">breaking</span><span class="tag keep">kept as-is</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ HOME ============================ -->
+<div class="view active" id="view-home">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="mark">KAT</span> KAT Arabia</a>
+      <nav class="nav">
+        <a href="#">About</a>
+        <a href="#" class="here">Services</a>
+        <a href="#">Industries</a>
+        <a href="#">Projects</a>
+        <a href="#">HSE</a>
+        <a href="#">Contact</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#">Get in touch</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Engineering &amp; contracting · UAE + Saudi Arabia <span class="tag new" style="margin-inline-start:8px">new copy</span></p>
+      <h1>Engineering and Contracting<br>Solutions Across Industries</h1>
+      <p class="lead">KAT Arabia delivers construction, infrastructure, industrial and energy projects across the UAE and Saudi Arabia, supported by in-house equipment and workforce capability.</p>
+      <div class="actions">
+        <a class="btn btn-gold" href="#">Our Services</a>
+        <a class="btn btn-ghost" style="border-color:#F4EEE3;color:#F4EEE3" href="#">Contact Us</a>
+      </div>
+      <p class="anchor">banner · single CTA row (deck) · page title: “KAT Arabia General Contracting | Engineering and Contracting in the UAE and Saudi Arabia”</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="filmstrip">
+        <span class="tag keep">kept</span>
+        <span class="chapter">01 — The film · scroll-scrubbed</span>
+        <span class="bar"><i></i></span>
+        <span class="chapter">chapter rail + captions update as you scroll</span>
+      </div>
+      <p class="anchor">The deck doesn’t mention the film; the design keeps it as the signature section (see design.md, Decision 4). Drop it here if you disagree — one line in the seed.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">01 — About KAT Arabia <span class="tag upd">updated copy</span></p>
+        <h2>International standards, local execution</h2>
+        <p class="lead">KAT Arabia General Contracting is an engineering and contracting company serving government entities, EPC contractors, industrial operators and private sector clients. We are part of KAT Group, a diversified multinational business group headquartered in the United Arab Emirates, with offices in Abu Dhabi, Dubai, Sharjah and Al Jubail.</p>
+        <p class="muted">We combine international standards with local execution to deliver reliable, sustainable and value-driven projects, from design and engineering through construction, commissioning and maintenance.</p>
+      </div>
+      <div class="scope">
+        <p class="eyebrow" style="margin:0">Facts row</p>
+        <div class="grid g2" style="margin-top:14px">
+          <div><h3>4</h3><p class="muted" style="font-size:13.5px;margin:0">offices across the UAE &amp; KSA</p></div>
+          <div><h3>11</h3><p class="muted" style="font-size:13.5px;margin:0">service lines</p></div>
+        </div>
+        <p class="anchor">No figures invented anywhere — deck rule. Only copy-backed counts appear.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">02 — Our Services <span class="tag new">11 services</span></p>
+      <h2>Four groups, eleven service lines</h2>
+      <div class="grid g4">
+        <div class="card group"><span class="num">GROUP 01</span><h3 style="margin-top:6px">Construction and Infrastructure</h3>
+          <ul><li>General Contracting &amp; Building Construction</li><li>Civil Infrastructure &amp; Heavy Engineering</li><li>Camp Construction &amp; Maintenance</li></ul></div>
+        <div class="card group"><span class="num">GROUP 02</span><h3 style="margin-top:6px">Industrial and Energy</h3>
+          <ul><li>Industrial Construction &amp; Plant Services</li><li>Oil &amp; Gas Engineering Services</li><li>Energy, Electrical &amp; Solar Solutions <span class="tag new">new</span></li></ul></div>
+        <div class="card group"><span class="num">GROUP 03</span><h3 style="margin-top:6px">Building Systems and Facilities</h3>
+          <ul><li>MEP &amp; Electro-Mechanical</li><li>Integrated Facility Management</li></ul></div>
+        <div class="card group"><span class="num">GROUP 04</span><h3 style="margin-top:6px">Engineering, Equipment and Workforce</h3>
+          <ul><li>Engineering, Contracting &amp; Project Management <span class="tag new">new</span></li><li>Plant &amp; Equipment Solutions</li><li>Project Workforce Solutions</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">03 — Industries We Serve <span class="tag upd">deck wording</span></p>
+      <h2>Sectors across the region</h2>
+      <ul class="chips">
+        <li>Infrastructure and transportation</li><li>Oil and gas</li><li>Petrochemicals</li><li>Energy and utilities</li>
+        <li>Manufacturing</li><li>Mining and metals</li><li>Commercial developments</li><li>Government projects</li>
+        <li>Healthcare</li><li>Hospitality</li><li>Logistics</li><li>Marine</li><li>Renewable energy</li><li>Smart cities</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">04 — Why Work with KAT Arabia <span class="tag new">absorbs /strengths</span></p>
+      <h2>Six reasons, one organisation</h2>
+      <ol class="why">
+        <li><b>Integrated delivery.</b><span>Engineering, construction, industrial services, equipment and workforce under one organization.</span></li>
+        <li><b>Engineering-led execution.</b><span>Technical supervision and quality control at every stage.</span></li>
+        <li><b>In-house workforce capability.</b><span>A dedicated international recruitment division supports rapid mobilization.</span></li>
+        <li><b>Modern plant and equipment.</b><span>Equipment supplied with certified operators.</span></li>
+        <li><b>Safety and quality.</b><span>HSE and quality systems embedded across our operations.</span></li>
+        <li><b>Long-term partnerships.</b><span>A client-focused approach built around timelines, budgets and regulatory compliance.</span></li>
+      </ol>
+      <p class="anchor"><span class="tag brk">breaking</span> the standalone <code>/strengths</code> page is removed — its content lives here.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">05 — Our Projects <span class="tag new">new block + collection</span></p>
+      <h2>Currently delivering across the UAE and KSA</h2>
+      <p class="lead">KAT Arabia is currently delivering projects for clients across the UAE and Saudi Arabia, covering building construction, infrastructure, industrial works, oil and gas support and building services.</p>
+      <div class="grid g3" id="proj-slot">
+        <div class="projcard">
+          <div class="ph-img" data-label="project image"></div>
+          <div class="body"><span class="sector">Infrastructure · Al Jubail</span><h3 style="margin-top:6px">Sample profile card</h3><p class="muted" style="font-size:14px;margin:0">Title, sector, location and one-line summary — exactly what an editor fills in.</p></div>
+        </div>
+        <div class="projcard">
+          <div class="ph-img" data-label="project image"></div>
+          <div class="body"><span class="sector">Building · Abu Dhabi</span><h3 style="margin-top:6px">Second profile card</h3><p class="muted" style="font-size:14px;margin:0">Published entries render in sort order; drafts stay invisible.</p></div>
+        </div>
+        <div class="empty">
+          <span class="mono">empty state</span>
+          <p>With no published profiles the section shows its headline and intro only — no placeholder frames.</p>
+        </div>
+      </div>
+      <div class="actions" style="margin-top:22px"><a class="btn btn-ghost" href="#">View all projects</a></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">06 — Our Presence <span class="tag upd">absorbs /locations</span></p>
+      <div class="offices">
+        <div class="office hq"><span class="role">Corporate HQ · UAE</span><h3 style="margin-top:8px">Abu Dhabi</h3><p>Foodco Building, Salam Street, Abu Dhabi</p></div>
+        <div class="office"><span class="role">UAE office</span><h3 style="margin-top:8px">Dubai</h3><p>55, BIN Dasmal Building 1, Al Quoz Industrial Area 1, Dubai</p></div>
+        <div class="office"><span class="role">UAE office</span><h3 style="margin-top:8px">Sharjah</h3><p>1201, Crystal Tower, Corniche Street, Al Majaz 1, Sharjah</p></div>
+        <div class="office"><span class="role">KSA office</span><h3 style="margin-top:8px">Al Jubail</h3><p>Abu Al Hassan Ibn Al Jawzi St, Tebah District, Al Jubail, P.O. 35513</p></div>
+      </div>
+      <p class="anchor"><span class="tag brk">breaking</span> the standalone <code>/locations</code> page is removed — addresses live here and on Contact.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="cta">
+        <p class="eyebrow" style="color:var(--gold)">Contact banner</p>
+        <h2>Discuss Your Project</h2>
+        <p class="lead">Whether you are developing critical infrastructure, expanding industrial operations or delivering complex engineering projects, KAT Arabia is ready to be your engineering and contracting partner.</p>
+        <a class="btn btn-gold" href="#">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================ SERVICES ============================ -->
+<div class="view" id="view-services">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="mark">KAT</span> KAT Arabia</a>
+      <nav class="nav">
+        <a href="#">About</a><a href="#" class="here">Services</a><a href="#">Industries</a><a href="#">Projects</a><a href="#">HSE</a><a href="#">Contact</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#">Get in touch</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Services index <span class="tag upd">8 → 11</span></p>
+      <h1>Our Services</h1>
+      <p class="lead">KAT Arabia provides a comprehensive range of engineering, construction and support services designed for complex projects. Our integrated model lets clients rely on a single partner from design to commissioning and maintenance.</p>
+      <div class="svc-list">
+        <a class="svc" href="#"><span class="n">01</span><span class="t">General Contracting &amp; Building Construction</span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">02</span><span class="t">Civil Infrastructure &amp; Heavy Engineering</span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">03</span><span class="t">Industrial Construction &amp; Plant Services</span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">04</span><span class="t">Oil &amp; Gas Engineering Services</span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">05</span><span class="t">Mechanical, Electrical &amp; Plumbing (MEP) and Electro-Mechanical Solutions</span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">06</span><span class="t">Energy, Electrical &amp; Solar Solutions <span class="tag new">new</span></span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">07</span><span class="t">Engineering, Contracting &amp; Project Management <span class="tag new">new</span></span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">08</span><span class="t">Plant &amp; Equipment Solutions</span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">09</span><span class="t">Integrated Facility Management</span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">10</span><span class="t">Camp Construction &amp; Maintenance <span class="tag new">new</span></span><span class="arrow">→</span></a>
+        <a class="svc" href="#"><span class="n">11</span><span class="t">Project Workforce Solutions</span><span class="arrow">→</span></a>
+      </div>
+      <p class="anchor">Existing slugs stay stable (<code>/services/mep</code> keeps its URL — only the title changed). Tab layout on Home reads this same list in sort order.</p>
+      <div class="actions" style="margin-top:24px"><a class="btn btn-primary" href="#">Discuss Your Project</a></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================ SERVICE DETAIL ============================ -->
+<div class="view" id="view-detail">
+  <div class="svc-hero">
+    <div class="wrap">
+      <p class="crumbs"><a href="#">Services</a> / Oil &amp; Gas Engineering Services</p>
+      <p class="eyebrow" style="color:var(--gold)">Service 04 <span class="tag upd">deck copy</span></p>
+      <h1 style="margin-bottom:10px">Oil &amp; Gas Engineering Services</h1>
+      <p class="lead" style="color:rgba(244,238,227,.75);margin:0">Engineering, construction, maintenance and technical support across upstream, midstream and downstream oil and gas, onshore and offshore.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap two">
+      <div>
+        <p class="eyebrow">Overview</p>
+        <p class="lead">KAT Arabia provides engineering, construction, maintenance and technical support services across upstream, midstream and downstream oil and gas operations, both onshore and offshore.</p>
+        <p class="eyebrow" style="margin-top:34px">Our Approach</p>
+        <p class="muted">All operations comply with international safety standards and local regulations, supporting reliability and operational excellence.</p>
+        <div class="actions" style="margin-top:26px">
+          <a class="btn btn-primary" href="#">Discuss Your Project</a>
+          <a class="btn btn-ghost" href="#">Next service →</a>
+        </div>
+        <p class="anchor">Every service page follows this fixed shape: Overview · Scope of Services · Our Approach · CTA. Meta description = the deck’s line for this page.</p>
+      </div>
+      <aside class="scope">
+        <p class="eyebrow" style="margin:0">Scope of Services</p>
+        <ul>
+          <li>Pipeline construction</li><li>Plant construction</li><li>Mechanical works</li>
+          <li>Piping fabrication and installation</li><li>Tank and pressure vessel services</li>
+          <li>Structural steel works</li><li>Equipment installation</li><li>Commissioning support</li>
+          <li>Shutdown and turnaround services</li><li>Asset integrity support</li>
+          <li>Industrial maintenance</li><li>Facility maintenance and upgrades</li>
+          <li>Field support services <span class="tag new">was buried</span></li>
+          <li>Technical and engineering workforce support</li>
+        </ul>
+        <div class="meta-row" style="margin-top:16px">
+          <span class="pill">14 scope items</span><span class="pill">deck: no figures</span><span class="pill">no certificates claimed</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<!-- ============================ PROJECTS ============================ -->
+<div class="view" id="view-projects">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="mark">KAT</span> KAT Arabia</a>
+      <nav class="nav">
+        <a href="#">About</a><a href="#">Services</a><a href="#">Industries</a><a href="#" class="here">Projects</a><a href="#">HSE</a><a href="#">Contact</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#">Get in touch</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">New page · /projects <span class="tag new">new</span></p>
+      <h1>Our Projects</h1>
+      <p class="lead">KAT Arabia is currently delivering projects for clients across the UAE and Saudi Arabia in construction, infrastructure, energy, industrial and government sectors. Our project work includes:</p>
+      <ul class="chips" style="margin-bottom:30px">
+        <li>Building construction and structural works</li><li>Infrastructure and civil works</li>
+        <li>Industrial construction and plant services</li><li>Oil and gas engineering and maintenance support</li>
+        <li>MEP and electro-mechanical installations</li><li>Facility management and maintenance</li>
+        <li>Plant, equipment and workforce supply</li>
+      </ul>
+
+      <div class="grid g3">
+        <div class="projcard"><div class="ph-img" data-label="profile"></div>
+          <div class="body"><span class="sector">Industrial · Jubail</span><h3 style="margin-top:6px">Editor-authored profile</h3><p class="muted" style="font-size:14px;margin:0">Image · title · summary. Draft until cleared for publication.</p></div></div>
+        <div class="projcard"><div class="ph-img" data-label="profile"></div>
+          <div class="body"><span class="sector">Building · Dubai</span><h3 style="margin-top:6px">Second profile</h3><p class="muted" style="font-size:14px;margin:0">Sorted by the entry’s sort order field.</p></div></div>
+        <div class="projcard"><div class="ph-img" data-label="profile"></div>
+          <div class="body"><span class="sector">Infrastructure · Sharjah</span><h3 style="margin-top:6px">Third profile</h3><p class="muted" style="font-size:14px;margin:0">“Project profiles will be added as projects are completed and cleared for publication.” — deck</p></div></div>
+      </div>
+
+      <div class="note">
+        <strong>Editor flow:</strong> admin → Projects → New (draft) → fill title, summary, image, description → publish when cleared. Drafts never appear here. No <code>/projects/[slug]</code> detail pages in this change (design.md, Decision 5).
+      </div>
+      <div class="empty">
+        <span class="mono">fresh install state</span>
+        <p>On a new deployment with no profiles, the listing area is simply absent — headline and intro only.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================ CONTACT ============================ -->
+<div class="view" id="view-contact">
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="#"><span class="mark">KAT</span> KAT Arabia</a>
+      <nav class="nav">
+        <a href="#">About</a><a href="#">Services</a><a href="#">Industries</a><a href="#">Projects</a><a href="#">HSE</a><a href="#" class="here">Contact</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" href="#">Get in touch</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Contact Us <span class="tag upd">deck copy</span> <span class="tag new">expanded form</span></p>
+      <h1>Contact Us</h1>
+      <p class="lead">Whether you are developing critical infrastructure, expanding industrial operations or delivering complex engineering projects, KAT Arabia is ready to be your engineering and contracting partner.</p>
+
+      <div class="two">
+        <form class="formcard" onsubmit="return false">
+          <div class="fgrid">
+            <div class="field"><label>Category</label>
+              <select><option>Project</option><option>Prequalification</option><option>Manpower</option><option>Careers</option></select>
+              <span class="hint">kept — drives the inbox grouping</span></div>
+            <div class="field"><label>Name <span class="req">*</span></label><input placeholder="Full name"></div>
+            <div class="field"><label>Company</label><input placeholder="Organisation"></div>
+            <div class="field"><label>Email <span class="req">*</span></label><input type="email" placeholder="name@company.com"></div>
+            <div class="field"><label>Phone</label><input placeholder="+971 …"></div>
+            <div class="field"><label>Country <span class="req">*</span></label><input placeholder="United Arab Emirates"><span class="hint">new · required · max 80</span></div>
+            <div class="field"><label>Project type <span class="req">*</span></label>
+              <select>
+                <option>Construction and Infrastructure</option>
+                <option>Industrial and Energy</option>
+                <option>Building Systems and Facilities</option>
+                <option>Engineering, Equipment and Workforce</option>
+              </select>
+              <span class="hint">new · the deck’s four service groups</span></div>
+            <div class="field"><label>Location <span class="req">*</span></label><input placeholder="City / project location"><span class="hint">new · required · max 120</span></div>
+            <div class="field wide"><label>Message <span class="req">*</span></label><textarea placeholder="Tell us about the project…"></textarea></div>
+            <div class="field wide"><label>Attach tender document</label>
+              <label class="filebox"><b>Choose a file</b> or drop it here — PDF, DOC, DOCX, XLS, XLSX · max 10&nbsp;MB<br>
+                <input type="file" style="margin-top:10px;font-size:12px"></label>
+              <span class="hint">new · stored in R2 under enquiries/ · admins download it from the inbox</span></div>
+            <div class="hp"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
+          </div>
+          <div class="actions" style="margin-top:20px">
+            <button class="btn btn-primary" type="submit">Send enquiry</button>
+            <span class="anchor" style="margin:0;align-self:center">posts to /api/enquiry → 303 back with sent=1 / sent=0</span>
+          </div>
+        </form>
+
+        <div class="contact-details">
+          <div class="detail"><div class="k">United Arab Emirates</div>
+            <b>Abu Dhabi</b> — Foodco Building, Salam Street<br>
+            <b>Dubai</b> — 55, BIN Dasmal Building 1, Al Quoz Industrial Area 1<br>
+            <b>Sharjah</b> — 1201, Crystal Tower, Corniche Street, Al Majaz 1
+            <div class="hint" style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:8px">phone numbers: to confirm (deck Review Notes)</div>
+          </div>
+          <div class="detail"><div class="k">Kingdom of Saudi Arabia</div>
+            KAT Arabia General Contracting Co.<br>Abu Al Hassan Ibn Al Jawzi St, Tebah District, Al Jubail, P.O. 35513
+          </div>
+          <div class="detail"><div class="k">General enquiries</div>
+            <b>Email</b> — info@katarabia.com<br><b>Website</b> — www.katarabia.com
+          </div>
+          <div class="detail" style="background:rgba(122,20,24,.06)"><div class="k">Server-side rules</div>
+            <span style="font-size:13.5px">Required: category, name, email, country, project type, location, message · honeypot pretends success · redirect stays same-origin · wrong/oversized file → sent=0, nothing stored</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================ NOTES ============================ -->
+<div class="view" id="view-notes">
+  <section>
+    <div class="wrap">
+      <p class="eyebrow">Review</p>
+      <h1>What this preview changes</h1>
+      <div class="grid g2" style="margin-top:26px">
+        <div class="card"><span class="tag new">new</span>
+          <h3 style="margin-top:12px">Added</h3>
+          <ul>
+            <li>4 pages: Industries, Projects, HSE &amp; Quality, Clients</li>
+            <li>3 services: Energy/Solar, Camp Construction, Engineering &amp; PM</li>
+            <li><code>projects</code> collection + <code>kat_projects</code> block (draft → cleared → published)</li>
+            <li>Enquiry fields: country, project type, location + tender upload to R2</li>
+            <li>Admin-only attachment download in the /enquiries inbox</li>
+          </ul></div>
+        <div class="card"><span class="tag upd">updated copy</span>
+          <h3 style="margin-top:12px">Rewritten</h3>
+          <ul>
+            <li>Home: all 8 sections in the deck’s order</li>
+            <li>About: overview, what we do, approach, presence</li>
+            <li>All 11 service pages: Overview · Scope · Approach · CTA</li>
+            <li>Industries, HSE, Clients, Contact copy</li>
+            <li>Page titles + meta descriptions on every entry</li>
+          </ul></div>
+        <div class="card"><span class="tag brk">breaking</span>
+          <h3 style="margin-top:12px">Removed</h3>
+          <ul>
+            <li><code>/strengths</code> → 404; content folds into Home “Why Work with KAT Arabia”</li>
+            <li><code>/locations</code> → 404; addresses live in Home “Our Presence” + Contact</li>
+            <li>Menu links to both, in header and footer</li>
+          </ul></div>
+        <div class="card"><span class="tag keep">kept as-is</span>
+          <h3 style="margin-top:12px">Unchanged</h3>
+          <ul>
+            <li>Palette, Montserrat type, cards &amp; maroon CTA language</li>
+            <li>Scroll film on Home (design decision 4)</li>
+            <li>Existing service slugs — no broken URLs</li>
+            <li>Globe, motion, reduced-motion fallbacks</li>
+          </ul></div>
+      </div>
+
+      <div class="note">
+        <strong>Not shown — “To Confirm Before Launch” (deck Review Notes):</strong> UAE/KSA phone numbers · leadership names &amp; bios · client logos (permission required) · named project profiles · offshore approvals · whether design &amp; engineering is in-house or partnered. These stay as placeholders until supplied.
+      </div>
+      <div class="actions" style="margin-top:26px">
+        <button class="btn btn-primary" onclick="alert('OpenSpec change: corporate-edition-copy — run /opsx-apply to implement this preview.')">Ready to build →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============================ FOOTER (shared pattern) ============================ -->
+<footer>
+  <div class="wrap">
+    <div class="fgrid4">
+      <div>
+        <div class="logo" style="color:#EDE6D9"><span class="mark">KAT</span> KAT Arabia</div>
+        <p style="font-size:13.5px;color:rgba(237,230,217,.65);margin-top:14px">Engineering and contracting across the UAE and Saudi Arabia. Part of KAT Group.</p>
+      </div>
+      <div><h4>Company</h4>
+        <ul><li><a href="#">About</a></li><li><a href="#">Industries</a></li><li><a href="#">Projects</a></li>
+        <li><a href="#">HSE &amp; Quality</a></li><li><a href="#">Clients</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div><h4>Services</h4>
+        <ul>
+          <li><a href="#">General Contracting</a></li><li><a href="#">Civil Infrastructure</a></li>
+          <li><a href="#">Industrial Construction</a></li><li><a href="#">Oil &amp; Gas</a></li>
+          <li><a href="#">MEP &amp; Electro-Mechanical</a></li><li><a href="#">Energy &amp; Solar</a></li>
+          <li><a href="#">Engineering &amp; PM</a></li><li><a href="#">Plant &amp; Equipment</a></li>
+          <li><a href="#">Facility Management</a></li><li><a href="#">Camp Construction</a></li>
+          <li><a href="#">Project Workforce</a></li>
+        </ul></div>
+      <div><h4>Get in touch</h4>
+        <ul><li><a href="#">info@katarabia.com</a></li><li><a href="#">Abu Dhabi · Dubai · Sharjah</a></li>
+        <li><a href="#">Al Jubail, KSA</a></li><li><a href="#" class="btn btn-gold btn-sm" style="margin-top:8px;display:inline-flex">Get in touch</a></li></ul></div>
+    </div>
+    <div class="giantmark">KAT ARABIA</div>
+    <div class="fbottom"><span>© KAT Arabia General Contracting</span><span>UI preview — Corporate Edition copy deck</span></div>
+  </div>
+</footer>
+
+<script>
+const btns = document.querySelectorAll('.viewbtn');
+btns.forEach(b => b.addEventListener('click', () => {
+  btns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + b.dataset.view).classList.add('active');
+  window.scrollTo({ top: 0 });
+}));
+</script>
+</body>
+</html>
