@@ -417,7 +417,7 @@ CONTACT = dict(email="info@katarabia.com",
 
 HOME = [
     k("hero", "kat_hero", variant="home", eyebrow="KAT Arabia General Contracting",
-      headline="Engineering and Contracting Solutions Across Industries", highlight="Across Industries",
+      headline="Engineering and Contracting Solutions", highlight="Across Industries",
       subheadline="KAT Arabia delivers construction, infrastructure, industrial and energy projects across the UAE and Saudi Arabia, supported by in-house equipment and workforce capability.",
       primary_cta_label="Our Services", primary_cta_url="/services",
       secondary_cta_label="Contact Us", secondary_cta_url="/contact", default_image="hero-dusk"),
