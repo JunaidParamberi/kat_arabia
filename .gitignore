@@ -38,3 +38,11 @@ Thumbs.db
 *.log
 npm-debug.log*
 .claude/skills
+
+# Python bytecode
+__pycache__/
+
+# Raw source material kept out of the repo
+/*.pdf
+/*.mp4
+/KAT_Arabia_General_contracting_logo.png

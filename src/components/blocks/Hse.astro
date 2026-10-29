@@ -1,4 +1,5 @@
 ---
+import Eyebrow from "../Eyebrow.astro";
 interface Props {
 	value: Record<string, any>;
 }
@@ -8,7 +9,7 @@ const certs: Array<{ code: string; title?: string; note?: string }> = v.certs ??
 
 <section class="section hse" id={v.anchor_id || undefined}>
 	<div class="wrap">
-		{v.label && <div class="sec-label mono"><span>{v.label}</span><span>Integrated management system</span></div>}
+		<Eyebrow label={v.label} />
 		<div class="sec-head">
 			<h2 class="disp h-lg" data-reveal>
 				{v.headline}{v.highlight && <><br /><span class="accent">{v.highlight}</span></>}

@@ -1,78 +1,151 @@
 ---
-import { mediaUrl } from "../../lib/media";
+import Eyebrow from "../Eyebrow.astro";
+import { CLIENT_LOGOS, mediaUrl } from "../../lib/media";
 
 interface Props {
 	value: Record<string, any>;
 }
 const { value: v } = Astro.props;
-const logos: Array<{ name: string; logo?: any }> = v.logos ?? [];
+
+// An uploaded logo wins; otherwise a brochure logo matching the client name.
+const builtIn = new Map(CLIENT_LOGOS.map((c) => [c.name.toLowerCase(), `/images/clients/${c.slug}.png`]));
+const logos = ((v.logos ?? []) as Array<{ name: string; logo?: any }>)
+	.filter((l) => l?.name)
+	.map((l) => ({ name: l.name, src: mediaUrl(l.logo) ?? builtIn.get(l.name.toLowerCase()) }));
+const marquee = v.layout === "marquee";
 ---
 
-<section class="section clients" id={v.anchor_id || undefined}>
-	<div class="wrap">
-		{v.label && <div class="sec-label mono"><span>{v.label}</span><span>KAT Group clients</span></div>}
-		<h2 class="disp clients__title" data-reveal>{v.headline}</h2>
-		<ul class="clients__grid">
-			{
-				logos.map((l) => {
-					const src = mediaUrl(l.logo);
-					return (
-						<li class="clients__cell">
-							{src ? <img src={src} alt={l.name} loading="lazy" /> : <span class="mono">{l.name}</span>}
-						</li>
-					);
-				})
-			}
-		</ul>
-		<p class="clients__note">Logos shown in monochrome; full colour on hover.</p>
-	</div>
-</section>
+{
+	logos.length > 0 && (
+		<section class:list={["section clients", marquee && "clients--marquee"]} id={v.anchor_id || undefined}>
+			<div class="wrap clients__head">
+				<Eyebrow label={v.label} />
+				{v.headline && <h2 class="disp clients__title" data-reveal>{v.headline}</h2>}
+			</div>
+			{marquee ? (
+				<div class="clients__rail" aria-label="Clients">
+					{[0, 1].map((copy) => (
+						<ul class="clients__track" aria-hidden={copy === 1 ? "true" : undefined}>
+							{logos.map((l) => (
+								<li class="clients__cell">
+									{l.src ? <img src={l.src} alt={copy ? "" : l.name} loading="lazy" /> : <span>{l.name}</span>}
+								</li>
+							))}
+						</ul>
+					))}
+				</div>
+			) : (
+				<div class="wrap">
+					<ul class="clients__grid">
+						{logos.map((l) => (
+							<li class="clients__cell">
+								{l.src ? <img src={l.src} alt={l.name} loading="lazy" /> : <span>{l.name}</span>}
+							</li>
+						))}
+					</ul>
+				</div>
+			)}
+		</section>
+	)
+}
 
 <style>
-	.clients {
-		padding-top: 0;
-	}
 	.clients__title {
-		margin-bottom: 48px;
-		font-size: clamp(32px, 3.2vw, 44px);
+		margin-bottom: clamp(28px, 3vw, 40px);
+		font-size: clamp(26px, 2.8vw, 40px);
+		max-width: 22ch;
 	}
 	.clients__grid {
 		display: grid;
 		grid-template-columns: repeat(6, minmax(0, 1fr));
-		border-top: 1px solid var(--rule);
-		border-left: 1px solid var(--rule);
+		gap: 12px;
 	}
 	.clients__cell {
+		border-radius: var(--r);
+		overflow: hidden;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		min-height: 110px;
-		padding: 20px;
-		border-right: 1px solid var(--rule);
-		border-bottom: 1px solid var(--rule);
-		color: #6b6056;
+		min-height: 104px;
+		padding: 20px 24px;
+		background: var(--paper-2);
+		font-weight: 600;
+		font-size: 14px;
+		text-align: center;
+		color: var(--ink-muted);
 	}
 	.clients__cell img {
-		max-height: 44px;
+		max-height: 56px;
+		max-width: 100%;
 		width: auto;
-		filter: grayscale(1);
-		opacity: 0.75;
+		object-fit: contain;
+		filter: grayscale(1) contrast(1.15);
+		opacity: 0.85;
+		mix-blend-mode: multiply;
 		transition:
-			filter 0.3s,
-			opacity 0.3s;
+			filter 0.3s var(--ease),
+			opacity 0.3s var(--ease);
 	}
-	.clients__cell:hover img {
+	.clients__cell:hover img,
+	.clients__cell:focus-within img {
 		filter: none;
 		opacity: 1;
 	}
-	.clients__note {
-		margin-top: 16px;
-		font-size: 13px;
-		color: var(--ink-muted);
+
+	/* marquee (home) */
+	.clients--marquee {
+		padding-block: clamp(56px, 6vw, 88px) 0;
 	}
+	.clients__rail {
+		display: flex;
+		overflow: hidden;
+		mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+	}
+	.clients__track {
+		display: flex;
+		flex-shrink: 0;
+		gap: 12px;
+		padding-right: 12px;
+		animation: clients-scroll 70s linear infinite;
+	}
+	.clients__rail:hover .clients__track {
+		animation-play-state: paused;
+	}
+	.clients__track .clients__cell {
+		width: 220px;
+		min-height: 112px;
+	}
+	@keyframes clients-scroll {
+		to {
+			transform: translateX(-100%);
+		}
+	}
+
 	@media (max-width: 860px) {
 		.clients__grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+		.clients__track .clients__cell {
+			width: 150px;
+			min-height: 80px;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.clients__cell img {
+			transition: none;
+		}
+		.clients__rail {
+			mask-image: none;
+		}
+		.clients__track {
+			animation: none;
+			flex-wrap: wrap;
+			justify-content: center;
+			flex-shrink: 1;
+			padding-inline: var(--gutter);
+		}
+		.clients__track[aria-hidden] {
+			display: none;
 		}
 	}
 </style>

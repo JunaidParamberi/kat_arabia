@@ -1,0 +1,9 @@
+---
+/** Section eyebrow: a short label above a headline. Strips legacy "03 — " ordinals from stored labels. */
+interface Props {
+	label?: string | null;
+}
+const text = (Astro.props.label ?? "").replace(/^\s*\d+\s*[—–-]\s*/, "").trim();
+---
+
+{text && <p class="eyebrow">{text}</p>}

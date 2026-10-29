@@ -101,7 +101,31 @@
 									"plant-night",
 									"mep",
 									"equipment",
-									"workforce"
+									"workforce",
+									"ksa-vision",
+									"engineers-site",
+									"hse-site",
+									"svc-building",
+									"svc-civil",
+									"svc-industrial",
+									"svc-oil-gas",
+									"svc-mep",
+									"svc-energy",
+									"svc-plant",
+									"svc-facility",
+									"ind-infrastructure",
+									"ind-oil-gas",
+									"ind-petrochemicals",
+									"ind-manufacturing",
+									"ind-mining",
+									"ind-commercial",
+									"ind-government",
+									"ind-healthcare",
+									"ind-hospitality",
+									"ind-logistics",
+									"ind-marine",
+									"ind-renewables",
+									"ind-smart-cities"
 								]
 							},
 							"defaultValue": "hero-dusk"
@@ -315,7 +339,8 @@
 							"validation": {
 								"options": [
 									"tabs",
-									"grid"
+									"grid",
+									"cards"
 								]
 							},
 							"defaultValue": "tabs"
@@ -387,6 +412,48 @@
 							"type": "image"
 						},
 						{
+							"slug": "default_image",
+							"label": "Built-in image when none is chosen",
+							"type": "select",
+							"validation": {
+								"options": [
+									"hero-dusk",
+									"gc-facade",
+									"civil-interchange",
+									"steel-erection",
+									"plant-night",
+									"mep",
+									"equipment",
+									"workforce",
+									"ksa-vision",
+									"engineers-site",
+									"hse-site",
+									"svc-building",
+									"svc-civil",
+									"svc-industrial",
+									"svc-oil-gas",
+									"svc-mep",
+									"svc-energy",
+									"svc-plant",
+									"svc-facility",
+									"ind-infrastructure",
+									"ind-oil-gas",
+									"ind-petrochemicals",
+									"ind-manufacturing",
+									"ind-mining",
+									"ind-commercial",
+									"ind-government",
+									"ind-healthcare",
+									"ind-hospitality",
+									"ind-logistics",
+									"ind-marine",
+									"ind-renewables",
+									"ind-smart-cities"
+								]
+							},
+							"defaultValue": "workforce"
+						},
+						{
 							"slug": "countries",
 							"label": "Source countries (comma separated)",
 							"type": "text"
@@ -438,7 +505,7 @@
 		{
 			"slug": "kat_industries",
 			"label": "Industries",
-			"description": "Index of industries served, with hover image",
+			"description": "Photo tiles of the industries served",
 			"category": "KAT Arabia",
 			"currentVersion": 1,
 			"versions": [
@@ -571,7 +638,7 @@
 		{
 			"slug": "kat_steps",
 			"label": "Numbered steps",
-			"description": "Numbered points: process, strengths or next steps",
+			"description": "Numbered or icon points: process, strengths or next steps",
 			"category": "KAT Arabia",
 			"currentVersion": 1,
 			"versions": [
@@ -610,6 +677,21 @@
 										"slug": "text",
 										"label": "Text",
 										"type": "text"
+									},
+									{
+										"slug": "icon",
+										"label": "Icon (icon style only)",
+										"type": "select",
+										"options": [
+											"layers",
+											"flow",
+											"globe",
+											"bolt",
+											"compass",
+											"crane",
+											"shield",
+											"handshake"
+										]
 									}
 								],
 								"maxItems": 9,
@@ -627,6 +709,18 @@
 								]
 							},
 							"defaultValue": "4"
+						},
+						{
+							"slug": "style",
+							"label": "Style",
+							"type": "select",
+							"validation": {
+								"options": [
+									"numbers",
+									"icons"
+								]
+							},
+							"defaultValue": "numbers"
 						},
 						{
 							"slug": "tone",
@@ -695,14 +789,38 @@
 							"type": "select",
 							"validation": {
 								"options": [
-									"steel-erection",
-									"workforce",
+									"hero-dusk",
 									"gc-facade",
+									"civil-interchange",
+									"steel-erection",
 									"plant-night",
 									"mep",
 									"equipment",
-									"civil-interchange",
-									"hero-dusk"
+									"workforce",
+									"ksa-vision",
+									"engineers-site",
+									"hse-site",
+									"svc-building",
+									"svc-civil",
+									"svc-industrial",
+									"svc-oil-gas",
+									"svc-mep",
+									"svc-energy",
+									"svc-plant",
+									"svc-facility",
+									"ind-infrastructure",
+									"ind-oil-gas",
+									"ind-petrochemicals",
+									"ind-manufacturing",
+									"ind-mining",
+									"ind-commercial",
+									"ind-government",
+									"ind-healthcare",
+									"ind-hospitality",
+									"ind-logistics",
+									"ind-marine",
+									"ind-renewables",
+									"ind-smart-cities"
 								]
 							},
 							"defaultValue": "steel-erection"
@@ -832,7 +950,7 @@
 		{
 			"slug": "kat_clients",
 			"label": "Clients",
-			"description": "Logo wall",
+			"description": "Logo wall or scrolling logo strip",
 			"category": "KAT Arabia",
 			"currentVersion": 1,
 			"versions": [
@@ -852,7 +970,7 @@
 						},
 						{
 							"slug": "logos",
-							"label": "Logos",
+							"label": "Logos (leave the logo empty to use the built-in brochure logo for that name)",
 							"type": "repeater",
 							"validation": {
 								"subFields": [
@@ -868,8 +986,20 @@
 										"type": "image"
 									}
 								],
-								"maxItems": 24
+								"maxItems": 30
 							}
+						},
+						{
+							"slug": "layout",
+							"label": "Layout",
+							"type": "select",
+							"validation": {
+								"options": [
+									"grid",
+									"marquee"
+								]
+							},
+							"defaultValue": "grid"
 						},
 						{
 							"slug": "anchor_id",
@@ -886,7 +1016,7 @@
 		{
 			"slug": "kat_cta",
 			"label": "Call to action",
-			"description": "Maroon band with a headline and buttons",
+			"description": "Maroon band, or a photo band, with a headline and buttons",
 			"category": "KAT Arabia",
 			"currentVersion": 1,
 			"versions": [
@@ -898,6 +1028,54 @@
 							"label": "Headline",
 							"type": "string",
 							"required": true
+						},
+						{
+							"slug": "image",
+							"label": "Background photo (optional)",
+							"type": "image"
+						},
+						{
+							"slug": "default_image",
+							"label": "Built-in image when none is chosen",
+							"type": "select",
+							"validation": {
+								"options": [
+									"none",
+									"hero-dusk",
+									"gc-facade",
+									"civil-interchange",
+									"steel-erection",
+									"plant-night",
+									"mep",
+									"equipment",
+									"workforce",
+									"ksa-vision",
+									"engineers-site",
+									"hse-site",
+									"svc-building",
+									"svc-civil",
+									"svc-industrial",
+									"svc-oil-gas",
+									"svc-mep",
+									"svc-energy",
+									"svc-plant",
+									"svc-facility",
+									"ind-infrastructure",
+									"ind-oil-gas",
+									"ind-petrochemicals",
+									"ind-manufacturing",
+									"ind-mining",
+									"ind-commercial",
+									"ind-government",
+									"ind-healthcare",
+									"ind-hospitality",
+									"ind-logistics",
+									"ind-marine",
+									"ind-renewables",
+									"ind-smart-cities"
+								]
+							},
+							"defaultValue": "none"
 						},
 						{
 							"slug": "primary_cta_label",
@@ -1165,6 +1343,7 @@
 					"validation": {
 						"options": [
 							"none",
+							"hero-dusk",
 							"gc-facade",
 							"civil-interchange",
 							"steel-erection",
@@ -1172,7 +1351,30 @@
 							"mep",
 							"equipment",
 							"workforce",
-							"hero-dusk"
+							"ksa-vision",
+							"engineers-site",
+							"hse-site",
+							"svc-building",
+							"svc-civil",
+							"svc-industrial",
+							"svc-oil-gas",
+							"svc-mep",
+							"svc-energy",
+							"svc-plant",
+							"svc-facility",
+							"ind-infrastructure",
+							"ind-oil-gas",
+							"ind-petrochemicals",
+							"ind-manufacturing",
+							"ind-mining",
+							"ind-commercial",
+							"ind-government",
+							"ind-healthcare",
+							"ind-hospitality",
+							"ind-logistics",
+							"ind-marine",
+							"ind-renewables",
+							"ind-smart-cities"
 						]
 					},
 					"defaultValue": "none"
@@ -1250,14 +1452,38 @@
 					"validation": {
 						"options": [
 							"none",
-							"plant-night",
-							"steel-erection",
-							"civil-interchange",
+							"hero-dusk",
 							"gc-facade",
+							"civil-interchange",
+							"steel-erection",
+							"plant-night",
 							"mep",
 							"equipment",
 							"workforce",
-							"hero-dusk"
+							"ksa-vision",
+							"engineers-site",
+							"hse-site",
+							"svc-building",
+							"svc-civil",
+							"svc-industrial",
+							"svc-oil-gas",
+							"svc-mep",
+							"svc-energy",
+							"svc-plant",
+							"svc-facility",
+							"ind-infrastructure",
+							"ind-oil-gas",
+							"ind-petrochemicals",
+							"ind-manufacturing",
+							"ind-mining",
+							"ind-commercial",
+							"ind-government",
+							"ind-healthcare",
+							"ind-hospitality",
+							"ind-logistics",
+							"ind-marine",
+							"ind-renewables",
+							"ind-smart-cities"
 						]
 					},
 					"defaultValue": "none"
@@ -1501,10 +1727,10 @@
 							"_version": 1,
 							"_key": "hero",
 							"variant": "home",
-							"eyebrow": "KAT Arabia General Contracting",
+							"eyebrow": "Saudi Arabia · United Arab Emirates",
 							"headline": "Engineering and Contracting Solutions",
 							"highlight": "Across Industries",
-							"subheadline": "KAT Arabia delivers construction, infrastructure, industrial and energy projects across the UAE and Saudi Arabia, supported by in-house equipment and workforce capability.",
+							"subheadline": "Construction, infrastructure, industrial and energy projects across the UAE and Saudi Arabia, backed by our own equipment and workforce.",
 							"primary_cta_label": "Our Services",
 							"primary_cta_url": "/services",
 							"secondary_cta_label": "Contact Us",
@@ -1512,84 +1738,211 @@
 							"default_image": "hero-dusk"
 						},
 						{
-							"_type": "kat_film",
+							"_type": "kat_clients",
 							"_version": 1,
-							"_key": "film",
-							"label": "01 — The film · From bare ground to skyline",
-							"headline": "One partner. Every stage.",
-							"intro": "Scroll and watch a project come to life — from survey pegs in the ground to an operating skyline, delivered by one contractor.",
-							"chapters": [
+							"_key": "clients",
+							"label": "Our clients",
+							"headline": "Trusted by the region's leading operators.",
+							"logos": [
 								{
-									"title": "Ground",
-									"description": "The plot is staked out on bare desert, pegs marking every line before a single column is poured.",
-									"services": "Civil & heavy engineering · Plant & equipment · Workforce"
+									"name": "Saudi Aramco"
 								},
 								{
-									"title": "Frame",
-									"description": "A concrete frame climbs floor by floor under a single tower crane.",
-									"services": "General contracting · Civil · Plant & equipment · Workforce"
+									"name": "SABIC"
 								},
 								{
-									"title": "Climb",
-									"description": "The structure keeps rising as a second crane joins, with glazing closing in from the base.",
-									"services": "General contracting · Civil · Plant & equipment · Workforce"
+									"name": "Eagle Marine"
 								},
 								{
-									"title": "Skin",
-									"description": "The glass façade wraps the tower from base to crown as the cranes finish the top floors.",
-									"services": "General contracting · MEP · Plant & equipment · Workforce"
+									"name": "Zamil Group"
 								},
 								{
-									"title": "Skyline",
-									"description": "Cranes gone, plaza landscaped: the tower stands finished and operating against the skyline.",
-									"services": "General contracting · MEP · Facility management · Workforce"
+									"name": "Concord Stars Contracting"
+								},
+								{
+									"name": "GazMin Motors"
+								},
+								{
+									"name": "APCC"
+								},
+								{
+									"name": "Sobha Constructions"
+								},
+								{
+									"name": "Azizi"
+								},
+								{
+									"name": "Torri Contracting"
+								},
+								{
+									"name": "Aroma International Building Contracting"
+								},
+								{
+									"name": "Cylingas Engineering & Construction"
+								},
+								{
+									"name": "General Construction Co."
+								},
+								{
+									"name": "Shapoorji Pallonji"
+								},
+								{
+									"name": "Bahri & Mazroei"
+								},
+								{
+									"name": "ACE Contracting"
+								},
+								{
+									"name": "Larsen & Toubro"
+								},
+								{
+									"name": "Ma'aden"
+								},
+								{
+									"name": "The Deep Seafood Company"
+								},
+								{
+									"name": "noon"
+								},
+								{
+									"name": "Khansaheb Group"
+								},
+								{
+									"name": "Oasis Hills Landscape Services"
+								},
+								{
+									"name": "Pacific Marine Engineering"
+								},
+								{
+									"name": "Sierra Contracting"
+								},
+								{
+									"name": "Plante"
+								},
+								{
+									"name": "GPTC"
+								},
+								{
+									"name": "Sinopec"
+								},
+								{
+									"name": "Petroserve International"
+								},
+								{
+									"name": "SsangYong"
 								}
 							],
-							"anchor_id": "film"
-						},
-						{
-							"_type": "kat_intro",
-							"_version": 1,
-							"_key": "about",
-							"label": "02 — About KAT Arabia",
-							"headline": "International standards,",
-							"highlight": "local execution.",
-							"body": "KAT Arabia General Contracting is an engineering and contracting company serving government entities, EPC contractors, industrial operators and private sector clients. We are part of KAT Group, a diversified multinational business group headquartered in the United Arab Emirates, with offices in Abu Dhabi, Dubai, Sharjah and Al Jubail.\n\nWe combine international standards with local execution to deliver reliable, sustainable and value-driven projects, from design and engineering through construction, commissioning and maintenance.",
-							"tone": "sand",
-							"anchor_id": "about"
+							"layout": "marquee",
+							"anchor_id": "clients"
 						},
 						{
 							"_type": "kat_capabilities",
 							"_version": 1,
 							"_key": "capabilities",
-							"label": "03 — Our Services",
+							"label": "Services",
 							"headline": "Construction to commissioning,",
 							"highlight": "one partner.",
-							"intro": "Eleven service lines across four groups — construction and infrastructure, industrial and energy, building systems and facilities, and engineering, equipment and workforce — delivered under one contract and one HSE system.",
-							"layout": "tabs",
+							"intro": "Eleven service lines under one contract and one HSE system, from building and civil works to MEP, plant and project workforce.",
+							"layout": "cards",
 							"cta_label": "All services",
 							"cta_url": "/services",
 							"anchor_id": "services"
 						},
 						{
-							"_type": "kat_industries",
+							"_type": "kat_film",
 							"_version": 1,
-							"_key": "industries",
-							"label": "04 — Industries We Serve",
-							"headline": "The sectors driving",
-							"highlight": "growth in the region.",
-							"intro": "KAT Arabia supports the industries driving growth in the UAE and Saudi Arabia, delivering integrated solutions across the region’s most vital sectors.",
-							"anchor_id": "industries"
+							"_key": "film",
+							"label": "From bare ground to skyline",
+							"headline": "One partner. Every stage.",
+							"intro": "Scroll to watch a project rise, delivered by one contractor.",
+							"chapters": [
+								{
+									"title": "Ground",
+									"description": "The plot is staked out on bare desert, pegs marking every line before a single column is poured."
+								},
+								{
+									"title": "Frame",
+									"description": "A concrete frame climbs floor by floor under a single tower crane."
+								},
+								{
+									"title": "Climb",
+									"description": "The structure keeps rising as a second crane joins, with glazing closing in from the base."
+								},
+								{
+									"title": "Skin",
+									"description": "The glass façade wraps the tower from base to crown as the cranes finish the top floors."
+								},
+								{
+									"title": "Skyline",
+									"description": "Cranes gone, plaza landscaped: the tower stands finished and operating against the skyline."
+								}
+							],
+							"anchor_id": "film"
+						},
+						{
+							"_type": "kat_steps",
+							"_version": 1,
+							"_key": "why",
+							"label": "Why KAT Arabia",
+							"headline": "One partner.",
+							"highlight": "Multiple capabilities.",
+							"columns": "4",
+							"style": "icons",
+							"tone": "night",
+							"steps": [
+								{
+									"icon": "layers",
+									"title": "Integrated engineering & contracting",
+									"text": "Engineering, construction, plant and people under one organization."
+								},
+								{
+									"icon": "flow",
+									"title": "End-to-end delivery",
+									"text": "One partner accountable from planning to handover."
+								},
+								{
+									"icon": "globe",
+									"title": "In-house global recruitment",
+									"text": "KAT Group's own division sources and tests every crew."
+								},
+								{
+									"icon": "bolt",
+									"title": "Rapid mobilization",
+									"text": "Skilled teams on site when the programme needs them."
+								},
+								{
+									"icon": "compass",
+									"title": "Engineering-led execution",
+									"text": "Civil, mechanical and electrical engineers lead every job."
+								},
+								{
+									"icon": "crane",
+									"title": "Modern plant & equipment",
+									"text": "Our own fleet, run by certified operators."
+								},
+								{
+									"icon": "shield",
+									"title": "Safety-driven culture",
+									"text": "One integrated HSE and quality system on every site."
+								},
+								{
+									"icon": "handshake",
+									"title": "Long-term partnerships",
+									"text": "Clients who come back, project after project."
+								}
+							],
+							"anchor_id": "why"
 						},
 						{
 							"_type": "kat_workforce",
 							"_version": 1,
 							"_key": "workforce",
-							"label": "05 — Workforce",
-							"headline": "A dedicated international",
-							"highlight": "recruitment division.",
+							"label": "Workforce",
+							"headline": "The people behind",
+							"highlight": "every project.",
 							"caption": "Skilled crews, sourced and tested in-house",
-							"body": "Backed by KAT Group’s dedicated in-house international recruitment division, KAT Arabia provides integrated workforce solutions that enable clients to mobilize skilled professionals quickly, efficiently and confidently. Our network supports engineering, infrastructure, industrial, oil and gas, and maintenance projects by sourcing, assessing, mobilizing and managing qualified professionals.",
+							"body": "KAT Group's in-house recruitment division sources, tests and mobilizes engineers, supervisors and trades from twelve countries for engineering, industrial, oil and gas and maintenance projects.",
+							"default_image": "hse-site",
 							"countries": "India, Nepal, Pakistan, Sri Lanka, Bangladesh, Philippines, Ghana, Kenya, Uganda, Sierra Leone, Cameroon, Burundi",
 							"show_globe": true,
 							"primary_cta_label": "Request manpower",
@@ -1599,62 +1952,23 @@
 							"anchor_id": "workforce"
 						},
 						{
-							"_type": "kat_steps",
+							"_type": "kat_industries",
 							"_version": 1,
-							"_key": "why",
-							"label": "06 — Why Work with KAT Arabia",
-							"headline": "Six reasons,",
-							"highlight": "one organization.",
-							"columns": "3",
-							"tone": "paper",
-							"anchor_id": "why",
-							"steps": [
-								{
-									"title": "Integrated engineering and contracting.",
-									"text": "One organization accountable from planning to completion."
-								},
-								{
-									"title": "Advanced engineering expertise.",
-									"text": "Civil, mechanical and electrical disciplines supported by experienced engineers and technical supervisors."
-								},
-								{
-									"title": "In-house workforce capability.",
-									"text": "A dedicated international recruitment division supporting rapid mobilization of skilled professionals."
-								},
-								{
-									"title": "Modern plant and equipment.",
-									"text": "Certified operators and experienced professionals supporting productivity, safety and efficiency."
-								},
-								{
-									"title": "Client-focused execution.",
-									"text": "Timelines, quality and regulatory compliance treated as non-negotiable."
-								},
-								{
-									"title": "Safety, quality, and sustainability.",
-									"text": "An integrated management system applied across every site and service."
-								}
-							]
-						},
-						{
-							"_type": "kat_projects",
-							"_version": 1,
-							"_key": "projects",
-							"label": "07 — Our Projects",
-							"headline": "Selected project",
-							"highlight": "profiles.",
-							"intro": "Our project portfolio includes building construction, civil infrastructure, industrial plant works, oil and gas facilities, MEP installations, camp construction and facility management projects.\n\nRepresentative project profiles are being prepared for publication.",
-							"cta_label": "View projects",
-							"cta_url": "/projects",
-							"anchor_id": "projects"
+							"_key": "industries",
+							"label": "Industries",
+							"headline": "The sectors driving",
+							"highlight": "the region's growth.",
+							"intro": "From energy and petrochemicals to healthcare and smart cities.",
+							"anchor_id": "industries"
 						},
 						{
 							"_type": "kat_footprint",
 							"_version": 1,
 							"_key": "presence",
-							"label": "08 — Our Presence",
+							"label": "Our presence",
 							"headline": "Four bases.",
 							"highlight": "One network.",
-							"intro": "Offices in Abu Dhabi, Dubai and Sharjah in the United Arab Emirates, and in Al Jubail in the Kingdom of Saudi Arabia. Corporate headquarters are in the UAE.",
+							"intro": "Abu Dhabi, Dubai and Sharjah in the UAE, and Al Jubail in Saudi Arabia.",
 							"offices": [
 								{
 									"city": "Abu Dhabi",
@@ -1682,6 +1996,7 @@
 									"country": "Saudi Arabia",
 									"role": "KSA office",
 									"address": "Abu Al Hassan Ibn Al Jawzi St, Tebah District, Al Jubail, P.O. 35513",
+									"phone": "+966 53 181 4451",
 									"primary": false
 								}
 							],
@@ -1692,9 +2007,12 @@
 							"_type": "kat_cta",
 							"_version": 1,
 							"_key": "cta",
-							"headline": "Discuss Your Project",
-							"primary_cta_label": "Contact Us",
-							"primary_cta_url": "/contact"
+							"headline": "Let's build the future together.",
+							"default_image": "ksa-vision",
+							"primary_cta_label": "Discuss your project",
+							"primary_cta_url": "/contact",
+							"secondary_cta_label": "Request manpower",
+							"secondary_cta_url": "/contact?type=manpower"
 						}
 					]
 				}
@@ -1797,15 +2115,6 @@
 							"headline": "Four bases.",
 							"highlight": "One network.",
 							"body": "With offices in Abu Dhabi, Dubai and Sharjah in the United Arab Emirates, and in Al Jubail in the Kingdom of Saudi Arabia, we combine regional presence with global capability.",
-							"tone": "paper"
-						},
-						{
-							"_type": "kat_intro",
-							"_version": 1,
-							"_key": "leadership",
-							"label": "05 — Leadership",
-							"headline": "Leadership",
-							"body": "Leadership names, titles and short biographies will be added here once confirmed.",
 							"tone": "paper"
 						}
 					]
@@ -1986,8 +2295,98 @@
 							"_type": "kat_clients",
 							"_version": 1,
 							"_key": "logos",
-							"label": "01 — Clients",
+							"label": "Clients",
 							"headline": "Trusted across sectors.",
+							"logos": [
+								{
+									"name": "Saudi Aramco"
+								},
+								{
+									"name": "SABIC"
+								},
+								{
+									"name": "Eagle Marine"
+								},
+								{
+									"name": "Zamil Group"
+								},
+								{
+									"name": "Concord Stars Contracting"
+								},
+								{
+									"name": "GazMin Motors"
+								},
+								{
+									"name": "APCC"
+								},
+								{
+									"name": "Sobha Constructions"
+								},
+								{
+									"name": "Azizi"
+								},
+								{
+									"name": "Torri Contracting"
+								},
+								{
+									"name": "Aroma International Building Contracting"
+								},
+								{
+									"name": "Cylingas Engineering & Construction"
+								},
+								{
+									"name": "General Construction Co."
+								},
+								{
+									"name": "Shapoorji Pallonji"
+								},
+								{
+									"name": "Bahri & Mazroei"
+								},
+								{
+									"name": "ACE Contracting"
+								},
+								{
+									"name": "Larsen & Toubro"
+								},
+								{
+									"name": "Ma'aden"
+								},
+								{
+									"name": "The Deep Seafood Company"
+								},
+								{
+									"name": "noon"
+								},
+								{
+									"name": "Khansaheb Group"
+								},
+								{
+									"name": "Oasis Hills Landscape Services"
+								},
+								{
+									"name": "Pacific Marine Engineering"
+								},
+								{
+									"name": "Sierra Contracting"
+								},
+								{
+									"name": "Plante"
+								},
+								{
+									"name": "GPTC"
+								},
+								{
+									"name": "Sinopec"
+								},
+								{
+									"name": "Petroserve International"
+								},
+								{
+									"name": "SsangYong"
+								}
+							],
+							"layout": "grid",
 							"anchor_id": "clients"
 						},
 						{
@@ -2018,10 +2417,9 @@
 							"intro": "Whether you are developing critical infrastructure, expanding industrial operations or delivering complex engineering projects, KAT Arabia is ready to be your engineering and contracting partner.",
 							"dark": false,
 							"email": "info@katarabia.com",
+							"phone": "+966 53 181 4451",
 							"ksa_address": "KAT Arabia General Contracting Co.\nAbu Al Hassan Ibn Al Jawzi St, Tebah District, Al Jubail, P.O. 35513",
-							"uae_address": "Abu Dhabi: Foodco Building, Salam Street, Abu Dhabi\nDubai: 55, BIN Dasmal Building 1, Al Quoz Industrial Area 1, Dubai\nSharjah: 1201, Crystal Tower, Corniche Street, Al Majaz 1, Sharjah",
-							"hours": "Sunday – Thursday · [08:00 – 17:00], local time per office",
-							"reply_note": "We reply within [X] working days."
+							"uae_address": "Abu Dhabi: Foodco Building, Salam Street, Abu Dhabi\nDubai: 55, BIN Dasmal Building 1, Al Quoz Industrial Area 1, Dubai\nSharjah: 1201, Crystal Tower, Corniche Street, Al Majaz 1, Sharjah"
 						}
 					]
 				}
@@ -2037,7 +2435,7 @@
 					"number": "01",
 					"summary": "Commercial, residential, government, healthcare, education, hospitality and industrial buildings delivered by KAT Arabia in the UAE and Saudi Arabia.",
 					"description": "KAT Arabia delivers integrated general contracting solutions across the commercial, residential, institutional, industrial, healthcare, hospitality and government sectors. Our project execution model emphasizes strict timeline adherence, cost management and consistent quality outcomes.\n\nBuilding works are supported by our MEP, civil, equipment and workforce capabilities, giving clients a single point of responsibility. Our teams work to specification, quality standards and applicable building regulations in each market.",
-					"default_image": "gc-facade",
+					"default_image": "svc-building",
 					"scope": [
 						{
 							"item": "Commercial developments"
@@ -2102,7 +2500,7 @@
 					"number": "02",
 					"summary": "Roads, bridges, utility networks, water transmission, pipelines, marine works and structural engineering by KAT Arabia in the UAE and Saudi Arabia.",
 					"description": "KAT Arabia delivers integrated civil engineering and heavy infrastructure solutions that support transportation networks, utilities, industrial expansion and urban development.\n\nOur infrastructure teams are supported by modern plant and equipment and certified operators, with engineering supervision and quality control throughout each project.",
-					"default_image": "civil-interchange",
+					"default_image": "svc-civil",
 					"scope": [
 						{
 							"item": "Roads and highways"
@@ -2167,7 +2565,7 @@
 					"number": "03",
 					"summary": "Construction, installation, commissioning, shutdown and maintenance services for manufacturing, petrochemical, mining, power and process facilities.",
 					"description": "KAT Arabia supports industrial growth through specialized engineering, construction and technical solutions for manufacturing, petrochemical, mining, power generation and industrial facilities.\n\nWe combine construction, mechanical installation, equipment and skilled workforce in one organization, enabling rapid mobilization for new construction, expansion and shutdown work.",
-					"default_image": "steel-erection",
+					"default_image": "svc-industrial",
 					"scope": [
 						{
 							"item": "Manufacturing facilities"
@@ -2229,7 +2627,7 @@
 					"number": "04",
 					"summary": "Engineering, construction, maintenance and technical support across upstream, midstream and downstream oil and gas, onshore and offshore.",
 					"description": "KAT Arabia provides engineering, construction, maintenance and technical support services across upstream, midstream and downstream oil and gas operations, both onshore and offshore.\n\nAll operations comply with international safety standards and local regulations, supporting reliability and operational excellence.",
-					"default_image": "plant-night",
+					"default_image": "svc-oil-gas",
 					"scope": [
 						{
 							"item": "Pipeline construction"
@@ -2297,7 +2695,7 @@
 					"number": "05",
 					"summary": "HVAC, electrical, plumbing, fire fighting, fire alarm, ELV, building automation, instrumentation, testing and commissioning by KAT Arabia.",
 					"description": "KAT Arabia delivers complete MEP and electro-mechanical solutions that enhance building performance, operational efficiency and sustainability, from installation through testing, commissioning and maintenance.\n\nMechanical, electrical and plumbing disciplines are coordinated within a single team and delivered either as part of a building project or as a standalone package.",
-					"default_image": "mep",
+					"default_image": "svc-mep",
 					"scope": [
 						{
 							"item": "HVAC systems"
@@ -2365,7 +2763,7 @@
 					"number": "06",
 					"summary": "Electrical installation, solar system design and implementation, power distribution and energy efficiency solutions for infrastructure and industrial projects.",
 					"description": "KAT Arabia delivers modern energy solutions for infrastructure and industrial projects, helping clients optimize energy usage while integrating sustainable practices into their facilities.\n\nOur electrical and engineering teams support projects from design through installation and ongoing maintenance.",
-					"default_image": "hero-dusk",
+					"default_image": "svc-energy",
 					"scope": [
 						{
 							"item": "Electrical installation and maintenance"
@@ -2403,7 +2801,7 @@
 					"number": "07",
 					"summary": "Civil, mechanical and electrical contracting, design and engineering, project management and site supervision by KAT Arabia.",
 					"description": "Our engineering division is equipped to handle technically demanding projects across multiple disciplines. Experienced engineers and technical supervisors ensure that every phase of a project is executed according to strict specifications, quality standards and best practice.\n\nOur integrated project execution model combines planning, technical supervision and on-site delivery, supporting seamless execution from engineering and construction through commissioning and maintenance.",
-					"default_image": "civil-interchange",
+					"default_image": "engineers-site",
 					"scope": [
 						{
 							"item": "Civil, mechanical and electrical contracting"
@@ -2453,7 +2851,7 @@
 					"number": "08",
 					"summary": "Cranes, excavators, loaders, forklifts, generators and material handling equipment supplied with certified operators.",
 					"description": "KAT Arabia provides modern construction equipment and certified operators that support productivity, safety and operational efficiency at every stage of project delivery.\n\nEquipment is supplied with certified operators and supported by experienced professionals, and is coordinated with our construction and workforce teams.",
-					"default_image": "equipment",
+					"default_image": "svc-plant",
 					"scope": [
 						{
 							"item": "Mobile cranes"
@@ -2515,7 +2913,7 @@
 					"number": "09",
 					"summary": "Hard and soft facility management, building, MEP and civil maintenance, asset and energy management by KAT Arabia.",
 					"description": "KAT Arabia delivers integrated facility management and technical maintenance solutions that preserve asset value and ensure long-term operational reliability.\n\nTechnical and operational services are delivered under one contract, with maintenance planned to protect asset performance across the full lifecycle.",
-					"default_image": "none",
+					"default_image": "svc-facility",
 					"scope": [
 						{
 							"item": "Hard facility management"
@@ -2580,7 +2978,7 @@
 					"number": "10",
 					"summary": "Labor camp construction, modular camp setup, utility infrastructure and camp maintenance services by KAT Arabia.",
 					"description": "KAT Arabia provides complete solutions for workforce accommodation and site infrastructure. Our designs prioritize functionality, compliance, safety and comfort, supporting smooth operations for project teams.\n\nCamp construction, utilities and ongoing maintenance are delivered by one contractor, supported by our workforce and facility management teams.",
-					"default_image": "gc-facade",
+					"default_image": "steel-erection",
 					"scope": [
 						{
 							"item": "Labor camp construction"
@@ -2662,7 +3060,7 @@
 				"data": {
 					"title": "Infrastructure and transportation",
 					"number": "01",
-					"default_image": "civil-interchange",
+					"default_image": "ind-infrastructure",
 					"order": 1
 				}
 			},
@@ -2673,7 +3071,7 @@
 				"data": {
 					"title": "Oil and gas",
 					"number": "02",
-					"default_image": "plant-night",
+					"default_image": "ind-oil-gas",
 					"order": 2
 				}
 			},
@@ -2684,7 +3082,7 @@
 				"data": {
 					"title": "Petrochemicals",
 					"number": "03",
-					"default_image": "steel-erection",
+					"default_image": "ind-petrochemicals",
 					"order": 3
 				}
 			},
@@ -2695,7 +3093,7 @@
 				"data": {
 					"title": "Energy and utilities",
 					"number": "04",
-					"default_image": "hero-dusk",
+					"default_image": "plant-night",
 					"order": 4
 				}
 			},
@@ -2706,7 +3104,7 @@
 				"data": {
 					"title": "Manufacturing",
 					"number": "05",
-					"default_image": "mep",
+					"default_image": "ind-manufacturing",
 					"order": 5
 				}
 			},
@@ -2717,7 +3115,7 @@
 				"data": {
 					"title": "Mining and metals",
 					"number": "06",
-					"default_image": "none",
+					"default_image": "ind-mining",
 					"order": 6
 				}
 			},
@@ -2728,7 +3126,7 @@
 				"data": {
 					"title": "Commercial developments",
 					"number": "07",
-					"default_image": "gc-facade",
+					"default_image": "ind-commercial",
 					"order": 7
 				}
 			},
@@ -2739,7 +3137,7 @@
 				"data": {
 					"title": "Government projects",
 					"number": "08",
-					"default_image": "none",
+					"default_image": "ind-government",
 					"order": 8
 				}
 			},
@@ -2750,7 +3148,7 @@
 				"data": {
 					"title": "Healthcare",
 					"number": "09",
-					"default_image": "none",
+					"default_image": "ind-healthcare",
 					"order": 9
 				}
 			},
@@ -2761,7 +3159,7 @@
 				"data": {
 					"title": "Hospitality",
 					"number": "10",
-					"default_image": "none",
+					"default_image": "ind-hospitality",
 					"order": 10
 				}
 			},
@@ -2772,7 +3170,7 @@
 				"data": {
 					"title": "Logistics",
 					"number": "11",
-					"default_image": "none",
+					"default_image": "ind-logistics",
 					"order": 11
 				}
 			},
@@ -2783,7 +3181,7 @@
 				"data": {
 					"title": "Marine",
 					"number": "12",
-					"default_image": "none",
+					"default_image": "ind-marine",
 					"order": 12
 				}
 			},
@@ -2794,7 +3192,7 @@
 				"data": {
 					"title": "Renewable energy",
 					"number": "13",
-					"default_image": "none",
+					"default_image": "ind-renewables",
 					"order": 13
 				}
 			},
@@ -2805,7 +3203,7 @@
 				"data": {
 					"title": "Smart cities",
 					"number": "14",
-					"default_image": "none",
+					"default_image": "ind-smart-cities",
 					"order": 14
 				}
 			}

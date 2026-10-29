@@ -12,7 +12,7 @@ export interface Industry {
   title: string;
   number: string;
   image?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  default_image?: "none" | "plant-night" | "steel-erection" | "civil-interchange" | "gc-facade" | "mep" | "equipment" | "workforce" | "hero-dusk";
+  default_image?: "none" | "hero-dusk" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | "ksa-vision" | "engineers-site" | "hse-site" | "svc-building" | "svc-civil" | "svc-industrial" | "svc-oil-gas" | "svc-mep" | "svc-energy" | "svc-plant" | "svc-facility" | "ind-infrastructure" | "ind-oil-gas" | "ind-petrochemicals" | "ind-manufacturing" | "ind-mining" | "ind-commercial" | "ind-government" | "ind-healthcare" | "ind-hospitality" | "ind-logistics" | "ind-marine" | "ind-renewables" | "ind-smart-cities";
   order?: number;
   createdAt: Date;
   updatedAt: Date;
@@ -36,7 +36,7 @@ export interface PageContentKatHeroV1Block {
   "secondary_cta_label"?: string | null;
   "secondary_cta_url"?: string | null;
   "image"?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null;
-  "default_image"?: "hero-dusk" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | null;
+  "default_image"?: "hero-dusk" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | "ksa-vision" | "engineers-site" | "hse-site" | "svc-building" | "svc-civil" | "svc-industrial" | "svc-oil-gas" | "svc-mep" | "svc-energy" | "svc-plant" | "svc-facility" | "ind-infrastructure" | "ind-oil-gas" | "ind-petrochemicals" | "ind-manufacturing" | "ind-mining" | "ind-commercial" | "ind-government" | "ind-healthcare" | "ind-hospitality" | "ind-logistics" | "ind-marine" | "ind-renewables" | "ind-smart-cities" | null;
   "breadcrumb"?: boolean | null;
   "anchor_id"?: string | null;
 }
@@ -81,7 +81,7 @@ export interface PageContentKatCapabilitiesV1Block {
   "headline": string;
   "highlight"?: string | null;
   "intro"?: string | null;
-  "layout"?: "tabs" | "grid" | null;
+  "layout"?: "tabs" | "grid" | "cards" | null;
   "cta_label"?: string | null;
   "cta_url"?: string | null;
   "anchor_id"?: string | null;
@@ -99,6 +99,7 @@ export interface PageContentKatWorkforceV1Block {
   "caption"?: string | null;
   "body"?: string | null;
   "image"?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null;
+  "default_image"?: "hero-dusk" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | "ksa-vision" | "engineers-site" | "hse-site" | "svc-building" | "svc-civil" | "svc-industrial" | "svc-oil-gas" | "svc-mep" | "svc-energy" | "svc-plant" | "svc-facility" | "ind-infrastructure" | "ind-oil-gas" | "ind-petrochemicals" | "ind-manufacturing" | "ind-mining" | "ind-commercial" | "ind-government" | "ind-healthcare" | "ind-hospitality" | "ind-logistics" | "ind-marine" | "ind-renewables" | "ind-smart-cities" | null;
   "countries"?: string | null;
   "show_globe"?: boolean | null;
   "primary_cta_label"?: string | null;
@@ -145,8 +146,9 @@ export interface PageContentKatStepsV1Block {
   "label"?: string | null;
   "headline": string;
   "highlight"?: string | null;
-  "steps"?: { "title": string; "text"?: string | null }[] | null;
+  "steps"?: { "title": string; "text"?: string | null; "icon"?: "layers" | "flow" | "globe" | "bolt" | "compass" | "crane" | "shield" | "handshake" | null }[] | null;
   "columns"?: "3" | "4" | null;
+  "style"?: "numbers" | "icons" | null;
   "tone"?: "paper" | "sand" | "night" | null;
   "anchor_id"?: string | null;
 }
@@ -162,7 +164,7 @@ export interface PageContentKatSplitV1Block {
   "highlight"?: string | null;
   "body"?: string | null;
   "image"?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null;
-  "default_image"?: "steel-erection" | "workforce" | "gc-facade" | "plant-night" | "mep" | "equipment" | "civil-interchange" | "hero-dusk" | null;
+  "default_image"?: "hero-dusk" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | "ksa-vision" | "engineers-site" | "hse-site" | "svc-building" | "svc-civil" | "svc-industrial" | "svc-oil-gas" | "svc-mep" | "svc-energy" | "svc-plant" | "svc-facility" | "ind-infrastructure" | "ind-oil-gas" | "ind-petrochemicals" | "ind-manufacturing" | "ind-mining" | "ind-commercial" | "ind-government" | "ind-healthcare" | "ind-hospitality" | "ind-logistics" | "ind-marine" | "ind-renewables" | "ind-smart-cities" | null;
   "image_right"?: boolean | null;
   "facts"?: { "value": string; "label": string }[] | null;
   "cta_label"?: string | null;
@@ -193,6 +195,7 @@ export interface PageContentKatClientsV1Block {
   "label"?: string | null;
   "headline": string;
   "logos"?: { "name": string; "logo"?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null }[] | null;
+  "layout"?: "grid" | "marquee" | null;
   "anchor_id"?: string | null;
 }
 
@@ -203,6 +206,8 @@ export interface PageContentKatCtaV1Block {
   _version: 1;
   _key: string;
   "headline": string;
+  "image"?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } } | null;
+  "default_image"?: "none" | "hero-dusk" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | "ksa-vision" | "engineers-site" | "hse-site" | "svc-building" | "svc-civil" | "svc-industrial" | "svc-oil-gas" | "svc-mep" | "svc-energy" | "svc-plant" | "svc-facility" | "ind-infrastructure" | "ind-oil-gas" | "ind-petrochemicals" | "ind-manufacturing" | "ind-mining" | "ind-commercial" | "ind-government" | "ind-healthcare" | "ind-hospitality" | "ind-logistics" | "ind-marine" | "ind-renewables" | "ind-smart-cities" | null;
   "primary_cta_label"?: string | null;
   "primary_cta_url"?: string | null;
   "secondary_cta_label"?: string | null;
@@ -289,7 +294,7 @@ export interface Service {
   summary: string;
   description?: string;
   image?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown>; darkVariant?: { id: string; src?: string; alt?: string; caption?: string; width?: number; height?: number; filename?: string; mimeType?: string; blurhash?: string; dominantColor?: string; focalX?: number; focalY?: number; provider?: string; previewUrl?: string; meta?: Record<string, unknown> } };
-  default_image?: "none" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | "hero-dusk";
+  default_image?: "none" | "hero-dusk" | "gc-facade" | "civil-interchange" | "steel-erection" | "plant-night" | "mep" | "equipment" | "workforce" | "ksa-vision" | "engineers-site" | "hse-site" | "svc-building" | "svc-civil" | "svc-industrial" | "svc-oil-gas" | "svc-mep" | "svc-energy" | "svc-plant" | "svc-facility" | "ind-infrastructure" | "ind-oil-gas" | "ind-petrochemicals" | "ind-manufacturing" | "ind-mining" | "ind-commercial" | "ind-government" | "ind-healthcare" | "ind-hospitality" | "ind-logistics" | "ind-marine" | "ind-renewables" | "ind-smart-cities";
   scope?: { "item": string }[];
   industries?: { "item": string }[];
   order?: number;

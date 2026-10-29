@@ -1,4 +1,5 @@
 ---
+import Eyebrow from "../Eyebrow.astro";
 import { getProjects } from "../../lib/content";
 
 interface Props {
@@ -8,16 +9,11 @@ const { value: v } = Astro.props;
 const projects = await getProjects();
 ---
 
+{
+	projects.length > 0 && (
 <section class="section projects" id={v.anchor_id || undefined}>
 	<div class="wrap">
-		{
-			v.label && (
-				<div class="sec-label mono">
-					<span>{v.label}</span>
-					<span>{projects.length} {projects.length === 1 ? "profile" : "profiles"}</span>
-				</div>
-			)
-		}
+		<Eyebrow label={v.label} />
 		<div class="sec-head">
 			<h2 class="disp h-lg" data-reveal>
 				{v.headline}
@@ -54,6 +50,8 @@ const projects = await getProjects();
 		}
 	</div>
 </section>
+	)
+}
 
 <style>
 	.projects__grid {
@@ -67,6 +65,8 @@ const projects = await getProjects();
 		flex-direction: column;
 	}
 	.projects__figure {
+		border-radius: var(--r-lg);
+		overflow: hidden;
 		position: relative;
 		aspect-ratio: 4 / 3;
 		overflow: hidden;

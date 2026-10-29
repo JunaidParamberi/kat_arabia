@@ -23,6 +23,12 @@
 	--max: 1440px;
 
 	--ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+	/* corner radii: rounded like the brochure's tiles */
+	--r-sm: 10px;
+	--r: 16px;
+	--r-lg: 24px;
+	--r-xl: clamp(24px, 2.6vw, 36px);
 	color-scheme: light;
 }
 
@@ -128,19 +134,22 @@ ul {
 
 .disp {
 	font-family: var(--font-display);
-	font-weight: 500;
-	letter-spacing: -0.035em;
-	line-height: 0.96;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	line-height: 1.02;
+}
+h2.disp {
+	font-weight: 800;
 }
 
 .h-xl {
-	font-size: clamp(46px, 7vw, 104px);
+	font-size: clamp(42px, 6.4vw, 96px);
 }
 .h-lg {
-	font-size: clamp(38px, 5vw, 76px);
+	font-size: clamp(30px, 4.6vw, 72px);
 }
 .h-md {
-	font-size: clamp(32px, 3.6vw, 52px);
+	font-size: clamp(28px, 3.4vw, 50px);
 }
 
 .accent {
@@ -191,13 +200,35 @@ ul {
 	display: flex;
 	justify-content: space-between;
 	gap: 16px;
-	padding-top: 12px;
-	margin-bottom: clamp(32px, 4vw, 48px);
-	border-top: 1px solid currentColor;
+	margin-bottom: clamp(20px, 2.4vw, 28px);
 }
 .night .sec-label {
 	color: var(--on-night-dim);
-	border-color: rgba(236, 230, 219, 0.4);
+}
+
+/* Section eyebrow (Eyebrow.astro): a short word above the headline, no numbering or rules */
+.eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: clamp(16px, 2vw, 22px);
+	font-family: var(--font-body);
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--maroon);
+}
+.eyebrow::before {
+	content: "";
+	width: 28px;
+	height: 3px;
+	border-radius: 3px;
+	background: currentColor;
+}
+.night .eyebrow,
+.on-image .eyebrow {
+	color: var(--gold);
 }
 
 .sec-head {
@@ -229,8 +260,9 @@ ul {
 	justify-content: space-between;
 	gap: 14px;
 	min-height: 54px;
-	padding: 0 26px;
+	padding: 0 28px;
 	border: 1px solid transparent;
+	border-radius: 999px;
 	font-family: var(--font-body);
 	font-size: 15px;
 	font-weight: 600;
@@ -301,4 +333,12 @@ ul {
 		opacity: 1;
 		transform: none;
 	}
+}
+
+/* ---------- inset sheet: a rounded panel inset from the viewport edge ---------- */
+.sheet {
+	margin-inline: clamp(8px, 1.2vw, 16px);
+	border-radius: var(--r-xl);
+	overflow: hidden;
+	isolation: isolate;
 }

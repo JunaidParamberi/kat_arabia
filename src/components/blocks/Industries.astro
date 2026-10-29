@@ -1,172 +1,184 @@
 ---
+import Eyebrow from "../Eyebrow.astro";
 import { getIndustries } from "../../lib/content";
 
 interface Props {
 	value: Record<string, any>;
 }
 const { value: v } = Astro.props;
-const items = await getIndustries();
-const withImage = items.filter((i) => i.image);
-const startIndex = Math.max(
-	0,
-	items.findIndex((i) => i.image),
-);
+// One tile per unique title, so stale duplicate entries never show twice.
+const seen = new Set<string>();
+const items = (await getIndustries()).filter((it) => {
+	const key = it.title.trim().toLowerCase();
+	if (!key || seen.has(key)) return false;
+	seen.add(key);
+	return true;
+});
 ---
 
-<section class="section industries" id={v.anchor_id || undefined} data-industries>
-	<div class="wrap">
-		{v.label && <div class="sec-label mono"><span>{v.label}</span><span>{items.length} sectors</span></div>}
-		<div class="sec-head">
-			<h2 class="disp h-lg" data-reveal>
-				{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
-			</h2>
-			{v.intro && <p class="lead" data-reveal>{v.intro}</p>}
-		</div>
-		<div class="industries__grid">
-			<ol class="industries__list">
-				{
-					items.map((it, i) => (
-						<li>
-							<button
-								type="button"
-								class:list={["industries__item", { "is-active": i === startIndex }]}
-								data-ind={i}
-								data-has-image={it.image ? "true" : "false"}
-							>
-								<span class="mono industries__num">{it.number}</span>
-								<span class="disp">{it.title}</span>
-							</button>
+{
+	items.length > 0 && (
+		<section class="section industries" id={v.anchor_id || undefined}>
+			<div class="wrap">
+				<Eyebrow label={v.label} />
+				<div class="sec-head">
+					<h2 class="disp h-lg" data-reveal>
+						{v.headline}
+						{v.highlight && <span class="accent"> {v.highlight}</span>}
+					</h2>
+					{v.intro && (
+						<p class="lead" data-reveal>
+							{v.intro}
+						</p>
+					)}
+				</div>
+				<ul class="industries__bento">
+					{items.map((it, i) => (
+						<li class:list={["industries__tile", { "industries__tile--plain": !it.image }]} data-reveal>
+							{it.image && <img src={it.image.src} alt="" loading="lazy" />}
+							<span class="industries__num">{String(i + 1).padStart(2, "0")}</span>
+							<span class="industries__name">
+								{it.title}
+								<svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M4 12 12 4M6 4h6v6" />
+								</svg>
+							</span>
 						</li>
-					))
-				}
-			</ol>
-			{
-				withImage.length > 0 && (
-					<figure class="industries__figure" aria-live="polite">
-						{items.map((it, i) =>
-							it.image ? (
-								<img
-									class:list={{ "is-active": i === startIndex }}
-									src={it.image.src}
-									alt={it.image.alt}
-									loading="lazy"
-									data-ind-img={i}
-								/>
-							) : null,
-						)}
-						<figcaption>
-							<span class="disp" data-ind-title>
-								{items[startIndex]?.title}
-							</span>
-							<span class="mono" data-ind-count>
-								{items[startIndex]?.number} / {String(items.length).padStart(2, "0")}
-							</span>
-						</figcaption>
-					</figure>
-				)
-			}
-		</div>
-	</div>
-</section>
+					))}
+				</ul>
+			</div>
+		</section>
+	)
+}
 
 <style>
-	.industries__grid {
+	/* Bento mosaic: 12 columns, two feature tiles (1st and 8th) span half the width and two rows. */
+	.industries__bento {
 		display: grid;
 		grid-template-columns: repeat(12, minmax(0, 1fr));
-		column-gap: 24px;
-		align-items: start;
-	}
-	.industries__list {
-		grid-column: span 8;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		grid-auto-flow: column;
-		grid-template-rows: repeat(7, auto);
-		column-gap: 32px;
-		border-bottom: 1px solid var(--rule);
-	}
-	.industries__item {
-		display: grid;
-		grid-template-columns: 44px minmax(0, 1fr);
-		align-items: baseline;
+		grid-auto-rows: clamp(170px, 15vw, 230px);
+		grid-auto-flow: dense;
 		gap: 12px;
-		width: 100%;
-		min-height: 64px;
-		padding: 16px 0;
-		background: none;
-		border: 0;
-		border-top: 1px solid var(--rule);
-		color: #2a2220;
-		font-size: clamp(20px, 1.9vw, 26px);
-		text-align: left;
-		cursor: default;
-		transition: color 0.2s;
 	}
-	.industries__item[data-has-image="true"] {
-		cursor: pointer;
-	}
-	.industries__item:hover,
-	.industries__item.is-active {
-		color: var(--maroon);
-	}
-	.industries__item.is-active {
-		border-top: 2px solid var(--maroon);
-	}
-	.industries__num {
-		color: var(--maroon);
-	}
-	.industries__figure {
-		grid-column: 9 / span 4;
-		position: sticky;
-		top: 96px;
-		aspect-ratio: 3 / 4;
+	.industries__tile {
+		position: relative;
+		grid-column: span 3;
+		display: flex;
+		align-items: flex-end;
 		overflow: hidden;
-		background: #2a1c17;
+		border-radius: var(--r-lg);
+		background: var(--ink);
+		color: #fff;
 	}
-	.industries__figure img {
+	.industries__tile:nth-child(1),
+	.industries__tile:nth-child(8) {
+		grid-column: span 6;
+		grid-row: span 2;
+	}
+	.industries__tile img {
 		position: absolute;
 		inset: 0;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		opacity: 0;
-		transform: scale(1.04);
-		transition:
-			opacity 0.6s var(--ease),
-			transform 1.2s var(--ease);
+		transition: transform 1s var(--ease);
 	}
-	.industries__figure img.is-active {
-		opacity: 1;
-		transform: none;
-	}
-	.industries__figure figcaption {
+	.industries__tile::after {
+		content: "";
 		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		display: flex;
-		justify-content: space-between;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(12, 9, 8, 0) 50%, rgba(12, 9, 8, 0.55) 100%);
+	}
+	.industries__tile:hover img {
+		transform: scale(1.07);
+	}
+	.industries__tile--plain {
+		background: var(--maroon);
+	}
+	.industries__num {
+		position: absolute;
+		top: 14px;
+		left: 14px;
+		z-index: 1;
+		padding: 5px 10px;
+		border-radius: 999px;
+		background: rgba(12, 9, 8, 0.35);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+	}
+	.industries__name {
+		position: relative;
+		z-index: 1;
+		display: inline-flex;
 		align-items: center;
-		padding: 18px;
-		background: linear-gradient(180deg, transparent, rgba(11, 8, 7, 0.75));
-		color: #f6f0e6;
+		gap: 10px;
+		margin: 14px;
+		padding: 10px 16px;
+		border-radius: 999px;
+		background: rgba(246, 240, 230, 0.16);
+		border: 1px solid rgba(246, 240, 230, 0.22);
+		backdrop-filter: blur(14px) saturate(1.3);
+		-webkit-backdrop-filter: blur(14px) saturate(1.3);
+		font-family: var(--font-display);
+		font-weight: 700;
+		font-size: 14px;
+		line-height: 1.2;
 	}
-	.industries__figure figcaption .disp {
-		font-size: 24px;
+	.industries__name svg {
+		flex-shrink: 0;
+		transition: transform 0.4s var(--ease);
 	}
-	@media (max-width: 960px) {
-		.industries__list {
-			grid-column: 1 / -1;
+	.industries__tile:hover .industries__name svg {
+		transform: translate(2px, -2px);
+	}
+	.industries__tile:nth-child(1) .industries__name,
+	.industries__tile:nth-child(8) .industries__name {
+		padding: 14px 22px;
+		font-size: clamp(16px, 1.5vw, 22px);
+	}
+	@media (max-width: 1100px) {
+		.industries__bento {
+			grid-template-columns: repeat(6, minmax(0, 1fr));
 		}
-		.industries__figure {
+	}
+	@media (max-width: 640px) {
+		.industries__bento {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			grid-auto-rows: 128px;
+			gap: 8px;
+		}
+		.industries__tile,
+		.industries__tile:nth-child(1),
+		.industries__tile:nth-child(8) {
+			grid-column: span 1;
+			grid-row: span 1;
+		}
+		.industries__tile:nth-child(1),
+		.industries__tile:nth-child(8) {
+			grid-column: span 2;
+			grid-row: span 1;
+		}
+		.industries__num {
+			display: none;
+		}
+		.industries__name,
+		.industries__tile:nth-child(1) .industries__name,
+		.industries__tile:nth-child(8) .industries__name {
+			margin: 8px;
+			padding: 6px 10px;
+			font-size: 12px;
+		}
+		.industries__name svg {
 			display: none;
 		}
 	}
-	@media (max-width: 560px) {
-		.industries__list {
-			grid-template-columns: 1fr;
-			grid-auto-flow: row;
-			grid-template-rows: none;
+	@media (prefers-reduced-motion: reduce) {
+		.industries__tile img,
+		.industries__name svg {
+			transition: none;
 		}
 	}
 </style>

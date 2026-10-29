@@ -138,6 +138,8 @@ if (!reduced) {
 /* ---------- scroll film ---------- */
 // Chapter breakpoints: Ground 0-20%, Structure 20-45%, Industry 45-65%, Energy 65-85%, Skyline 85-100%.
 const FILM_BREAKPOINTS = [0, 0.2, 0.45, 0.65, 0.85, 1.0001];
+// Sharpest frame in each chapter of public/film/film-scrub.mp4, as scroll progress. Re-measure if the film changes.
+const FILM_REST_POINTS = [0, 0.44, 0.615, 0.84, 1];
 
 for (const film of $$("[data-film]")) {
 	const stage = $("[data-film-stage]", film)!;
@@ -225,6 +227,7 @@ for (const film of $$("[data-film]")) {
 		});
 	}
 
+	let settleTimer: number | undefined;
 	const setProgress = (p: number) => {
 		const chapter = chapterAt(p);
 		setChapter(chapter);
@@ -234,6 +237,14 @@ for (const film of $$("[data-film]")) {
 			f.style.width = `${Math.max(0, Math.min(1, into)) * 100}%`;
 		});
 		seek(p);
+		// When scrolling pauses mid-film, ease only the video (never the page) to the nearest
+		// sharp frame, so it doesn't rest on a motion-blurred one.
+		if (settleTimer) clearTimeout(settleTimer);
+		settleTimer = window.setTimeout(() => {
+			if (p <= 0 || p >= 1) return;
+			const rest = FILM_REST_POINTS.reduce((a, b) => (Math.abs(b - p) < Math.abs(a - p) ? b : a));
+			if (Math.abs(rest - p) <= 0.15) seek(rest);
+		}, 220);
 		scale = 1 + p * 0.08;
 		applyTransform();
 		if (poster) poster.style.transform = `scale(${1.12 - p * 0.12})`;
@@ -345,38 +356,16 @@ for (const root of $$("[data-caps]")) {
 	});
 }
 
-/* ---------- industries image swap ---------- */
-for (const root of $$("[data-industries]")) {
-	const items = $$<HTMLButtonElement>("[data-ind]", root);
-	const imgs = $$<HTMLImageElement>("[data-ind-img]", root);
-	const title = $("[data-ind-title]", root);
-	const count = $("[data-ind-count]", root);
-	const total = String(items.length).padStart(2, "0");
-	const show = (btn: HTMLButtonElement) => {
-		if (btn.dataset.hasImage !== "true") return;
-		const i = btn.dataset.ind;
-		items.forEach((b) => b.classList.toggle("is-active", b === btn));
-		imgs.forEach((img) => img.classList.toggle("is-active", img.dataset.indImg === i));
-		if (title) title.textContent = btn.querySelector(".disp")?.textContent ?? "";
-		if (count) count.textContent = `${btn.querySelector(".mono")?.textContent ?? ""} / ${total}`;
-	};
-	items.forEach((b) => {
-		b.addEventListener("mouseenter", () => show(b));
-		b.addEventListener("focus", () => show(b));
-		b.addEventListener("click", () => show(b));
-	});
-}
-
-/* ---------- footprint arcs ---------- */
+/* ---------- footprint traverse: the survey line draws itself between benchmarks ---------- */
 for (const map of $$("[data-map]")) {
 	const arcs = $$<SVGPathElement>("[data-arc]", map);
 	if (!arcs.length || reduced) continue;
 	gsap.set(arcs, { strokeDasharray: 1, strokeDashoffset: 1 });
 	ScrollTrigger.create({
 		trigger: map,
-		start: "top 75%",
+		start: "top 70%",
 		once: true,
-		onEnter: () => gsap.to(arcs, { strokeDashoffset: 0, duration: 1.6, stagger: 0.25, ease: "power2.inOut" }),
+		onEnter: () => gsap.to(arcs, { strokeDashoffset: 0, duration: 2.2, ease: "power2.inOut" }),
 	});
 }
 

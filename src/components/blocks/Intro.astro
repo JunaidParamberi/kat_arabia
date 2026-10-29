@@ -1,4 +1,5 @@
 ---
+import Eyebrow from "../Eyebrow.astro";
 import { paragraphs } from "../../lib/media";
 
 interface Props {
@@ -12,7 +13,7 @@ const tone = v.tone === "night" ? "night" : v.tone === "sand" ? "sand" : "";
 
 <section class:list={["section intro", tone]} id={v.anchor_id || undefined}>
 	<div class="wrap">
-		{v.label && <div class="sec-label mono"><span>{v.label}</span></div>}
+		<Eyebrow label={v.label} />
 		<div class="intro__grid">
 			<h2 class="disp h-lg intro__title" data-reveal>
 				{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}

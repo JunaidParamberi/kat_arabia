@@ -301,6 +301,7 @@ const year = new Date().getFullYear();
 		gap: 6px;
 		background: none;
 		border: 1px solid currentColor;
+		border-radius: 999px;
 		color: inherit;
 		cursor: pointer;
 	}
@@ -320,6 +321,15 @@ const year = new Date().getFullYear();
 		padding: 8px var(--gutter) 32px;
 		background: var(--ink);
 		color: #f6f0e6;
+	}
+	/* The open menu covers the whole screen so page content never shows beneath it. */
+	.site-header.menu-open {
+		position: fixed;
+		inset: 0;
+		height: 100dvh;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		transform: none;
 	}
 	.mobile-menu nav {
 		display: flex;
