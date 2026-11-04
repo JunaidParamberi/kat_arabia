@@ -59,101 +59,68 @@ const legs = chain.slice(1).map((b, i) => {
 });
 const traverse = legs.map((l) => l.d).join("");
 
-// The SVG frame leaves room outside the plate for graticule labels and the scale bar.
-const VB = { x: -56, y: -34, w: MAP.width + 56, h: MAP.height + 90 };
+// The map fills a rounded sheet edge to edge, like the site's photo tiles.
+const VB = { x: 0, y: 0, w: MAP.width, h: MAP.height };
 const pct = ([x, y]: number[]) => `left:${(((x - VB.x) / VB.w) * 100).toFixed(2)}%;top:${(((y - VB.y) / VB.h) * 100).toFixed(2)}%`;
-const coords = (g: { lat: number; lon: number }) => `${g.lat.toFixed(2)}°N ${g.lon.toFixed(2)}°E`;
 const directions = (o: Office) =>
 	`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${o.address ?? ""} ${o.city}`.trim())}`;
-const scale = MAP.per100km;
 ---
 
 <section class="section footprint" id={v.anchor_id || undefined}>
 	<div class="wrap">
 		<Eyebrow label={v.label} />
+		<div class="sec-head">
+			<h2 class="disp h-lg" data-reveal>
+				{v.headline}
+				{v.highlight && <span class="accent"> {v.highlight}</span>}
+			</h2>
+			{v.intro && (
+				<p class="lead" data-reveal>
+					{v.intro}
+				</p>
+			)}
+		</div>
 		<div class="fp">
-			<figure class="fp__plate" data-map>
+			<figure class="fp__map" data-map data-reveal>
 				<svg
 					viewBox={`${VB.x} ${VB.y} ${VB.w} ${VB.h}`}
 					role="img"
 					aria-label={`Map of the Gulf coast showing ${offices.map((o) => o.city).join(", ")}`}
 				>
 					<defs>
-						<pattern id="fp-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-							<line x1="0" y1="0" x2="0" y2="7" stroke="#7a1418" stroke-width="1.1" stroke-opacity=".5"></line>
-						</pattern>
-						<clipPath id="fp-clip"><rect width={MAP.width} height={MAP.height}></rect></clipPath>
 						<mask id="fp-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width={MAP.width} height={MAP.height}>
 							<path d={traverse} fill="none" stroke="#fff" stroke-width="8" pathLength="1" data-arc></path>
 						</mask>
 					</defs>
-					<g clip-path="url(#fp-clip)">
-						<rect width={MAP.width} height={MAP.height} fill="#f4efe6"></rect>
-						<path d={MAP.graticule} fill="none" stroke="#141010" stroke-opacity=".09"></path>
-						<path d={MAP.neighbours} fill="#ece6db"></path>
-						<path d={MAP.saudi} fill="#e4dccd"></path>
-						<path d={MAP.uae} fill="url(#fp-hatch)"></path>
-						<path d={MAP.borders} fill="none" stroke="#3d342e" stroke-width=".9" stroke-dasharray="5 3 1 3"></path>
-						<path d={MAP.saudi + MAP.uae + MAP.neighbours} fill="none" stroke="#3d342e" stroke-width="1.1" stroke-linejoin="round"></path>
-						<path d={MAP.uae} fill="none" stroke="#7a1418" stroke-width="1.8" stroke-linejoin="round"></path>
-						{
-							MAP.labels.map((l) => (
-								<text x={l.at[0]} y={l.at[1]} text-anchor="middle" class:list={["fp__geo", `fp__geo--${l.kind}`]}>
-									{l.text}
-								</text>
-							))
-						}
-						<path d={traverse} fill="none" stroke="#7a1418" stroke-width="2" stroke-dasharray="10 5 2 5" mask="url(#fp-reveal)"></path>
-						{
-							marks.map((m) =>
-								m === hub ? (
-									<g class="fp__bm fp__bm--hub" data-office-mark={m.i}>
-										<circle cx={m.pos![0]} cy={m.pos![1]} r="16" fill="#f4efe6" stroke="#7a1418" stroke-width="2"></circle>
-										<circle cx={m.pos![0]} cy={m.pos![1]} r="6" fill="#7a1418"></circle>
-										<path
-											d={`M${m.pos![0] - 21} ${m.pos![1]}H${m.pos![0] + 21}M${m.pos![0]} ${m.pos![1] - 21}V${m.pos![1] + 21}`}
-											stroke="#7a1418"
-											stroke-width="1.4"
-										></path>
-									</g>
-								) : (
-									<g class="fp__bm" data-office-mark={m.i}>
-										<circle cx={m.pos![0]} cy={m.pos![1]} r="8" fill="#f4efe6" stroke="#141010" stroke-width="1.4"></circle>
-										<path
-											d={`M${m.pos![0] - 13} ${m.pos![1]}H${m.pos![0] + 13}M${m.pos![0]} ${m.pos![1] - 13}V${m.pos![1] + 13}`}
-											stroke="#141010"
-											stroke-width="1.4"
-										></path>
-									</g>
-								),
-							)
-						}
-						<path d={`M${MAP.width - 54} 66L${MAP.width - 44} 36L${MAP.width - 34} 66L${MAP.width - 44} 58Z`} fill="#141010"></path>
-						<text x={MAP.width - 44} y="84" text-anchor="middle" class="fp__tick fp__tick--n">N</text>
-					</g>
-					<rect width={MAP.width} height={MAP.height} fill="none" stroke="#141010" stroke-width="1.5"></rect>
-					<g stroke="#141010" stroke-width="1.2">
-						{MAP.ticks.lon.map((t) => <path d={`M${t.at} -8V0`}></path>)}
-						{MAP.ticks.lat.map((t) => <path d={`M-8 ${t.at}H0`}></path>)}
-					</g>
-					{MAP.ticks.lon.map((t) => <text x={t.at} y="-14" text-anchor="middle" class="fp__tick">{t.deg}°E</text>)}
-					{MAP.ticks.lat.map((t) => <text x="-14" y={t.at + 4} text-anchor="end" class="fp__tick">{t.deg}°N</text>)}
-					<g transform={`translate(0 ${MAP.height + 30})`}>
-						<rect width={scale / 2} height="6" fill="#141010"></rect>
-						<rect x={scale / 2} width={scale / 2} height="6" fill="none" stroke="#141010" stroke-width="1.2"></rect>
-						<text x={scale + 14} y="7" class="fp__tick">0 — 100 km</text>
-						<text x={MAP.width} y="7" text-anchor="end" class="fp__tick">Distances as the crow flies</text>
-					</g>
+					<rect width={MAP.width} height={MAP.height} fill="#f4efe6"></rect>
+					<path d={MAP.neighbours} fill="#ece6db"></path>
+					<path d={MAP.saudi} fill="#e4dccd"></path>
+					<path d={MAP.uae} fill="#7a1418" fill-opacity=".1"></path>
+					<path d={MAP.borders} fill="none" stroke="#4a4039" stroke-opacity=".45" stroke-width=".9" stroke-dasharray="4 4"></path>
+					<path d={MAP.saudi + MAP.uae + MAP.neighbours} fill="none" stroke="#4a4039" stroke-opacity=".55" stroke-width="1" stroke-linejoin="round"></path>
+					<path d={MAP.uae} fill="none" stroke="#7a1418" stroke-opacity=".7" stroke-width="1.4" stroke-linejoin="round"></path>
+					{
+						MAP.labels.map((l) => (
+							<text x={l.at[0]} y={l.at[1]} text-anchor="middle" class:list={["fp__geo", `fp__geo--${l.kind}`]}>
+								{l.text}
+							</text>
+						))
+					}
+					<path d={traverse} fill="none" stroke="#7a1418" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 7" mask="url(#fp-reveal)"></path>
+					{
+						marks.map((m) => (
+							<g class:list={["fp__pin", { "fp__pin--hub": m === hub }]} data-office-mark={m.i}>
+								{m === hub && <circle class="fp__pulse" cx={m.pos![0]} cy={m.pos![1]} r="14"></circle>}
+								<circle cx={m.pos![0]} cy={m.pos![1]} r={m === hub ? 11 : 8} fill="#7a1418" stroke="#f4efe6" stroke-width="3"></circle>
+							</g>
+						))
+					}
 				</svg>
 				{
 					marks.map((m) => (
 						<div class:list={["fp__label", `fp__label--${m.place}`, { "is-hub": m === hub }]} style={pct(m.pos!)} data-office-label={m.i}>
-							<span class="fp__label-no">
-								{m.no}
-								{m === hub && " · HQ"}
-								{m.geo && <span class="fp__label-coords"> · {coords(m.geo)}</span>}
-							</span>
-							<span class="fp__label-city">{m.city}</span>
+							{m.city}
+							{m === hub && <span class="fp__hq">HQ</span>}
 						</div>
 					))
 				}
@@ -168,50 +135,33 @@ const scale = MAP.per100km;
 				}
 			</figure>
 
-			<aside class="fp__block">
-				<div class="fp__block-head">
-					<h2 class="disp fp__title" data-reveal>
-						{v.headline}{v.highlight && <span class="accent"> {v.highlight}</span>}
-					</h2>
-				</div>
-				<div class="fp__legend">
-					<span class="fp__cap">Legend</span>
-					<ol>
-						{marks.map((m) => (
-							<li data-office={m.i} tabindex="0">
-								<span class="fp__legend-no">{String(m.i + 1).padStart(2, "0")}</span>
-								<div>
-									<div class="fp__legend-city">
-										{m.city}
-										{m === hub && <span class="fp__hq">HQ</span>}
-									</div>
-									{m.address && <address>{m.address}</address>}
-									<span class="fp__links">
-										{m.address && (
-											<a href={directions(m)} target="_blank" rel="noopener">
-												Directions <span aria-hidden="true">↗</span>
-											</a>
-										)}
-										{m.phone && <a href={`tel:${m.phone.replace(/\s/g, "")}`}>{m.phone}</a>}
-									</span>
-								</div>
-							</li>
-						))}
-					</ol>
-				</div>
-				<dl class="fp__meta">
-					<div><dt>Client</dt><dd>KAT Arabia</dd></div>
-					<div><dt>Bases</dt><dd>{String(offices.length).padStart(2, "0")}</dd></div>
-					<div><dt>Datum</dt><dd>WGS 84</dd></div>
-					<div><dt>Projection</dt><dd>Mercator</dd></div>
-				</dl>
-			</aside>
+			<ol class="fp__offices">
+				{marks.map((m) => (
+					<li class="fp__office" data-office={m.i} tabindex="0" data-reveal>
+						<div class="fp__office-head">
+							<span class="fp__office-no">{String(m.i + 1).padStart(2, "0")}</span>
+							<h3 class="fp__office-city">{m.city}</h3>
+							{m === hub && <span class="fp__hq">HQ</span>}
+							{m.country && <span class="fp__office-country">{m.country}</span>}
+						</div>
+						{m.address && <address>{m.address}</address>}
+						<span class="fp__links">
+							{m.address && (
+								<a href={directions(m)} target="_blank" rel="noopener">
+									Directions <span aria-hidden="true">↗</span>
+								</a>
+							)}
+							{m.phone && <a href={`tel:${m.phone.replace(/\s/g, "")}`}>{m.phone}</a>}
+						</span>
+					</li>
+				))}
+			</ol>
 		</div>
 	</div>
 </section>
 
 <script>
-	// Hovering or focusing a legend entry picks out its benchmark on the plate.
+	// Hovering or focusing an office card picks out its pin on the map.
 	for (const root of document.querySelectorAll<HTMLElement>(".footprint")) {
 		const rows = [...root.querySelectorAll<HTMLElement>("[data-office]")];
 		const targets = [...root.querySelectorAll<Element>("[data-office-mark], [data-office-label]")];
@@ -233,214 +183,191 @@ const scale = MAP.per100km;
 
 <style>
 	.fp {
-		--bw: clamp(280px, 24vw, 340px);
-		--gap: clamp(20px, 2.4vw, 32px);
-		/* the plate's width, so the title block can line up with its frame inside the tick margin */
-		--plate: calc(100cqi - var(--bw) - var(--gap));
-		container-type: inline-size;
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) var(--bw);
-		gap: var(--gap);
-		align-items: start;
+		grid-template-columns: minmax(0, 1fr) clamp(300px, 28vw, 400px);
+		gap: 12px;
+		align-items: stretch;
 	}
 
-	/* ---------- plate ---------- */
-	.fp__plate {
+	/* ---------- map sheet ---------- */
+	.fp__map {
 		position: relative;
-		margin: 0;
+		align-self: start;
+		overflow: hidden;
+		aspect-ratio: 980 / 700;
+		border-radius: var(--r-xl);
+		background: var(--paper-2);
 	}
-	.fp__plate svg {
-		display: block;
+	.fp__map svg {
 		width: 100%;
-		height: auto;
-	}
-	.fp__tick {
-		font-family: var(--font-mono);
-		font-size: 11px;
-		letter-spacing: 0.06em;
-		fill: var(--ink-muted);
-	}
-	.fp__tick--n {
-		font-size: 13px;
-		font-weight: 500;
-		fill: var(--ink);
+		height: 100%;
 	}
 	.fp__geo {
 		font-family: var(--font-body);
 		fill: var(--ink-muted);
+		fill-opacity: 0.7;
 	}
 	.fp__geo--country {
-		font-size: 14px;
+		font-size: 13px;
 		font-weight: 700;
-		letter-spacing: 0.32em;
+		letter-spacing: 0.28em;
 		text-transform: uppercase;
 	}
 	.fp__geo--minor {
 		font-size: 11px;
-		letter-spacing: 0.24em;
+		font-weight: 600;
+		letter-spacing: 0.2em;
 		text-transform: uppercase;
 	}
 	.fp__geo--sea {
-		font-size: 16px;
+		font-size: 15px;
 		font-style: italic;
 	}
+	.fp__pin {
+		transition: opacity 0.3s var(--ease);
+	}
+	.fp__pulse {
+		fill: #7a1418;
+		opacity: 0.25;
+		transform-box: fill-box;
+		transform-origin: center;
+		animation: fp-pulse 2.4s var(--ease) infinite;
+	}
+	@keyframes fp-pulse {
+		from {
+			transform: scale(0.8);
+			opacity: 0.35;
+		}
+		to {
+			transform: scale(2.4);
+			opacity: 0;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.fp__pulse {
+			animation: none;
+		}
+	}
 
-	/* benchmark labels: HTML so they stay legible at every map size */
+	/* pin labels: pill chips, like the industry tiles */
 	.fp__label {
 		position: absolute;
-		display: flex;
-		flex-direction: column;
-		padding: 6px 10px;
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		padding: 7px 14px;
+		border-radius: 999px;
 		background: var(--paper-2);
-		box-shadow: 0 0 0 1px var(--ink);
+		box-shadow: 0 6px 18px rgba(20, 16, 16, 0.12);
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--ink);
 		white-space: nowrap;
 		pointer-events: none;
-		transition: opacity 0.3s var(--ease), box-shadow 0.3s var(--ease);
+		transition: opacity 0.3s var(--ease);
 	}
 	.fp__label--e {
-		transform: translate(22px, -20%);
+		transform: translate(20px, -50%);
 	}
 	.fp__label--w {
-		transform: translate(calc(-100% - 20px), -10%);
+		transform: translate(calc(-100% - 20px), -50%);
 	}
 	.fp__label--n {
-		transform: translate(-20%, calc(-100% - 18px));
+		transform: translate(-30%, calc(-100% - 18px));
 	}
 	.fp__label--s {
-		transform: translate(-80%, 26px);
+		transform: translate(-70%, 22px);
 	}
 	.fp__label.is-hub {
-		box-shadow: 0 0 0 1.5px var(--maroon);
-	}
-	.fp__label-no {
-		font-family: var(--font-mono);
-		font-size: 10px;
-		letter-spacing: 0.12em;
-		color: var(--maroon);
-	}
-	.fp__label-city {
-		font-family: var(--font-display);
-		font-weight: 700;
-		font-size: 16px;
-		line-height: 1.2;
-		color: var(--ink);
-	}
-	.fp__label.is-hub .fp__label-city {
-		font-size: 19px;
-		font-weight: 800;
+		background: var(--ink);
+		color: var(--paper);
 	}
 	.fp__dist {
 		position: absolute;
 		transform: translate(-50%, -50%);
-		padding: 3px 8px;
-		background: var(--paper);
-		font-family: var(--font-mono);
-		font-size: 11px;
+		padding: 4px 10px;
+		border-radius: 999px;
+		background: rgba(244, 239, 230, 0.85);
+		font-size: 12px;
+		font-weight: 600;
 		color: var(--maroon);
 		white-space: nowrap;
 	}
-	.fp__bm {
-		transition: opacity 0.3s var(--ease);
-	}
-	.footprint.has-active :is(.fp__bm, .fp__label):not(.is-active) {
+	.footprint.has-active :is(.fp__pin, .fp__label):not(.is-active) {
 		opacity: 0.3;
 	}
 
-	/* ---------- title block ---------- */
-	.fp__block {
-		display: flex;
-		flex-direction: column;
-		background: var(--paper-2);
-		box-shadow: 0 0 0 1.5px var(--ink);
-		/* viewBox: 34 units of ticks above the frame, 1036 wide */
-		margin-top: calc(var(--plate) * 34 / 1036);
-	}
-	.fp__block > * + * {
-		box-shadow: 0 -1.5px 0 var(--ink);
-	}
-	.fp__block-head {
-		padding: 24px 22px 22px;
-	}
-	.fp__title {
-		margin: 0;
-		font-size: clamp(30px, 2.6vw, 40px);
-		line-height: 1;
-	}
-	.fp__title .accent {
-		color: var(--maroon);
-	}
-	.fp__legend {
-		flex-grow: 1;
-		padding: 18px 22px;
-	}
-	.fp__cap,
-	.fp__meta dt {
-		font-family: var(--font-mono);
-		font-size: 10px;
-		letter-spacing: 0.16em;
-		text-transform: uppercase;
-		color: var(--ink-muted);
-	}
-	.fp__legend ol {
-		display: flex;
-		flex-direction: column;
-		gap: 4px;
-		margin: 12px 0 0;
-		padding: 0;
-		list-style: none;
-	}
-	.fp__legend li {
-		display: flex;
-		gap: 12px;
-		margin-inline: -10px;
-		padding: 8px 10px;
-		outline: none;
-		transition: background 0.3s var(--ease);
-	}
-	.fp__legend li:hover,
-	.fp__legend li:focus-visible {
-		background: var(--paper);
-	}
-	.fp__legend li:focus-visible {
-		box-shadow: 0 0 0 2px var(--maroon);
-	}
-	.fp__legend-no {
-		padding-top: 3px;
-		font-family: var(--font-mono);
-		font-size: 11px;
-		color: var(--maroon);
-	}
-	.fp__legend-city {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-family: var(--font-display);
-		font-weight: 700;
-		font-size: 16px;
-		color: var(--ink);
-	}
 	.fp__hq {
-		padding: 1px 6px;
+		padding: 2px 8px;
+		border-radius: 999px;
 		background: var(--maroon);
-		font-family: var(--font-mono);
 		font-size: 10px;
-		font-weight: 500;
-		letter-spacing: 0.08em;
+		font-weight: 700;
+		letter-spacing: 0.1em;
 		color: #fff;
 	}
-	.fp__legend address {
-		margin-top: 2px;
-		font-style: normal;
+
+	/* ---------- office cards ---------- */
+	.fp__offices {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.fp__office {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		flex: 1;
+		padding: 20px 22px;
+		border-radius: var(--r-lg);
+		background: var(--paper-2);
+		outline: none;
+		transition:
+			background 0.3s var(--ease),
+			transform 0.3s var(--ease);
+	}
+	.fp__office:hover,
+	.fp__office:focus-visible {
+		background: #fff;
+		transform: translateY(-2px);
+	}
+	.fp__office:focus-visible {
+		box-shadow: 0 0 0 2px var(--maroon);
+	}
+	.fp__office-head {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+	.fp__office-no {
 		font-size: 12px;
-		line-height: 1.45;
+		font-weight: 700;
+		color: var(--maroon);
+	}
+	.fp__office-city {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: 20px;
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		line-height: 1.2;
+	}
+	.fp__office-country {
+		margin-inline-start: auto;
+		font-size: 12px;
 		color: var(--ink-muted);
+	}
+	.fp__office address {
+		font-style: normal;
+		font-size: 14px;
+		line-height: 1.5;
+		color: var(--ink-soft);
 	}
 	.fp__links {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 2px 14px;
-		margin-top: 4px;
-		font-size: 12px;
+		gap: 2px 16px;
+		font-size: 14px;
 		font-weight: 600;
 	}
 	.fp__links a {
@@ -449,64 +376,43 @@ const scale = MAP.per100km;
 	.fp__links a:hover {
 		color: var(--ink);
 	}
-	.fp__meta {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		margin: 0;
-	}
-	.fp__meta div {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		padding: 10px 14px;
-	}
-	.fp__meta div:nth-child(odd) {
-		box-shadow: 1.5px 0 0 var(--ink);
-	}
-	.fp__meta div:nth-child(-n + 2) {
-		border-bottom: 1.5px solid var(--ink);
-	}
-	.fp__meta dd {
-		margin: 0;
-		font-family: var(--font-mono);
-		font-size: 11px;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: var(--ink);
-	}
 
 	@media (max-width: 1024px) {
 		.fp {
 			grid-template-columns: minmax(0, 1fr);
 		}
-		.fp__block {
-			margin-top: 0;
-		}
-		.fp__legend ol {
+		.fp__offices {
 			display: grid;
 			grid-template-columns: repeat(2, minmax(0, 1fr));
-			column-gap: 24px;
 		}
 	}
-	/* phones: the plate shrinks, so drop the fine print and keep each benchmark to its number and city */
 	@media (max-width: 640px) {
-		.fp__tick,
 		.fp__geo,
-		.fp__dist,
-		.fp__label-coords {
+		.fp__dist {
 			display: none;
 		}
 		.fp__label {
-			padding: 3px 6px;
+			padding: 4px 9px;
+			font-size: 11px;
+			gap: 5px;
 		}
-		.fp__label-city,
-		.fp__label.is-hub .fp__label-city {
-			font-size: 12px;
+		.fp__label .fp__hq {
+			display: none;
 		}
-		.fp__label-no {
-			font-size: 9px;
+		.fp__label--n {
+			transform: translate(-85%, calc(-100% - 12px));
 		}
-		.fp__legend ol {
+		.fp__office-head {
+			flex-wrap: wrap;
+		}
+		.fp__office-city {
+			white-space: nowrap;
+		}
+		.fp__office-country {
+			flex-basis: 100%;
+			margin-inline-start: 0;
+		}
+		.fp__offices {
 			grid-template-columns: minmax(0, 1fr);
 		}
 	}
